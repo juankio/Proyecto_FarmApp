@@ -1,127 +1,128 @@
+/* General */
 body {
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
+    font-family: "Afacad Flux", sans-serif;
 }
 
+/* Carrusel */
 .carrusel {
-	margin: auto;
-	text-align: center;
-	max-width: 100%;
-	position: relative;
-	background: #fff;
-	padding: 10px;
-	border-radius: 15px;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    text-align: center;
+    max-width: 100%;
+    position: relative;
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.titulocarrusel {
+    font-size: 24px;
+    color: #ff6969;
+    margin-bottom: 15px;
+    font-weight: bold;
 }
 
 #container {
-	height: auto;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    max-width: 100%;
 }
 
-#slider-container {
-	width: 100%;
-	max-width: 1400px;
-	overflow: hidden;
-	padding: 30px;
-	box-sizing: border-box;
+#slider {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    gap: 10px; /* Espaciado entre imágenes */
 }
 
-#slider-container .btn {
-	position: absolute;
-	top: 50%;
-	transform: translateY(-50%);
-	height: 25px;
-	width: 25px;
-	border-left: 8px solid #000000;
-	border-top: 8px solid #000000;
-	cursor: pointer;
+.slide {
+    flex-shrink: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #f8f9fa;
 }
 
-#slider-container .btn:hover {
-	transform: scale(1.2) translateY(-50%);
+.slide img {
+    width: 100%;
+    height: 200px; /* Altura fija */
+    object-fit: cover; /* Recorta y ajusta las imágenes */
+    display: block;
+    border-radius: 10px;
 }
 
-#slider-container .btn.inactive {
-	border-color: #282828;
+
+
+
+/* Botones de Navegación */
+.btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: background-color 0.3s ease;
+    font-size: 24px;
 }
 
-#slider-container .btn:first-of-type {
-	transform: rotate(-45deg) translateY(-50%);
-	left: 10px;
+.btn:hover {
+    background-color: rgba(0, 0, 0, 0.8);
 }
 
-#slider-container .btn:last-of-type {
-	transform: rotate(135deg) translateY(-50%);
-	right: 10px;
+.btn-left {
+    left: 10px;
 }
 
-#slider-container #slider {
-	display: flex;
-	transition: all 0.5s;
+.btn-right {
+    right: 10px;
 }
 
-#slider-container img {
-	margin: auto 10px;
-	background-color: #b5b5b5;
-	border-radius: 5px;
-	box-shadow: 2px 2px 4px 2px rgb(135, 131, 131), -2px -2px 4px 2px rgb(170, 168, 168);
+/* Íconos de Font Awesome */
+.btn::before {
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
 }
 
-@media only screen and (min-width: 1100px) {
-	#slider-container #slider .slide {
-		width: calc(20% - 20px);
-	}
-
-	#slider-container img {
-		width: 285px;
-		height: 235px;
-	}
+.btn-left::before {
+    content: '\f104'; /* Flecha izquierda */
 }
 
-@media only screen and (max-width: 1100px) {
-	#slider-container #slider .slide {
-		width: calc(25% - 20px);
-	}
-
-	#slider-container img {
-		width: 250px;
-		height: 200px;
-	}
+.btn-right::before {
+    content: '\f105'; /* Flecha derecha */
 }
 
-@media only screen and (max-width: 900px) {
-	#slider-container #slider .slide {
-		width: calc(33.3333% - 20px);
-	}
+/* Responsividad */
+@media (max-width: 768px) {
+    .slide {
+        min-width: 50%; /* Mostrar 2 imágenes en pantallas pequeñas */
+    }
 
-	#slider-container img {
-		width: 200px;
-		height: 150px;
-	}
+    .btn {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
 }
 
-@media only screen and (max-width: 600px) {
-	#slider-container #slider .slide {
-		width: calc(50% - 20px);
-	}
+@media (max-width: 480px) {
+    .slide {
+        min-width: 100%; /* Mostrar 1 imagen en pantallas muy pequeñas */
+    }
 
-	#slider-container img {
-		width: 150px;
-		height: 100px;
-	}
-}
-
-@media only screen and (max-width: 400px) {
-	#slider-container #slider .slide {
-		width: calc(100% - 20px);
-	}
-
-	#slider-container img {
-		width: 100%;
-		height: auto;
-	}
+    .btn {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+    }
 }

@@ -34,7 +34,7 @@ body {
 .titulo-banner {
     font-size: 3rem;
     font-weight: 400;
-    color: #d20000;
+    color: #ff6969;
     margin: 0;
 }
 
@@ -63,7 +63,6 @@ body {
     max-width: 250px;
     height: auto;
     border-radius: 50%;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
     object-fit: contain;
 }
 
@@ -104,7 +103,7 @@ body {
 
 .card .contenido h3 {
     font-size: 20px;
-    color: #ca5c37;
+    color: #f862ec;
     margin-bottom: 10px;
 }
 
@@ -120,14 +119,25 @@ body {
 }
 
 /* Carrusel */
+.carrusel {
+    margin: 0px auto;
+    text-align: center;
+    max-width: 100%;
+    position: relative;
+    background: #fff;
+    padding: 10px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 .titulocarrusel {
     font-size: 24px;
-    color: #ff69b4;
+    color: #ff6969;
     margin-bottom: 10px;
     font-weight: bold;
 }
 
-.carrusel-container {
+.carrusel-contenedor {
     position: relative;
     overflow: hidden;
     border-radius: 10px;
@@ -171,6 +181,7 @@ body {
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    z-index: 10;
     transition: background 0.3s ease;
 }
 
@@ -186,7 +197,121 @@ body {
     right: 5px;
 }
 
-/* Responsividad */
+/* Img del producto / Video */
+#bienvenidos2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    margin: 20px auto;
+    margin-bottom: 5%;
+    border-radius: 10px;
+    max-width: 1200px;
+}
+
+#bienvenidos2 img {
+    max-width: 100%;
+    border-radius: 10px;
+}
+
+/* Misión y Visión */
+.MisionVision {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px auto;
+    max-width: 1200px;
+}
+
+.mision,
+.vision {
+    flex: 1 1 calc(50% - 20px);
+    padding: 20px;
+    text-align: center;
+    background-color: #f4acac;
+    border-radius: 10px;
+}
+
+.mision h3,
+.vision h3 {
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Footer */
+.footer {
+    background-color: #e27f7f;
+    color: #fff;
+    padding: 40px 20px;
+    width: 100%;
+    opacity: 0.8;
+}
+
+.footer-links h4 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #ffffff;
+    display: inline-block;
+    color: #4f1818;
+}
+
+.footer-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links ul li {
+    margin-bottom: 10px;
+}
+
+.footer-links ul li a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-links ul li a:hover {
+    color: #582222;
+}
+
+.copy {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 19px;
+    font-weight: 400;
+    color: #d31414;
+}
+
+/* Estilos para los iconos sociales */
+.social-link {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+.social-link a {
+    background-color: #bd2020;
+    color: #ffffff;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.social-link a:hover {
+    background-color: #e20606;
+}
+
+/* Responsiveness */
 @media (max-width: 1024px) {
     #banner {
         flex-direction: column;
@@ -203,8 +328,12 @@ body {
 }
 
 @media (max-width: 768px) {
-    .titulocarrusel {
-        font-size: 20px;
+    .card {
+        flex: 1 1 100%;
+    }
+
+    .MisionVision {
+        gap: 10px;
     }
 
     .carrusel-item {
@@ -216,43 +345,8 @@ body {
         height: 30px;
     }
 
-    .card {
-        flex: 1 1 100%;
-    }
-
-    .MisionVision {
-        gap: 20px;
-    }
-
-    .MisionVision h3 {
-        font-size: 30px;
-    }
-
-    .MisionVision p {
-        font-size: 20px;
-    }
-
-    .carrusel-item img {
-        width: 120px;
-    }
-
     .tituloCarrusel2 {
-        font-size: 24px;
-    }
-
-    #bienvenidos2 {
-        display: list-item;
-        gap: 2%;
-        justify-content: center;
-        align-items: center;
-        border-radius: 10px;
-        max-width: 768px;
-    }
-
-    #bienvenidos2 img {
-        flex-direction: column;
-        width: 400px;
-        height: 400px;
+        font-size: 20px;
     }
 }
 
@@ -269,22 +363,6 @@ body {
         font-size: 1rem;
     }
 
-    .card .contenido h3 {
-        font-size: 18px;
-    }
-
-    .card .contenido h2 {
-        font-size: 16px;
-    }
-
-    .card .contenido p {
-        font-size: 12px;
-    }
-
-    .titulocarrusel {
-        font-size: 18px;
-    }
-
     .carrusel-item {
         width: 120px;
     }
@@ -294,16 +372,7 @@ body {
         height: 25px;
     }
 
-    .MisionVision h3 {
-        font-size: 24px;
-    }
-
-    .MisionVision p {
+    .titulocarrusel {
         font-size: 18px;
-    }
-
-    #bienvenidos2 img {
-        width: 300px;
-        height: 300px;
     }
 }

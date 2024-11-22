@@ -1,80 +1,55 @@
-var container = document.getElementById('container')
-var slider = document.getElementById('slider');
-var slides = document.getElementsByClassName('slide').length;
-var buttons = document.getElementsByClassName('btn');
+const slider = document.getElementById("slider");
+const slides = document.querySelectorAll(".slide");
+let slideIndex = 0; // Índice actual
+let slidesVisible = 3; // Imágenes visibles por defecto
 
-var currentPosition = 0;
-var currentMargin = 0;
-var slidesPerPage = 0;
-var slidesCount = slides - slidesPerPage;
-var containerWidth = container.offsetWidth;
-var prevKeyActive = false;
-var nextKeyActive = true;
+function updateSlidesVisible() {
+    if (window.innerWidth <= 480) {
+        slidesVisible = 1; // 1 imagen visible en móviles
+    } else if (window.innerWidth <= 768) {
+        slidesVisible = 2; // 2 imágenes visibles en tablets
+    } else {
+        slidesVisible = 3; // 3 imágenes visibles en escritorio
+    }
 
-window.addEventListener("resize", checkWidth);
+    const slideWidth = 100 / slidesVisible; // Ajustar ancho según cantidad visible
+    slides.forEach((slide) => {
+        slide.style.width = `${slideWidth}%`;
+    });
 
-function checkWidth() {
-	containerWidth = container.offsetWidth;
-	setParams(containerWidth);
+    // Corregir índice si sobrepasa el límite válido
+    if (slideIndex > slides.length - slidesVisible) {
+        slideIndex = Math.max(0, slides.length - slidesVisible);
+    }
+    updateSliderPosition();
 }
 
-function setParams(w) {
-	if (w < 551) {
-		slidesPerPage = 1;
-	} else {
-		if (w < 901) {
-			slidesPerPage = 2;
-		} else {
-			if (w < 1101) {
-				slidesPerPage = 3;
-			} else {
-				slidesPerPage = 4;
-			}
-		}
-	}
-	slidesCount = slides - slidesPerPage;
-	if (currentPosition > slidesCount) {
-		currentPosition -= slidesPerPage;
-	};
-	currentMargin = - currentPosition * (100 / slidesPerPage);
-	slider.style.marginLeft = currentMargin + '%';
-	if (currentPosition > 0) {
-		buttons[0].classList.remove('inactive');
-	}
-	if (currentPosition < slidesCount) {
-		buttons[1].classList.remove('inactive');
-	}
-	if (currentPosition >= slidesCount) {
-		buttons[1].classList.add('inactive');
-	}
+function updateSliderPosition() {
+    const maxSlideIndex = slides.length - slidesVisible; // Última posición válida
+    slideIndex = Math.min(Math.max(slideIndex, 0), maxSlideIndex); // Asegurar que esté dentro del rango
+    slider.style.transform = `translateX(-${slideIndex * (100 / slidesVisible)}%)`;
 }
-
-setParams();
-
-function slideRight() {
-	if (currentPosition != 0) {
-		slider.style.marginLeft = currentMargin + (100 / slidesPerPage) + '%';
-		currentMargin += (100 / slidesPerPage);
-		currentPosition--;
-	};
-	if (currentPosition === 0) {
-		buttons[0].classList.add('inactive');
-	}
-	if (currentPosition < slidesCount) {
-		buttons[1].classList.remove('inactive');
-	}
-};
 
 function slideLeft() {
-	if (currentPosition != slidesCount) {
-		slider.style.marginLeft = currentMargin - (100 / slidesPerPage) + '%';
-		currentMargin -= (100 / slidesPerPage);
-		currentPosition++;
-	};
-	if (currentPosition == slidesCount) {
-		buttons[1].classList.add('inactive');
-	}
-	if (currentPosition > 0) {
-		buttons[0].classList.remove('inactive');
-	}
-};
+    if (slideIndex > 0) {
+        slideIndex--;
+    } else {
+        slideIndex = slides.length - slidesVisible; // Ir al último grupo de imágenes
+    }
+    updateSliderPosition();
+}
+
+function slideRight() {
+    if (slideIndex < slides.length - slidesVisible) {
+        slideIndex++;
+    } else {
+        slideIndex = 0; // Regresar al inicio
+    }
+    updateSliderPosition();
+}
+
+// Escuchar redimensionamiento
+window.addEventListener("resize", updateSlidesVisible);
+
+// Inicializar
+updateSlidesVisible();

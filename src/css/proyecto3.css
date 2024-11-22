@@ -1,7 +1,5 @@
 /* General */
 body {
-    margin: 0;
-    padding: 0;
     font-family: "Afacad Flux", sans-serif;
     color: #333;
     padding-top: 3rem;
@@ -118,85 +116,6 @@ body {
     text-align: justify;
 }
 
-/* Carrusel */
-.carrusel {
-    margin: 0px auto;
-    text-align: center;
-    max-width: 100%;
-    position: relative;
-    background: #fff;
-    padding: 10px;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.titulocarrusel {
-    font-size: 24px;
-    color: #ff6969;
-    margin-bottom: 10px;
-    font-weight: bold;
-}
-
-.carrusel-contenedor {
-    position: relative;
-    overflow: hidden;
-    border-radius: 10px;
-}
-
-.carrusel-items {
-    display: flex;
-    transition: transform 0.5s ease;
-    gap: 10px;
-}
-
-.carrusel-item {
-    flex: 0 0 auto;
-    width: 200px;
-    text-align: center;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-    background: #f8f9fa;
-}
-
-.carrusel-item img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    border-radius: 10px;
-}
-
-/* Botones del carrusel */
-.carrusel-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.5);
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    width: 35px;
-    height: 35px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    z-index: 10;
-    transition: background 0.3s ease;
-}
-
-.carrusel-btn:hover {
-    background: rgba(0, 0, 0, 0.7);
-}
-
-.carrusel-btn-left {
-    left: 5px;
-}
-
-.carrusel-btn-right {
-    right: 5px;
-}
-
 /* Img del producto / Video */
 #bienvenidos2 {
     display: flex;
@@ -245,9 +164,29 @@ body {
 /* Footer */
 .footer {
     background-color: #e2af7f;
+    opacity: 0.7;
     color: #fff;
-    padding: 40px 20px;
-    width: 100%;
+    width: 100%; /* Asegura que el footer ocupe el 100% del ancho */
+    position: relative; /* Por si hay problemas de posicionamiento */
+    left: 0; /* Resetea cualquier desplazamiento */
+    right: 0;
+    margin: 0; /* Evita márgenes que puedan causar problemas */
+    padding: 20px 0; /* Ajusta el espacio interno */
+    box-sizing: border-box; /* Incluye padding y borde en el cálculo del ancho */
+}
+
+.contenedor-footer {
+    max-width: 1200px; /* Opcional, para centrar contenido */
+    margin: 0 auto; /* Centra el contenido */
+    padding: 0 20px; /* Espaciado interno */
+}
+
+.copy {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 19px;
+    font-weight: 400;
+    color: #d31414;
 }
 
 .footer-links h4 {
@@ -269,7 +208,7 @@ body {
 }
 
 .footer-links ul li a {
-    color: #e05d5d;
+    color: #fff;
     text-decoration: none;
     transition: color 0.3s ease;
 }
@@ -310,45 +249,4 @@ body {
     background-color: #e20606;
 }
 
-/* Responsiveness */
-@media (max-width: 1024px) {
-    .card {
-        flex: 1 1 calc(50% - 20px);
-    }
-}
 
-@media (max-width: 768px) {
-    .card {
-        flex: 1 1 100%;
-    }
-
-    .MisionVision {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .carrusel-item {
-        width: 150px;
-    }
-
-    .carrusel-btn {
-        width: 30px;
-        height: 30px;
-    }
-}
-
-@media (max-width: 480px) {
-    .carrusel-item {
-        width: 120px;
-    }
-
-    .tituloCarrusel2 {
-        font-size: 24px;
-    }
-}
-
-@media (max-width: 390px) {
-    .carrusel-item {
-        width: 100px;
-    }
-}

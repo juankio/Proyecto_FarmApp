@@ -248,6 +248,7 @@ body {
     color: #fff;
     padding: 40px 20px;
     width: 100%;
+    opacity: 0.8;
 }
 
 .footer-links h4 {
@@ -269,7 +270,7 @@ body {
 }
 
 .footer-links ul li a {
-    color: #f3b0b0;
+    color: #fff;
     text-decoration: none;
     transition: color 0.3s ease;
 }
