@@ -16,14 +16,13 @@
 body {
     font-family: "Afacad Flux", sans-serif;
     font-size: 16px;
-    /*background-color: #cee3f8;*/
     color: #000000;
-    
 }
 
 .contenedor {
     max-width: 1200px;
     margin: 0 auto;
+    padding: 0 15px; /* Añadir padding para evitar que el contenido toque los bordes */
 }
 
 footer {
@@ -44,40 +43,33 @@ footer {
 
 /* Contenedor del acordeón */
 #acordeones {
-    /* background-color: #d1e7f7; Fondo azul claro */
     padding: 30px;
     border-radius: 10px;
-    /* max-width: 900px; Limita el ancho */
-    margin: 0 auto; /* Centra el acordeón */
+    margin: 0 auto;
     box-shadow: none;
 }
 
-.titulopreguntas{
-
-
+.titulopreguntas {
     margin-top: 10%;
-
-
 }
-
 
 /* Estilos para cada pregunta */
 details {
-    margin-bottom: 15px; /* Espacio entre preguntas */
+    margin-bottom: 15px;
     border-radius: 8px;
     overflow: hidden;
-    transition: all 0.3s ease; /* Transición suave */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
-    border: 1px solid #002f5d52; /* Borde suave */
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #002f5d52;
 }
 
 details[open] {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Más sombra cuando está abierto */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 /* Título de cada pregunta */
 summary {
-    background-color: #a6d4ff; /* Fondo azul */
+    background-color: #a6d4ff;
     color: #000;
     font-weight: bold;
     padding: 15px 20px;
@@ -88,33 +80,33 @@ summary {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    user-select: none; /* Evita selección de texto */
+    user-select: none;
 }
 
 summary:hover {
-    background-color: #81b7e7; /* Color diferente al pasar el cursor */
-    padding: 15px 22px; /* Ligero cambio de padding */
+    background-color: #81b7e7;
+    padding: 15px 22px;
 }
 
 summary::after {
-    content: "\25BC"; /* Flecha abajo */
+    content: "\25BC";
     font-size: 16px;
-    transition: transform 0.3s ease; /* Rotación de la flecha */
+    transition: transform 0.3s ease;
 }
 
 details[open] summary::after {
-    transform: rotate(-180deg); /* Rotación de flecha al abrir */
+    transform: rotate(-180deg);
 }
 
 /* Contenido de cada pregunta */
 details p {
     padding: 20px;
-    background-color: #ffffff; /* Fondo blanco para el contenido */
+    background-color: #ffffff;
     color: #333;
     font-size: 20px;
     line-height: 1.6;
-    border-top: 1px solid #ddd; /* Línea divisoria */
-    animation: fadeIn 0.3s ease; /* Animación al abrir */
+    border-top: 1px solid #ddd;
+    animation: fadeIn 0.3s ease;
 }
 
 @keyframes fadeIn {
@@ -138,6 +130,29 @@ details p {
 }
 
 /* Media Queries */
+@media only screen and (max-width: 1024px) {
+    body {
+        font-size: 15px;
+    }
+
+    .contenedor {
+        padding: 0 10px;
+    }
+
+    summary {
+        font-size: 22px;
+        padding: 12px 16px;
+    }
+
+    details p {
+        font-size: 18px;
+    }
+
+    .tituloacordeon {
+        font-size: 35px;
+    }
+}
+
 @media only screen and (max-width: 768px) {
     .footer-row {
         text-align: center;
@@ -149,48 +164,64 @@ details p {
 
     .contenedor {
         width: 100%;
+        padding: 0 10px;
     }
 
     #acordeones {
         padding: 20px;
-        max-width: 100%; /* Ocupa todo el ancho en pantallas pequeñas */
+        max-width: 100%;
     }
 
     summary {
-        font-size: 25px;
-        padding: 12px 16px;
+        font-size: 20px;
+        padding: 10px 14px;
     }
 
     details p {
-        font-size: 24px;
+        font-size: 16px;
     }
 
-    .titulopreguntas{
-
-
+    .titulopreguntas {
         margin-top: 40%;
         margin-bottom: 0%;
-        font-size: 40px;
-        
-    
-    
+        font-size: 35px;
     }
 
     .tituloacordeon {
         text-align: center;
         font-weight: 400;
         margin-top: 6%;
+        font-size: 30px;
     }
-
 }
 
 @media only screen and (max-width: 480px) {
     .btn {
         width: 100%;
     }
+
+    body {
+        font-size: 12px;
+    }
+
+    summary {
+        font-size: 18px;
+        padding: 8px 12px;
+    }
+
+    details p {
+        font-size: 14px;
+    }
+
+    .titulopreguntas {
+        margin-top: 50%;
+        font-size: 30px;
+    }
+
     .tituloacordeon {
         text-align: center;
         font-weight: 400;
         margin-top: 6%;
+        font-size: 25px;
     }
 }

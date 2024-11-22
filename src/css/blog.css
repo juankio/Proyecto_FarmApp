@@ -39,19 +39,16 @@
     text-align: center;
     padding: 15px;
     width: 280px;
-    /* Ancho fijo para las tarjetas */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .bg {
     margin-top: 15%;
     background-color: rgba(164, 202, 255, 0.523);
-
 }
 
 .info-petproyecto:hover {
     transform: translateY(-10px);
-    /* Efecto de elevación */
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
@@ -78,7 +75,6 @@
 
 .info-petproyecto:hover .proyecto-imagen img {
     transform: scale(1.05);
-    /* Efecto de zoom */
 }
 
 /* Títulos y descripciones */
@@ -95,6 +91,12 @@
 }
 
 /* Responsivo */
+@media (max-width: 1024px) {
+    .info-petproyecto {
+        width: 45%;
+    }
+}
+
 @media (max-width: 768px) {
     .contenedor {
         flex-direction: column;
@@ -103,14 +105,29 @@
 
     .info-petproyecto {
         width: 90%;
-        /* Ocupa más espacio en pantallas pequeñas */
     }
 
     #blog h3 {
-        font-size: 48px;
-        margin-bottom: 13%;
-        font-weight: 500;
-        text-align: center;
-        color: #002e5d;
+        font-size: 36px;
+        margin-bottom: 10%;
+    }
+}
+
+@media (max-width: 480px) {
+    #blog h3 {
+        font-size: 28px;
+        margin-bottom: 15%;
+    }
+
+    .info-petproyecto {
+        width: 100%;
+    }
+
+    .info-petproyecto h4 {
+        font-size: 18px;
+    }
+
+    .info-petproyecto p {
+        font-size: 12px;
     }
 }

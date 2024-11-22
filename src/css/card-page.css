@@ -12,15 +12,13 @@ body {
 
 .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     padding: 20px;
-    grid-gap: 40px;
+    grid-gap: 20px;
 }
 
 .Precios {
-
     margin-bottom: 8%;
-
 }
 
 .card {
@@ -52,51 +50,23 @@ body {
     opacity: 0.7;
 }
 
-.card1>.container-card:after {
-    background-image: linear-gradient(135deg,
-            #ffffff,
-            #054ba184);
-}
-
-.card2>.container-card:after {
-    background-image: linear-gradient(135deg,
-            #ffffff,
-            #054ba184);
-}
-
+.card1>.container-card:after,
+.card2>.container-card:after,
 .card3>.container-card:after {
-    background-image: linear-gradient(135deg,
-            #ffffff,
-            #054ba184);
+    background-image: linear-gradient(135deg, #ffffff, #054ba184);
 }
 
 .details {
     padding: 20px 10px;
 }
 
-.details>h3 {
-    color: #010101;
-    font-weight: 600;
-    font-size: 18px;
-    margin: 10px 0 15px 0;    
-    justify-content: center;
-    text-align: center;
-}
-.details>h2 {
-    color: #010101;
-    font-weight: 600;
-    font-size: 18px;
-    margin: 10px 0 15px 0;    
-    justify-content: center;
-    text-align: center;
-}
-
+.details>h3,
+.details>h2,
 .details>h1 {
-    color: #000000;
+    color: #010101;
     font-weight: 600;
     font-size: 18px;
     margin: 10px 0 15px 0;
-    justify-content: center;
     text-align: center;
 }
 
@@ -105,125 +75,46 @@ body {
     font-size: 15px;
     line-height: 30px;
     font-weight: 400;
-    justify-content: center;
     text-align: center;
 }
 
 /* Responsividad */
 @media (max-width: 780px) {
-
-    .cards p {
-        font-size: 20px;
+    .cards {
+        grid-template-columns: 1fr;
     }
 
-    .cards h3 {
-        font-size: 30px;
+    .details>h3,
+    .details>h2,
+    .details>h1 {
+        font-size: 24px;
     }
 
-    .card1 {
-
-        width: 460px;
-        /* Reducir el tamaño de los elementos en móviles */
-        height: auto;
-        padding: 10px;
-
+    .details>p {
+        font-size: 18px;
     }
-
-    .card2 {
-
-        width: 460px;
-        /* Reducir el tamaño de los elementos en móviles */
-        height: auto;
-        padding: 10px;
-
-    }
-
-    .card3 {
-
-        width: 460px;
-        /* Reducir el tamaño de los elementos en móviles */
-        height: auto;
-        padding: 10px;
-
-    }
-
 }
 
 @media (max-width: 490px) {
-
-    .cards p {
+    .details>h3,
+    .details>h2,
+    .details>h1 {
         font-size: 20px;
     }
 
-    .cards h3 {
-        font-size: 30px;
+    .details>p {
+        font-size: 16px;
     }
-
-    .card1 {
-
-        width: 450px;
-        /* Reducir el tamaño de los elementos en móviles */
-        height: auto;
-        padding: 10px;
-
-    }
-
-    .card2 {
-
-        width: 460px;
-        /* Reducir el tamaño de los elementos en móviles */
-        height: auto;
-        padding: 10px;
-
-    }
-
-    .card3 {
-
-        width: 460px;
-        /* Reducir el tamaño de los elementos en móviles */
-        height: auto;
-        padding: 10px;
-
-    }
-
 }
 
 @media (max-width: 400px) {
-
-
-    .cards p {
-        font-size: 20px;
+    .details>h3,
+    .details>h2,
+    .details>h1 {
+        font-size: 18px;
     }
 
-    .cards h3 {
-        font-size: 30px;
+    .details>p {
+        font-size: 14px;
     }
-
-    .card1 {
-
-        width: 390px;
-        /* Reducir el tamaño de los elementos en móviles */
-        height: auto;
-        padding: 10px;
-
-    }
-
-    .card2 {
-
-        width: 390px;
-        /* Reducir el tamaño de los elementos en móviles */
-        height: auto;
-        padding: 10px;
-
-    }
-
-    .card3 {
-
-        width: 390px;
-        /* Reducir el tamaño de los elementos en móviles */
-        height: auto;
-        padding: 10px;
-
-    }
-
 }

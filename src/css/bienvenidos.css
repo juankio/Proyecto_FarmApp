@@ -1,13 +1,11 @@
 #bienvenidos {
     text-align: center;
-    /* background-color: #ffffff; */
     padding: 3%;
     width: auto;
     height: auto;
     max-height: 60%;
     margin-bottom: 2%;
 }
-
 
 #bienvenidos h2 {
     font-size: 32px;
@@ -19,20 +17,35 @@
 }
 
 .contenedor {
-
     margin-top: 15%;
-
 }
 
-
 /* Media Queries */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
+    #bienvenidos {
+        padding: 3.5%;
+    }
+
     #bienvenidos h2 {
-        font-size: 32px;
+        font-size: 30px;
     }
 
     #bienvenidos p {
-        font-size: 14px;
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    #bienvenidos {
+        padding: 4%;
+    }
+
+    #bienvenidos h2 {
+        font-size: 28px;
+    }
+
+    #bienvenidos p {
+        font-size: 18px;
         padding: 10px;
     }
 }
@@ -42,12 +55,26 @@
         padding: 5%;
     }
 
-    #bienvenidos h3 {
-        font-size: 38px;
+    #bienvenidos h2 {
+        font-size: 24px;
     }
 
     #bienvenidos p {
         font-size: 16px;
         text-align: justify;
+    }
+}
+
+@media (max-width: 320px) {
+    #bienvenidos {
+        padding: 6%;
+    }
+
+    #bienvenidos h2 {
+        font-size: 20px;
+    }
+
+    #bienvenidos p {
+        font-size: 14px;
     }
 }

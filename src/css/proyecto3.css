@@ -16,6 +16,8 @@ body {
     border-radius: 15px;
     margin: 20px auto;
     max-width: 1200px;
+    flex-wrap: wrap;
+    text-align: center;
 }
 
 .contenedorpro {
@@ -27,7 +29,6 @@ body {
 
 .texto-banner {
     flex: 1;
-    text-align: left;
 }
 
 .titulo-banner {
@@ -118,28 +119,21 @@ body {
 }
 
 /* Carrusel */
-/* Estilos del carrusel compacto */
 .carrusel {
     margin: 0px auto;
-    /* Reducir el margen superior e inferior */
     text-align: center;
-    max-width: 120%;
-    /* Ajustar el ancho del carrusel */
-    max-height: 50%;
+    max-width: 100%;
     position: relative;
     background: #fff;
     padding: 10px;
-    /* Reducir el padding interno */
     border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .titulocarrusel {
     font-size: 24px;
-    /* Reducir el tamaño del título */
     color: #ff6969;
     margin-bottom: 10px;
-    /* Reducir el margen inferior del título */
     font-weight: bold;
 }
 
@@ -153,13 +147,11 @@ body {
     display: flex;
     transition: transform 0.5s ease;
     gap: 10px;
-    /* Reducir el espacio entre los elementos */
 }
 
 .carrusel-item {
     flex: 0 0 auto;
     width: 200px;
-    /* Ajustar el tamaño de los elementos */
     text-align: center;
     border-radius: 10px;
     overflow: hidden;
@@ -184,7 +176,6 @@ body {
     border: none;
     border-radius: 50%;
     width: 35px;
-    /* Reducir el tamaño de los botones */
     height: 35px;
     display: flex;
     justify-content: center;
@@ -200,42 +191,10 @@ body {
 
 .carrusel-btn-left {
     left: 5px;
-    /* Ajustar la posición de los botones */
 }
 
 .carrusel-btn-right {
     right: 5px;
-}
-
-/* Responsividad */
-@media (max-width: 768px) {
-    .titulocarrusel {
-        font-size: 20px;
-        /* Reducir el tamaño del título en móviles */
-    }
-
-    .carrusel-item {
-        width: 150px;
-        /* Reducir el tamaño de los elementos en móviles */
-    }
-
-    .carrusel-btn {
-        width: 30px;
-        height: 30px;
-    }
-}
-
-
-/* Animación */
-@keyframes carrusel-scroll {
-    0% {
-        transform: translateX(0);
-    }
-
-    100% {
-        transform: translateX(-50%);
-        /* Ajusta según los duplicados */
-    }
 }
 
 /* Img del producto / Video */
@@ -288,7 +247,7 @@ body {
     background-color: #e2af7f;
     color: #fff;
     padding: 40px 20px;
-    width: 100%  ;
+    width: 100%;
 }
 
 .footer-links h4 {
@@ -327,7 +286,6 @@ body {
     color: #d31414;
 }
 
-
 /* Estilos para los iconos sociales */
 .social-link {
     display: flex;
@@ -354,19 +312,6 @@ body {
 
 /* Responsiveness */
 @media (max-width: 1024px) {
-    #banner {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    #banner #empresa {
-        padding: 0;
-    }
-
-    .MisionVision {
-        flex-direction: column;
-    }
-
     .card {
         flex: 1 1 calc(50% - 20px);
     }
@@ -378,31 +323,22 @@ body {
     }
 
     .MisionVision {
+        flex-direction: column;
         gap: 10px;
-        width: 95vmin;
     }
 
-    .carrusel-item img {
-        width: 120px;
+    .carrusel-item {
+        width: 150px;
     }
 
-    .tituloCarrusel2 {
-        font-size: 24px;
+    .carrusel-btn {
+        width: 30px;
+        height: 30px;
     }
 }
 
 @media (max-width: 480px) {
-    .card {
-        flex: 1 1 100%;
-    }
-
-
-    .MisionVision {
-        gap: 10px;
-        width: 95vmin;
-    }
-
-    .carrusel-item img {
+    .carrusel-item {
         width: 120px;
     }
 
@@ -412,21 +348,7 @@ body {
 }
 
 @media (max-width: 390px) {
-    .card {
-        flex: 1 1 100%;
-    }
-
-
-    .MisionVision {
-        gap: 10px;
-        width: 95vmin;
-    }
-
-    .carrusel-item img {
-        width: 120px;
-    }
-
-    .tituloCarrusel2 {
-        font-size: 24px;
+    .carrusel-item {
+        width: 100px;
     }
 }

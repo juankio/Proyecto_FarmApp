@@ -6,7 +6,6 @@
 }
 
 section {
-
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -18,10 +17,7 @@ section {
 	color: #000000;
 }
 
-
 .contenedor {
-	/* Este es el cuadro de iniciar sesion*/
-
 	position: relative;
 	width: 400px;
 	border: 1px solid #000000;
@@ -31,29 +27,27 @@ section {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-
 }
 
 .contenedor h2 {
-
 	font-family: "Afacad Flux", sans-serif;
 	font-size: 2.3rem;
 	color: #000000;
 	text-align: center;
 }
 
-.input-contenedor { /* Linea inferior del input*/
+.input-contenedor {
 	position: relative;
 	margin: 30px 0;
 	width: 300px;
 	border-bottom: 1px solid #000000;
 }
 
-.input-contenedor label { /* Texto que dice Email y Contraseña*/
+.input-contenedor label {
 	position: absolute;
 	top: 50%;
 	left: 5px;
-	transform: translateY (-50%);
+	transform: translateY(-50%);
 	color: #000000;
 	font-size: 1rem;
 	pointer-events: none;
@@ -61,8 +55,6 @@ section {
 	font-weight: 500;
 	cursor: pointer;
 }
-
-
 
 input:focus~label,
 input:valid~label {
@@ -76,11 +68,11 @@ input:valid~label {
 	border: none;
 	outline: none;
 	font-size: 1rem;
-	padding: - 35px 0 5px;
+	padding: 0 0 5px;
 	color: #000000;
 }
 
-.input-contenedor i { /* Iconos de correo y contraseña*/
+.input-contenedor i {
 	position: absolute;
 	color: #000000;
 	font-size: 1.5rem;
@@ -119,7 +111,7 @@ button {
 	background-color: #ffffff3a;
 	border: none;
 	font-weight: bold;
-	cursor: point;
+	cursor: pointer;
 	outline: none;
 	font-size: 1rem;
 	transition: .4s;
@@ -148,7 +140,48 @@ button:hover {
 
 .registrar p a:hover {
 	text-decoration: underline;
-	text-decoration: underline;
 	font-size: 17px;
+}
 
+/* Media Queries */
+@media (max-width: 768px) {
+	.contenedor {
+		width: 90%;
+		height: auto;
+		padding: 20px;
+	}
+
+	.input-contenedor {
+		width: 100%;
+	}
+
+	.contenedor h2 {
+		font-size: 2rem;
+	}
+
+	button {
+		height: 50px;
+		font-size: 1.2rem;
+	}
+}
+
+@media (max-width: 480px) {
+	.contenedor {
+		width: 100%;
+		height: auto;
+		padding: 10px;
+	}
+
+	.input-contenedor {
+		width: 100%;
+	}
+
+	.contenedor h2 {
+		font-size: 1.8rem;
+	}
+
+	button {
+		height: 50px;
+		font-size: 1rem;
+	}
 }

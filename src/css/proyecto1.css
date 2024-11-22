@@ -173,6 +173,22 @@ p {
 }
 
 /* Responsivo */
+@media (max-width: 1024px) {
+    #banner .contenedorpro {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .MisionVision {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .mision, .vision {
+        max-width: 80%;
+    }
+}
+
 @media (max-width: 768px) {
     #empresa h1 {
         font-size: 2rem;
@@ -183,10 +199,44 @@ p {
     }
 
     .imagen-proyecto {
-        max-width: 300px;
+        max-width: 250px;
     }
 
     .mision, .vision {
         max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        font-size: 0.9rem;
+    }
+
+    #empresa h1 {
+        font-size: 1.5rem;
+    }
+
+    #empresa h2 {
+        font-size: 1.2rem;
+    }
+
+    .imagen-proyecto {
+        max-width: 200px;
+    }
+
+    .mision h3, .vision h3 {
+        font-size: 1.5rem;
+    }
+
+    .mision p, .vision p {
+        font-size: 0.9rem;
+    }
+
+    .footer-links h4 {
+        font-size: 1rem;
+    }
+
+    .social-link a {
+        font-size: 1.2rem;
     }
 }

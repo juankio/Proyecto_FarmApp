@@ -1,11 +1,9 @@
 main {
-    /* background-color: #9fd4ed; */
     background-color: transparent;    
 }
 
 /* Banner */
 #banner {
-    
     margin: auto;
     margin-top: 60px;
     position: relative;
@@ -24,7 +22,7 @@ main {
 }
 
 #banner h2 {
-    font-size: 52px;
+    font-size: 3rem;
     font-weight: 500;
 }
 
@@ -33,9 +31,10 @@ main {
     width: 150px;
     color: #000000;
     text-decoration: none;
-    padding: 7px;
-    margin-top: 20px;
+    padding: 0.5rem;
+    margin-top: 1.25rem;
     border: 3px solid #419dde;
+    text-align: center;
 }
 
 #banner a:hover {
@@ -43,34 +42,52 @@ main {
 }
 
 /* Media Queries */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     #banner h2 {
-        font-size: 28px;
-        text-align: center;
+        font-size: 2.5rem;
     }
 
     #banner a {
-        font-size: 14px;
+        font-size: 1rem;
         width: auto;
-        padding: 10px;
+        padding: 0.75rem;
     }
 
     .contenedor {
         width: 90%;
-        padding: 10px;
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    #banner h2 {
+        font-size: 2rem;
+        text-align: center;
+    }
+
+    #banner a {
+        font-size: 0.875rem;
+        width: auto;
+        padding: 0.75rem;
+    }
+
+    .contenedor {
+        width: 90%;
+        padding: 1rem;
     }
 }
 
 @media (max-width: 480px) {
     #banner h2 {
-        font-size: 24px;
+        font-size: 1.5rem;
     }
 
     #banner a {
-        padding: 8px;
+        font-size: 0.75rem;
+        padding: 0.5rem;
     }
 
     .contenedor {
-        padding: 5px;
+        padding: 0.5rem;
     }
 }

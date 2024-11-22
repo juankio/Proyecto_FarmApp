@@ -6,25 +6,19 @@
 }
 
 #hero {
-
 	min-height: 100vh;
 	position: relative;
-
 }
 
-
 .capa {
-
 	position: absolute;
 	top: 0%;
 	left: 0%;
 	width: 100%;
 	height: 100%;
-
 }
 
 body {
-
 	background-position: center;
 	background-size: cover;
 	font-family: "Afacad Flux", sans-serif;
@@ -32,18 +26,17 @@ body {
 }
 
 .form-register {
-	width: 400px;
+	width: 90%;
+	max-width: 400px;
 	backdrop-filter: blur(15px);
 	padding: 30px;
 	margin: auto;
 	margin-top: 100px;
 	margin-bottom: 100px;
 	border-radius: 15px;
-	font-family: 4px;
 	color: #000000;
 	box-shadow: 7px 13px 37px #120585;
 	border: none;
-
 }
 
 .form-register h4 {
@@ -51,18 +44,13 @@ body {
 	margin-bottom: 20px;
 	text-align: center;
 	color: rgb(0, 64, 92);
-
 }
 
 .caja {
-
 	font-family: "Afacad Flux", sans-serif;
-
-
 }
 
 .controls {
-	/* Estos son los cuadros del input /nombres / apellidos / email /*/
 	width: 100%;
 	background: #ffffff61;
 	padding: 10px;
@@ -72,7 +60,6 @@ body {
 	font-family: 'Fredoka', sans-serif;
 	font-size: 15px;
 	color: #000000;
-
 }
 
 .controls:hover {
@@ -91,20 +78,17 @@ body {
 }
 
 .form-register a {
-	/* terminos y condiciones*/
 	color: #000000;
 	text-decoration: none;
 	font-weight: 500;
 }
 
 .form-register a:hover {
-	/* terminos y condiciones hover*/
 	color: #03395a81;
 	text-decoration: none;
 }
 
 .form-register .botons {
-	/*Registrar*/
 	width: 100%;
 	height: 45px;
 	border-radius: 40px;
@@ -114,15 +98,48 @@ body {
 	cursor: pointer;
 	outline: none;
 	font-size: 1rem;
-
-
 }
 
 .form-register .botons:hover {
-	/*Registrar hover*/
 	background: rgba(15, 149, 206, 0.4);
 	color: #000000;
 	margin-top: 2%;
 	transition: .4s;
+}
 
+/* Media Queries */
+@media (max-width: 768px) {
+	.form-register {
+		width: 80%;
+		padding: 20px;
+		margin-top: 50px;
+		margin-bottom: 50px;
+	}
+
+	.form-register h4 {
+		font-size: 28px;
+	}
+
+	.controls {
+		font-size: 14px;
+		padding: 8px;
+	}
+}
+
+@media (max-width: 480px) {
+	.form-register {
+		width: 95%;
+		padding: 15px;
+		margin-top: 30px;
+		margin-bottom: 30px;
+	}
+
+	.form-register h4 {
+		font-size: 24px;
+	}
+
+	.controls {
+		font-size: 13px;
+		padding: 6px;
+	}
 }

@@ -15,7 +15,6 @@
     text-transform: uppercase;
 }
 
-
 /* Contenedor del Carrusel */
 .carrusel-contenedor {
     position: relative;
@@ -47,13 +46,10 @@
     margin-bottom: 3%;
 }
 
-.carrusel-item:hover{
-
+.carrusel-item:hover {
     transform: scale(1.2);
     box-shadow: 0 8px 12px rgba(0, 0, 0, 0.7);
-
 }
-
 
 .carrusel-item img {
     width: 100%;
@@ -71,6 +67,16 @@
 }
 
 /* Responsividad */
+@media (max-width: 1024px) {
+    .carrusel-item {
+        width: 220px;
+    }
+
+    .tituloCarrusel2 {
+        font-size: 32px;
+    }
+}
+
 @media (max-width: 768px) {
     .carrusel-item {
         width: 200px;
@@ -78,5 +84,29 @@
 
     .tituloCarrusel2 {
         font-size: 28px;
+    }
+}
+
+@media (max-width: 480px) {
+    .carrusel-item {
+        width: 150px;
+    }
+
+    .tituloCarrusel2 {
+        font-size: 24px;
+        margin-top: 20%;
+        margin-bottom: 50px;
+    }
+}
+
+@media (max-width: 320px) {
+    .carrusel-item {
+        width: 120px;
+    }
+
+    .tituloCarrusel2 {
+        font-size: 20px;
+        margin-top: 25%;
+        margin-bottom: 40px;
     }
 }

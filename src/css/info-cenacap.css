@@ -138,7 +138,6 @@ body {
 footer {
     background-color: #f8f8f8;
     padding: 40px 20px;
-    /* color: #333; */
     text-align: center;
 }
 
@@ -170,7 +169,6 @@ footer .footer-links ul li {
 
 footer .footer-links ul li a {
     text-decoration: none;
-    /* color: #333; */
     transition: color 0.3s ease;
 }
 
@@ -191,7 +189,7 @@ footer .footer-links ul li a:hover {
     transition: color 0.3s ease;
 }
 
-.social-link a:hover {
+social-link a:hover {
     color: #418fde;
 }
 
@@ -202,12 +200,7 @@ footer .footer-links ul li a:hover {
 }
 
 /* ==================== Responsive Styles ==================== */
-@media (min-width: 768px) {
-    #bienvenidos p, #info .contenedor {
-        max-width: 80%;
-        margin: auto;
-    }
-
+@media (min-width: 1200px) {
     #banner h2, #banner h1 {
         font-size: 4rem;
     }
@@ -218,7 +211,34 @@ footer .footer-links ul li a:hover {
     }
 }
 
-@media (max-width: 768px) {
+@media (min-width: 992px) and (max-width: 1199px) {
+    #banner h2, #banner h1 {
+        font-size: 3.5rem;
+    }
+
+    .info-pet img {
+        width: 180px;
+        height: 180px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    #bienvenidos p, #info .contenedor {
+        max-width: 80%;
+        margin: auto;
+    }
+
+    #banner h2, #banner h1 {
+        font-size: 3rem;
+    }
+
+    .info-pet img {
+        width: 160px;
+        height: 160px;
+    }
+}
+
+@media (max-width: 767px) {
     .info-pet img {
         width: 120px;
         height: 120px;
@@ -226,5 +246,29 @@ footer .footer-links ul li a:hover {
 
     #banner h2 {
         font-size: 2rem;
+    }
+
+    #banner h1 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #banner h2 {
+        font-size: 1.5rem;
+    }
+
+    #banner h1 {
+        font-size: 1.2rem;
+    }
+
+    #banner a {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+
+    .info-pet img {
+        width: 100px;
+        height: 100px;
     }
 }
