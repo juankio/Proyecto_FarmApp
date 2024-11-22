@@ -1,0 +1,116 @@
+/* Estilos Generales */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Contenedor General */
+#blog {
+    margin: 40px auto;
+    padding: 20px;
+}
+
+#blog p {
+    font-size: 20px;
+}
+
+#blog h3 {
+    font-size: 48px;
+    margin-bottom: 5%;
+    font-weight: 500;
+    text-align: center;
+    color: #002e5d;
+}
+
+/* Contenedor de las tarjetas */
+.contenedor {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* Tarjetas de proyectos */
+.info-petproyecto {
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    text-align: center;
+    padding: 15px;
+    width: 280px;
+    /* Ancho fijo para las tarjetas */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bg {
+    margin-top: 15%;
+    background-color: rgba(164, 202, 255, 0.523);
+
+}
+
+.info-petproyecto:hover {
+    transform: translateY(-10px);
+    /* Efecto de elevación */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Imagen de los proyectos */
+.proyecto-imagen {
+    overflow: hidden;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    width: 100%;
+    height: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+}
+
+.proyecto-imagen img {
+    width: auto;
+    height: 100%;
+    max-width: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.info-petproyecto:hover .proyecto-imagen img {
+    transform: scale(1.05);
+    /* Efecto de zoom */
+}
+
+/* Títulos y descripciones */
+.info-petproyecto h4 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #002e5d;
+    font-weight: bold;
+}
+
+.info-petproyecto p {
+    font-size: 14px;
+    color: #555;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .contenedor {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .info-petproyecto {
+        width: 90%;
+        /* Ocupa más espacio en pantallas pequeñas */
+    }
+
+    #blog h3 {
+        font-size: 48px;
+        margin-bottom: 13%;
+        font-weight: 500;
+        text-align: center;
+        color: #002e5d;
+    }
+}

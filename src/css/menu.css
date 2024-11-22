@@ -1,0 +1,138 @@
+:root {
+    --color_primario: rgba(255, 255, 255, 0.4);
+    --color_primario_suave: rgba(123, 200, 224, 0.558);
+    --color_fondo_suave: rgba(0, 0, 0, 0.5); /* Fondo menos oscuro para el menú */
+    --color_blanco: #fff;
+    --altura_header: 60px;
+    --padding_left_right: 2rem;
+    --ancho_maximo: 1200px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: transparent;    
+    font-family: 'Afacad Flux', sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+ol,
+ul {
+    list-style: none;
+}
+
+.header {
+    height: var(--altura_header);
+    background-color: var(--color_primario);
+    font-weight: 200;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.navbar {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 0 var(--padding_left_right);
+    max-width: var(--ancho_maximo);
+    margin: 0 auto;
+}
+
+.menu_hamburguesa {
+    display: none;
+}
+
+.menu_hamburguesa:checked + .ul_links {
+    height: calc(100vh - var(--altura_header));
+    opacity: 1;
+    background-color: var(--color_fondo_suave); /* Fondo menos oscuro cuando se despliega */
+}
+
+.logo {
+    color: #002e5d;
+    font-weight: 300;
+    text-align: center;
+    padding: 0;
+    font-size: 40px;
+    transition: all .5s ease;
+}
+
+.list_icon {
+    color: var(--color_negro);
+    cursor: pointer;
+}
+
+.ul_links {
+    width: 100%;
+    background-color: var(--color_primario_suave);
+    position: absolute;
+    top: var(--altura_header);
+    left: 0;
+    height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+    transition: height 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+}
+
+.link {
+    font-size: 1.8em;
+    color: var(--color_blanco);
+    font-weight: 600;
+    transition: color 0.3s ease;
+    padding: 0.5em 1em;
+    border-radius: 5px;
+}
+
+/* Fondo ligeramente más oscuro al hacer hover */
+.link:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0); /* Fondo suave al pasar el cursor */
+}
+
+@media (min-width: 768px) {
+    .labe_hamburguesa {
+        display: none;
+    }
+
+    .ul_links {
+        position: static;
+        width: auto;
+        height: auto;
+        flex-direction: row;
+        gap: 2rem;
+        opacity: 1;
+        background-color: transparent; /* Fondo transparente en pantallas grandes */
+    }
+
+    .link {
+        color: #000000;
+        font-size: 1.2rem;
+        padding: 0.2rem 0.7rem;
+        transition: all 0.3s;
+    }
+
+    .link:hover {
+        color: #007afd;
+        background: rgba(255, 255, 255, 0);
+        border-bottom: 2px solid #005187;
+        padding-bottom: 10px;
+        border-radius: 10%;
+    }
+}

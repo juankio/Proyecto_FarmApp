@@ -1,0 +1,306 @@
+#info {
+    /* background-color: #d1e7f7; */
+    padding: 20px;
+    margin-top: 40px;
+    text-align: center;
+}
+
+#info h3 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    /* Espacio entre el título y el contenido */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Contenedor de los íconos */
+#info .contenedor {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    /* Espacio entre los íconos */
+    margin-bottom: 5%;
+    flex-wrap: wrap;
+}
+
+.info-pet {
+    text-align: center;
+}
+
+.info-pet img {
+    width: 200px;
+    /* Tamaño de los íconos */
+    height: auto;
+    border-radius: 50%;
+}
+
+.info-pet h4 {
+    font-size: 26px;
+    margin-top: 10px;
+    font-weight: normal;
+    color: #333;
+}
+
+/* Resto del código existente */
+#contentItemsCarrusel {
+    height: 200px;
+    overflow: hidden;
+    margin-top: 60px;
+}
+
+.itemCarrusel {
+    height: 100%;
+    position: relative;
+}
+
+#contePuntos {
+    background-color: rgb(249, 249, 249);
+    display: flex;
+    justify-content: space-around;
+}
+
+#contePuntos>a {
+    font-size: 1.5em;
+}
+
+#infoCarrusel .contenedor {
+    margin: 30%;
+    position: absolute;
+    text-align: justify;
+    font-size: larger;
+    color: #000000;
+}
+
+#infoCarrusel a {
+    display: block;
+    width: 150px;
+    color: #000000;
+    text-decoration: none;
+    padding: 7px;
+    margin-top: 20px;
+    border: 3px solid #418fde;
+    cursor: pointer;
+}
+
+#infoCarrusel a:hover {
+    background: rgba(116, 118, 120, 0.5);
+    cursor: pointer;
+}
+
+h3 {
+    font-family: 'Fredoka', sans-serif;
+    /* Fuente moderna */
+    font-size: 30px;
+    /* Tamaño visible */
+    font-weight: 600;
+    /* Para que resalte */
+    color: #000000;
+    /* Un gris oscuro neutro */
+    text-align: center;
+    /* Centrado para uniformidad */
+    margin: 20px 0;
+    /* Espacio arriba y abajo */
+    text-transform: uppercase;
+    /* Para que todo sea en mayúsculas */
+    letter-spacing: 1px;
+    /* Espaciado entre letras */
+}
+
+.tarjetaCarrusel-1 {
+    background-color: rgba(78, 196, 42, 0.963);
+    height: 100%;
+}
+
+.tarjetaCarrusel-2 {
+    background-color: rgba(116, 31, 172, 0.814);
+    height: 100%;
+}
+
+.tarjetaCarrusel-3 {
+    background-color: rgba(121, 0, 0, 0.889);
+    height: 100%;
+}
+
+.flechasCarrusel {
+    position: absolute;
+    top: 0%;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.titulo {
+    font-family: "Afacad Flux", sans-serif;
+    font-size: 35px;
+    font-weight: 800;
+}
+
+.parrafo {
+    text-align: center;
+    font-size: 20px;
+}
+
+#info .contenedor2 {
+    margin-top: 25px;
+    width: 100%;
+    justify-content: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #info {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .info-pet img {
+        width: 150px;
+    }
+
+    .info-pet h4 {
+        font-size: 30px;
+        margin-top: 10px;
+        font-weight: normal;
+        color: #130243;
+    }
+
+    #contePuntos>a {
+        font-size: 1.2em;
+    }
+
+    #infoCarrusel a {
+        width: 120px;
+        font-size: 14px;
+    }
+
+    .titulo {
+        font-size: 28px;
+    }
+
+    .parrafo {
+        font-size: 16px;
+    }
+
+    h3 {
+        font-size: 40px;
+        /* Más pequeño en tablets */
+    }
+}
+
+@media (max-width: 480px) {
+    #info {
+        padding: 5px;
+    }
+
+    .info-pet img {
+        width: 200px;
+    }
+
+    #infoCarrusel a {
+        width: 100px;
+        font-size: 12px;
+    }
+
+    .titulo {
+        font-size: 24px;
+    }
+
+    .parrafo {
+        font-size: 20px;
+    }
+
+    h3 {
+        font-size: 35px;
+        /* Aún más pequeño en móviles */
+    }
+}
+
+.banner-texto {
+
+    margin-top: 0%;
+    margin-bottom: 0%;
+}
+
+.contenedor-servicioss {
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+
+}
+
+.contenedor-servicios {
+    display: flex;
+    max-width: 1200px;
+    margin-bottom: 50px;
+    margin-top: 0px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    text-align: center;
+    padding: 15px;
+    width: 380px;
+    /* Ancho fijo para las tarjetas */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: block;
+    cursor: initial;
+}
+
+.contenedor-servicios ol {
+    list-style-type: decimal;
+    text-align: center;
+
+}
+
+.contenedor-servicios li {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.contenedor-servicios h3 {
+    font-size: 1.5rem;
+    color: #002e5d;
+    text-align: center;
+}
+
+.banner-texto h2 {
+    font-size: 3.5rem;
+    color: #002e5d;
+    text-align: center;
+}
+
+.contenedor-servicios p {
+    font-size: 2rem;
+    color: #000000;
+    text-align: center;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .contenedor-servicios h3 {
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .contenedor-servicios {
+        width: 340px;
+
+    }
+
+    .contenedor-servicios h3 {
+        font-size: 2rem;
+    }
+
+
+    .contenedor-servicios p {
+        font-size: 2rem;
+    }
+}

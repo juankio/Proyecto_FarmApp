@@ -1,0 +1,82 @@
+/* Estilos Generales */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Título del Carrusel */
+.tituloCarrusel2 {
+    text-align: center;
+    font-size: 36px;
+    color: #002e5d;
+    margin-top: 10%;
+    margin-bottom: 70px;
+    text-transform: uppercase;
+}
+
+
+/* Contenedor del Carrusel */
+.carrusel-contenedor {
+    position: relative;
+    max-width: 100%;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+/* Carrusel Wrapper */
+.carrusel-wrapper {
+    display: flex;
+    animation: carrusel-infinito 15s linear infinite;
+}
+
+.carrusel-items {
+    display: flex;
+    gap: 15px;
+    width: max-content;
+}
+
+/* Carrusel Item */
+.carrusel-item {
+    flex: 0 0 auto;
+    width: 250px;
+    border-radius: 100%;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    margin-top: 30px;
+    margin-bottom: 3%;
+}
+
+.carrusel-item:hover{
+
+    transform: scale(1.2);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.7);
+
+}
+
+
+.carrusel-item img {
+    width: 100%;
+    display: block;
+}
+
+/* Animación Infinita */
+@keyframes carrusel-infinito {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .carrusel-item {
+        width: 200px;
+    }
+
+    .tituloCarrusel2 {
+        font-size: 28px;
+    }
+}

@@ -1,0 +1,151 @@
+    
+<section>
+            <!--carrusel imagenes-->
+            <div id="conteItemsCarrusel">
+
+
+                <div class="itemCarrusel" id="itemcarrusel-1">
+
+                    <div class="tarjetaCarrusel" id="tarjetacarrusel-1">
+
+                        <img src="img/gummyvit.jpg" alt="imagen-1-python">
+
+                    </div>
+
+                    <div class="flechasCarrusel">
+
+                        <a href="#itemcarrusel-3">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </a>
+
+                        <a href="#itemcarrusel-2">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <div class="itemCarrusel" id="itemcarrusel-2">
+
+                    <div class="tarjetaCarrusel" id="tarjetacarrusel-2">
+
+                        <img src="img/goma-morita.jpg" alt="imagen-1-python">
+
+                    </div>
+
+                    <div class="flechasCarrusel">
+
+                        <a href="#itemcarrusel-1">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </a>
+
+                        <a href="#itemcarrusel-3">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <div class="itemCarrusel" id="itemcarrusel-3">
+
+                    <div class="tarjetaCarrusel" id="tarjetacarrusel-3">
+                        <img src="img/velas.jpg.jpg" alt="imagen-1-python">
+                    </div>
+
+                    <div class="flechasCarrusel">
+
+                        <a href="#itemcarrusel-2">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </a>
+
+                        <a href="#itemcarrusel-1">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+            <div id="contePuntos">
+                <a href="#itemcarrusel-1"> </a>
+                <a href="#itemcarrusel-2"> </a>
+                <a href="#itemcarrusel-3"> </a>
+            </div>
+
+
+
+
+
+
+CSS
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#conteItemsCarrusel{
+	height: 300px;
+	overflow: hidden;
+}
+
+.itemCarrusel{
+	height: 100%;
+	position: relative;
+}
+
+.tarjetaCarrusel{
+	height: 100%;
+}
+
+.flechascarrusel{
+	position: absolute;
+	top: 0;
+	height: 100%;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 20px;
+}
+
+#tarjetacarrusel-1{
+	background-color: #ffccff;
+}
+
+#tarjetacarrusel-2{
+	background-color: #cc99ff;
+}
+
+#tarjetacarrusel-3{
+	background-color: #ccffcc;
+}
+
+a{
+	text-decoration: none;
+}
+
+i{
+	color: #76D7C4;
+}
+
+#contePuntos{
+	display: flex;
+	justify-content: space-around;
+	background-color: #B0BEC5;
+}
+
+#contePuntos > a{
+	font-size: 1.5em;
+	font-style: none;
+	color: black;
+}
+
+#conteItemsCarrusel img{
+	width: 100%;
+	height: 100%;
+}

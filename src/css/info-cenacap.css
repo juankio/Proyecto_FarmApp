@@ -1,0 +1,230 @@
+/* ==================== Global Styles ==================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Afacad Flux", sans-serif;
+    line-height: 1.5;
+}
+
+/* ==================== Banner Section ==================== */
+#banner, #banner2, #banner-info {
+    margin: 0 auto;
+    margin-top: 60px;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    width: 100%;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    text-shadow: none;
+}
+
+#banner {
+    background-image: url(/parcial_1/img/hero2-bg.png);
+}
+
+#banner2 {
+    background-image: url(/parcial_1/img/hero2-bg.png);
+}
+
+#banner-info {
+    background-image: url(/parcial_1/img/fondo/fondo_1.jpg);
+}
+
+/* Banner Text Styles */
+#banner h2, #banner h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+#banner h2 {
+    font-size: 3rem;
+    font-weight: 600;
+}
+
+#banner h1 {
+    font-size: 2rem;
+    font-weight: 300;
+}
+
+#banner a {
+    display: inline-block;
+    width: auto;
+    padding: 10px 20px;
+    margin-top: 20px;
+    font-size: 1rem;
+    color: #000;
+    text-decoration: none;
+    border: 2px solid #418fde;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+#banner a:hover {
+    background: rgba(116, 118, 120, 0.5);
+    color: #fff;
+}
+
+/* ==================== Bienvenidos Section ==================== */
+#bienvenidos {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+#bienvenidos h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+#bienvenidos p {
+    font-size: 1rem;
+    color: #555;
+    margin: 20px auto;
+    max-width: 800px;
+    line-height: 1.6;
+}
+
+/* ==================== Info Section ==================== */
+#info {
+    background: rgba(255, 255, 255, 0.4);
+    padding: 40px 20px;
+    text-align: center;
+}
+
+#info .titulo {
+    font-size: 2.5rem;
+    font-weight: 500;
+    margin-bottom: 30px;
+}
+
+#info .contenedor {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.info-pet {
+    margin: 20px;
+    text-align: center;
+    max-width: 200px;
+}
+
+.info-pet img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    object-fit: cover;
+}
+
+.info-pet h4 {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    font-weight: 500;
+}
+
+/* ==================== Footer Section ==================== */
+footer {
+    background-color: #f8f8f8;
+    padding: 40px 20px;
+    /* color: #333; */
+    text-align: center;
+}
+
+footer .contenedor {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+footer .footer-links {
+    max-width: 200px;
+    text-align: left;
+}
+
+footer .footer-links h4 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+footer .footer-links ul {
+    list-style: none;
+}
+
+footer .footer-links ul li {
+    margin-bottom: 10px;
+}
+
+footer .footer-links ul li a {
+    text-decoration: none;
+    /* color: #333; */
+    transition: color 0.3s ease;
+}
+
+footer .footer-links ul li a:hover {
+    color: #418fde;
+}
+
+.social-link {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    font-size: 1.5rem;
+}
+
+.social-link a {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.social-link a:hover {
+    color: #418fde;
+}
+
+.copy {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* ==================== Responsive Styles ==================== */
+@media (min-width: 768px) {
+    #bienvenidos p, #info .contenedor {
+        max-width: 80%;
+        margin: auto;
+    }
+
+    #banner h2, #banner h1 {
+        font-size: 4rem;
+    }
+
+    .info-pet img {
+        width: 200px;
+        height: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .info-pet img {
+        width: 120px;
+        height: 120px;
+    }
+
+    #banner h2 {
+        font-size: 2rem;
+    }
+}

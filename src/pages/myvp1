@@ -1,0 +1,86 @@
+<html> 
+
+<!--ENCABEZADO-->
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+
+<title>FARMAPP</title>
+
+<!--ARCHIVOS CSS-->
+
+<link type="text/css"rel="Stylesheet"href="css/banner.css">
+<link type="text/css"rel="Stylesheet"href="css/bienvenidos.css">
+<link type="text/css"rel="Stylesheet"href="css/blog.css">
+<link type="text/css"rel="Stylesheet"href="css/estilos.css">
+<link type="text/css"rel="Stylesheet"href="css/footer.css">
+<link type="text/css"rel="Stylesheet"href="css/info.css">
+<link type="text/css"rel="Stylesheet"href="css/menu.css">
+<link type="text/css"rel="Stylesheet"href="css/fontello.css">
+
+</head>
+
+<body>
+
+<!--MENU-->
+
+    <header>	
+        <div class="contenedor">
+            <h1 class="icon-anchor">FARMAPP</h1>
+            <input type="checkbox" id="menu-bar">
+            <label class="icon-menu" for="menu-bar"></label>
+            <nav class="menu">
+                <a href="index.html">Pagina principal</a>
+                <a href="blog.html">Blog</a>
+                <a href="contactos.html">contacto</a>    
+                <a href="login.html">Registarse</a>    
+            </nav>
+        </div>
+
+    </header>
+
+<!--BANNER-->
+
+     <main>
+            <section id="banner">
+                <img src="img/fondo_1.jpg">
+                <div class="contenedor">
+                    <center><h2>FARMAPP</h2>
+                    <p>Conozca nuestros productos</p></center>
+                </div>
+            </section>
+
+<!--BIENVENIDOS-->
+
+        <section id="bienvenidos">
+            <div class="contenedor">
+                <h2>MISIÓN</h2><br>
+                <p>Nuestra misión es ser una empresa comprometida con nuestros clientes en  el campo de productos 
+                   naturales brindando los mejores productos y herramientas con innovación y calidad
+            </div>
+            </section>
+
+<!--REDES SOCIALES-->
+
+<footer>
+            <div class="contenedor">
+                <p class="copy">Proyectos &copy; 2024</p>
+                <div class="sociales">
+                    <a href="https://www.facebook.com"><img src="img/facebook.png" width="30" height="30">
+                    <a href="https://www.instagram.com"><img src="img/instagram.jpg" width="30" height="30">
+                    <a href="https://twitter.com/?lang=es"><img src="img/twitter.png" width="30" height="30">
+                    <a class="icon-blogger" href="#"></a>
+                  
+                    
+                </div>
+            </div>
+        </footer>
+                  
+         
+    </main>
+    
+    
+    </body>
+</html>
+

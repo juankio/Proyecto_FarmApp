@@ -1,0 +1,432 @@
+/* General */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Afacad Flux", sans-serif;
+    color: #333;
+    padding-top: 3rem;
+}
+
+/* Banner */
+#banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 50px;
+    border-radius: 15px;
+    margin: 20px auto;
+    max-width: 1200px;
+}
+
+.contenedorpro {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+}
+
+.texto-banner {
+    flex: 1;
+    text-align: left;
+}
+
+.titulo-banner {
+    font-size: 3rem;
+    font-weight: 400;
+    color: #ff6969;
+    margin: 0;
+}
+
+.subtitulo-banner {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+    margin-top: 10px;
+}
+
+.descripcion-banner {
+    font-size: 1.2rem;
+    color: #555;
+    margin-top: 20px;
+    line-height: 1.5;
+}
+
+.imagen-banner {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.imagen-banner img {
+    max-width: 250px;
+    height: auto;
+    border-radius: 50%;
+    object-fit: contain;
+}
+
+/* Precios */
+#precios {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 40px 20px;
+    border-radius: 10px;
+    margin: 20px auto;
+}
+
+.card {
+    flex: 1 1 calc(33.333% - 20px);
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.card .contenido {
+    padding: 15px;
+    text-align: center;
+}
+
+.card .contenido h3 {
+    font-size: 20px;
+    color: #f862ec;
+    margin-bottom: 10px;
+}
+
+.card .contenido h2 {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.card .contenido p {
+    font-size: 14px;
+    color: #666;
+    text-align: justify;
+}
+
+/* Carrusel */
+/* Estilos del carrusel compacto */
+.carrusel {
+    margin: 0px auto;
+    /* Reducir el margen superior e inferior */
+    text-align: center;
+    max-width: 120%;
+    /* Ajustar el ancho del carrusel */
+    max-height: 50%;
+    position: relative;
+    background: #fff;
+    padding: 10px;
+    /* Reducir el padding interno */
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.titulocarrusel {
+    font-size: 24px;
+    /* Reducir el tamaño del título */
+    color: #ff6969;
+    margin-bottom: 10px;
+    /* Reducir el margen inferior del título */
+    font-weight: bold;
+}
+
+.carrusel-contenedor {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.carrusel-items {
+    display: flex;
+    transition: transform 0.5s ease;
+    gap: 10px;
+    /* Reducir el espacio entre los elementos */
+}
+
+.carrusel-item {
+    flex: 0 0 auto;
+    width: 200px;
+    /* Ajustar el tamaño de los elementos */
+    text-align: center;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    background: #f8f9fa;
+}
+
+.carrusel-item img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* Botones del carrusel */
+.carrusel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    /* Reducir el tamaño de los botones */
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.3s ease;
+}
+
+.carrusel-btn:hover {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.carrusel-btn-left {
+    left: 5px;
+    /* Ajustar la posición de los botones */
+}
+
+.carrusel-btn-right {
+    right: 5px;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .titulocarrusel {
+        font-size: 20px;
+        /* Reducir el tamaño del título en móviles */
+    }
+
+    .carrusel-item {
+        width: 150px;
+        /* Reducir el tamaño de los elementos en móviles */
+    }
+
+    .carrusel-btn {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+
+/* Animación */
+@keyframes carrusel-scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+        /* Ajusta según los duplicados */
+    }
+}
+
+/* Img del producto / Video */
+#bienvenidos2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    margin: 20px auto;
+    margin-bottom: 5%;
+    border-radius: 10px;
+    max-width: 1200px;
+}
+
+#bienvenidos2 video {
+    max-width: 100%;
+    border-radius: 10px;
+}
+
+/* Misión y Visión */
+.MisionVision {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px auto;
+    max-width: 1200px;
+}
+
+.mision,
+.vision {
+    flex: 1 1 calc(50% - 20px);
+    padding: 20px;
+    text-align: center;
+    background-color: #f4d8ac;
+    border-radius: 10px;
+}
+
+.mision h3,
+.vision h3 {
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Footer */
+.footer {
+    background-color: #e2af7f;
+    color: #fff;
+    padding: 40px 20px;
+    width: 100%  ;
+}
+
+.footer-links h4 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #ffffff;
+    display: inline-block;
+    color: #4f1818;
+}
+
+.footer-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links ul li {
+    margin-bottom: 10px;
+}
+
+.footer-links ul li a {
+    color: #e05d5d;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-links ul li a:hover {
+    color: #ffaaaa;
+}
+
+.copy {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 19px;
+    font-weight: 400;
+    color: #d31414;
+}
+
+
+/* Estilos para los iconos sociales */
+.social-link {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+.social-link a {
+    background-color: #bd2020;
+    color: #ffffff;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.social-link a:hover {
+    background-color: #e20606;
+}
+
+/* Responsiveness */
+@media (max-width: 1024px) {
+    #banner {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    #banner #empresa {
+        padding: 0;
+    }
+
+    .MisionVision {
+        flex-direction: column;
+    }
+
+    .card {
+        flex: 1 1 calc(50% - 20px);
+    }
+}
+
+@media (max-width: 768px) {
+    .card {
+        flex: 1 1 100%;
+    }
+
+    .MisionVision {
+        gap: 10px;
+        width: 95vmin;
+    }
+
+    .carrusel-item img {
+        width: 120px;
+    }
+
+    .tituloCarrusel2 {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        flex: 1 1 100%;
+    }
+
+
+    .MisionVision {
+        gap: 10px;
+        width: 95vmin;
+    }
+
+    .carrusel-item img {
+        width: 120px;
+    }
+
+    .tituloCarrusel2 {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 390px) {
+    .card {
+        flex: 1 1 100%;
+    }
+
+
+    .MisionVision {
+        gap: 10px;
+        width: 95vmin;
+    }
+
+    .carrusel-item img {
+        width: 120px;
+    }
+
+    .tituloCarrusel2 {
+        font-size: 24px;
+    }
+}

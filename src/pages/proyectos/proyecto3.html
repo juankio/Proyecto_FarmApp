@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+    <title>FarmApp - Fenix</title>
+
+    <!-- Archivos CSS -->
+    <link type="text/css" rel="stylesheet" href="../../css/banner.css">
+    <link type="text/css" rel="stylesheet" href="../../css/bienvenidos.css">
+    <link type="text/css" rel="stylesheet" href="../../css/estilos.css">
+    <link type="text/css" rel="stylesheet" href="../../css/footer.css">
+    <link type="text/css" rel="stylesheet" href="../../css/info.css">
+    <link type="text/css" rel="stylesheet" href="../../css/menu.css">
+    <link type="text/css" rel="Stylesheet" href="../../css/proyecto3.css">
+    <link type="text/css" rel="Stylesheet" href="../../css/carousel.css">
+    <link type="text/css" rel="Stylesheet" href="../../css/Tab.css">
+    <link type="text/css" rel="Stylesheet" href="../../css/card-page.css">
+
+
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    <!--ICONO: Corazón (ecg_heart)-->
+
+    <link rel="icon"
+    href="https://res.cloudinary.com/dc4vyurnu/image/upload/v1732289390/logo_farmapp_z0lidf.png">
+
+
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Fredoka:wght@300..700&family=Itim&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <h1>
+                <a href="../../index.html">
+                    <span class="material-symbols-outlined">ecg_heart</span>
+                </a>
+                <a class="logo" href="../../index.html">FarmApp</a>
+            </h1>
+
+            <label class="labe_hamburguesa" for="menu_hamburguesa">
+                <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="list_icon"
+                    viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
+                </svg>
+            </label>
+
+            <input class="menu_hamburguesa" type="checkbox" id="menu_hamburguesa">
+
+            <ul class="ul_links">
+                <li><a href="../feria.html" class="link">Regresar</a></li>
+                <li><a href="./login.html" class="link">Inicia sesión</a></li>
+                <li><a href="./formulario.html" class="link">Registrate</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <style>
+        body {
+            background-image: url(https://res.cloudinary.com/dc4vyurnu/image/upload/v1732211114/Fenix_fondo_ensnxb.png);
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            margin: 0;
+            font-family: 'Fredoka', sans-serif;
+            color: #333;
+        }
+    </style>
+
+    <!-- Banner -->
+    <main>
+        <section id="banner">
+            <div class="contenedorpro">
+                <div id="empresa" class="texto-banner">
+                    <h1 class="titulo-banner">Alkanail</h1>
+                    <h2 class="subtitulo-banner">Fenix</h2>
+                    <p class="descripcion-banner">En este apartado podrás aprender más sobre nosotros, descubrir nuestro
+                        producto, nuestra Misión y
+                        Visión, ¡y también conocer a los creadores de este extraordinario proyecto!
+                    </p>
+                </div>
+                <div class="imagen-banner">
+                    <img src="https://res.cloudinary.com/dc4vyurnu/image/upload/v1732209492/Logo_fenix_b3wzic.png"
+                        alt="Fenix" class="imagen-proyecto">
+                </div>
+            </div>
+        </section>
+
+        <!-- Carrusel -->
+        <section class="carrusel">
+            <h2 class="titulocarrusel"></h2>
+            <div id="container">
+                <div id="slider-container">
+                    <span onclick="slideRight()" class="btn"></span>
+                    <div id="slider">
+                        <div class="slide"><img
+                                src="https://res.cloudinary.com/dc4vyurnu/image/upload/v1732210957/561f81ec0c2c550540d48b17be2d24a8_drp0y7.jpg"
+                                alt=""></div>
+                        <div class="slide"><img
+                                src="https://res.cloudinary.com/dc4vyurnu/image/upload/v1732210958/Imagen_de_WhatsApp_2024-11-21_a_las_12.38.46_d58e8889_tgjomm.jpg"
+                                alt=""></div>
+                        <div class="slide"><img
+                                src="https://res.cloudinary.com/dc4vyurnu/image/upload/v1732210958/Imagen_de_WhatsApp_2024-11-21_a_las_12.34.14_f02c5f82_lfkaqa.jpg"
+                                alt=""></div>
+                        <div class="slide"><img
+                                src="https://res.cloudinary.com/dc4vyurnu/image/upload/v1732210958/Imagen_de_WhatsApp_2024-11-21_a_las_12.34.53_02e8fe2b_jy0cck.jpg"
+                                alt=""></div>
+                        <div class="slide"><img
+                                src="https://res.cloudinary.com/dc4vyurnu/image/upload/v1732210958/Imagen_de_WhatsApp_2024-11-21_a_las_12.32.07_dc8a44f4_csczaf.jpg"
+                                alt=""></div>
+                        <div class="slide"><img
+                                src="https://res.cloudinary.com/dc4vyurnu/image/upload/v1732210957/2_xvphmg.jpg" alt="">
+                        </div>
+
+
+                    </div>
+                    <span onclick="slideLeft()" class="btn"></span>
+                </div>
+            </div>
+
+            <script src="../../css/carousel.js"></script>
+        </section>
+
+        <script>
+            const carruselItems = document.querySelector('.carrusel-items');
+            const btnLeft = document.querySelector('.carrusel-btn-left');
+            const btnRight = document.querySelector('.carrusel-btn-right');
+
+            let currentIndex = 0;
+            const totalItems = document.querySelectorAll('.carrusel-item').length;
+
+            btnLeft.addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+                updateCarrusel();
+            });
+
+            btnRight.addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % totalItems;
+                updateCarrusel();
+            });
+
+            function updateCarrusel() {
+                carruselItems.style.transform = `translateX(-${currentIndex * 100}%)`;
+            }
+
+        </script>
+
+
+
+        <!--        /**=============================== SECTION: TAB ==========================*/
+-->
+
+        <section class="container-tabs">
+
+            <div class="container">
+                <div class="tabs">
+                    <h3 class="active">Objetivo</h3>
+                    <h3>Sirve para</h3>
+                    <h3>ingredientes</h3>
+                </div>
+                <div class="tab-content">
+                    <div class="active">
+                        <h4>Nuestro Objetivo es...</h4>
+                        <p>
+                            promover la salud y el cuidado de las uñas y cutículas. Este producto tiene los siguientes
+                            objetivos específicos:
+                            1. Hidratación de las cutículas: El aceite de ricino y el aceite de oliva ayudan a mantener
+                            las cutículas hidratadas, previniendo la sequedad, agrietamiento o inflamación.
+                            2. Fortalecimiento de las uñas: El ajo, por sus propiedades antioxidantes y antimicrobianas,
+                            puede contribuir a fortalecer las uñas, ayudando a prevenir la rotura o debilitamiento.
+                        </p>
+                    </div>
+
+                    <div>
+                        <h4>Nuestro producto sirve para</h4>
+                        <p>Prevención de infecciones: El ajo tiene propiedades antimicrobianas que pueden ayudar a
+                            prevenir infecciones en
+                            las cuticulas y unas,
+                            especialmente si la piel está dañada o irritada.
+                            Mejora de la apariencia estética:
+                            Con el uso regular, el humectante puede mejorar la suavidad y apariencia de las cutículas,
+                            manteniéndolas más saludables, manejables y con un aspecto más cuidado.
+
+                        </p>
+
+                    </div>
+
+
+                    <div>
+                        <h4>Manejamos excelentes ingredientes como:</h4>
+                        <ol>
+                            <li>- Aceite de ricino</li>
+                            <li>- Ajo</li>
+                            <li>- Polvo de hornear</li>
+                            <li>- Jengibre</li>
+                            <li>- Limón</li>
+                            <li>- Vitamina e</li>
+                        </ol>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+
+
+            <!--Script-->
+            <script src="../../css/Tab.js"></script>
+
+
+        </section>
+
+        <!--/**==============================================================================*/-->
+
+
+        <section id="bienvenidos2">
+            <div class="contenedor-img">
+
+                <img src="https://res.cloudinary.com/dc4vyurnu/image/upload/v1732214555/fotor-20241121134255_iswqg9.png"
+                    alt="">
+
+            </div>
+        </section>
+
+
+
+        <!-- Misión y Visión -->
+
+        <section id="bienvenidospro">
+            <div class="MisionVision">
+                <div class="mision">
+                    <h3>MISIÓN</h3>
+                    <p>
+                        <br>
+                        Somos una empresa multinacional con experiencia y herramientas de óptima tecnología, ofreciendo
+                        una excelente calidad en el servicio gracias a la eficacia de nuestros productos elaborados con
+                        nuestra fórmula orgánica sin químicos. De esta manera, aportamos al cuidado del medio ambiente.
+
+                    </p>
+                </div>
+
+                <div class="vision">
+                    <h3>VISIÓN</h3>
+                    <p>
+                        <br>
+                        En 5 años seremos una empresa que, con nuestros productos orgánicos, abarcaremos nuevos
+                        mercados,
+                        especialmente en Japón, llegando a ser líderes mundiales en cosméticos, reconocidos también por
+                        la excelencia en calidad, innovación y compromiso en todo el mundo.
+                    </p>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="contenedor-footer">
+                <div class="footer-row">
+                    <div class="footer-links">
+                        <h4>Compañía</h4>
+                        <ul>
+                            <li><a href="../informacion.html">Nosotros</a></li>
+                            <li><a href="../servicios.html">Nuestros Servicios</a></li>
+                            <li><a href="#">Nuestro Blog</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-links">
+                        <h4>Ayuda</h4>
+                        <ul>
+                            <li><a href="#">Preguntas</a></li>
+                            <li><a href="encuesta.html">Participa en la encuesta</a></li>
+                            <li><a href="#">Política de privacidad</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-links">
+                        <h4>Síguenos</h4>
+                        <div class="social-link">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <p class="copy"><b>Proyecto realizado por CódigoX &copy; 2024</b></p>
+            </div>
+        </footer>
+    </main>
+</body>
+
+</html>

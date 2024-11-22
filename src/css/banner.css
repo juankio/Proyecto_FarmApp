@@ -1,0 +1,262 @@
+/* Fondo general */
+body {
+    background-image: url(https://res.cloudinary.com/dc4vyurnu/image/upload/v1731731667/hero2-bg_agxojm.png);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: #000;
+    font-family: 'Afacad Flux', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Banner */
+#banner {
+    width: 100%;
+    height: 700px;
+    /* Altura ajustable */
+    display: flex;
+    align-items: center;
+    /* Centra verticalmente */
+    justify-content: center;
+    /* Centra horizontalmente */
+    color: #000;
+    text-align: center;
+    padding: 20px;
+}
+
+.bienvenidos-espacio p {
+    text-align: justify;
+    background-color: #ffffff; 
+    padding: 3%;
+    width: auto;
+    height: auto;
+    max-height: 60%;
+    margin-bottom: 2%;
+}
+
+#banner-info {
+
+    margin-top: 8%;
+
+
+}
+
+#banner-info h2 {
+
+    font-size: 30px;
+    padding: 15px;
+
+}
+
+#banner-info p {
+
+    font-size: 22px;
+    padding: 15px;
+    justify-content: center;
+    text-align: justify;
+}
+
+/* Contenedor de texto */
+.banner-texto {
+    display: flex;
+    flex-direction: column;
+    /* Alinea elementos verticalmente */
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    /* Espacio entre el título y el párrafo */
+    background: rgba(255, 255, 255, 0.7);
+    /* Fondo semitransparente */
+    padding: 20px;
+    margin-top: 35%;
+    margin-bottom: 55%;
+    z-index: 999;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    /* Sombra suave */
+}
+
+/* Título del banner */
+.banner-texto h3 {
+    font-size: 45px;
+    font-weight: 650;
+    color: #000000;
+    margin: 0;
+}
+
+/* Subtítulo del banner */
+.banner-texto p {
+    font-size: 20px;
+    font-weight: 400;
+    color: #363636;
+    margin: 0;
+}
+
+.boton-leer-mas p {
+
+    font-size: 30px;
+    font-weight: 400;
+    color: #363636;
+    margin: 0;
+}
+
+/* Ajustes en pantallas pequeñas */
+@media (max-width: 768px) {
+    #banner {
+        height: auto;
+        /* Permite ajustar altura dinámica */
+        width: auto;
+        padding: 30px 20px;
+        margin-top: 10%;
+    }
+
+    .contenedor-banner {
+
+        width: auto;
+
+    }
+
+    .banner-texto {
+        justify-content: center;
+        align-items: center;
+        margin-top: 20%;
+        margin-bottom: 20%;
+
+    }
+
+    .banner-texto h3 {
+        font-size: 45px;
+        padding: 40px;
+        width: 400px;
+    }
+
+    .banner-texto p {
+        font-size: 30px;
+        width: 440px;
+    }
+
+
+    #banner-info {
+
+        margin-top: 10%;
+
+
+    }
+
+    #banner-info h2 {
+
+        font-size: 30px;
+        padding: 15px;
+
+    }
+
+    #banner-info p {
+
+        font-size: 22px;
+        padding: 15px;
+        justify-content: center;
+        text-align: justify;
+    }
+
+}
+
+
+
+
+
+@media (max-width: 480px) {
+    .banner-texto h3 {
+        font-size: 45px;
+        padding: 40px;
+        width: 400px;
+    }
+
+    .banner-texto p {
+        font-size: 25px;
+    }
+
+    .banner-texto p {
+        font-size: 20px;
+        width: 340px;
+    }
+
+
+    #banner-info {
+
+        margin-top: 20%;
+
+
+    }
+
+    #banner-info h2 {
+
+        font-size: 30px;
+        padding: 15px;
+
+    }
+
+    #banner-info p {
+
+        font-size: 22px;
+        padding: 15px;
+        justify-content: center;
+        text-align: justify;
+    }
+}
+
+
+
+
+@media (max-width: 390px) {
+    #banner {
+        height: auto;
+        /* Permite ajustar altura dinámica */
+        width: auto;
+        padding: 30px 20px;
+        margin-top: 10%;
+    }
+
+    .banner-texto {
+        justify-content: center;
+        align-items: center;
+        margin-top: 20%;
+        margin-bottom: 20%;
+        width: 100%;
+
+    }
+
+    .banner-texto h3 {
+        font-size: 45px;
+        padding: 40px;
+        width: 400px;
+    }
+
+    .banner-texto p {
+        font-size: 20px;
+        width: 340px;
+    }
+
+
+    #banner-info {
+
+        margin-top: 20%;
+
+
+    }
+
+    #banner-info h2 {
+
+        font-size: 30px;
+        padding: 15px;
+
+    }
+
+    #banner-info p {
+
+        font-size: 22px;
+        padding: 15px;
+        justify-content: center;
+        text-align: justify;
+    }
+}

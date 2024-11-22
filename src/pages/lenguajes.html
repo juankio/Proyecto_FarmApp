@@ -1,0 +1,168 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta charset="viewport"
+        content="widht=device-width,user-scalable=no,initial-scalable=1,maximun-scalable=1,minimum-scalable=1">
+    <title> LENGUAJES DE PROGRAMACIÓN </title>
+
+    <link type="text/css" rel="Stylesheet" href="../css/menu.css">
+    <link type="text/css" rel="Stylesheet" href="../css/estilos.css">
+    <link type="text/css" rel="Stylesheet" href="../css/fontello.css">
+    <link type="text/css" rel="Stylesheet" href="../css/banner.css">
+    <link type="text/css" rel="Stylesheet" href="../css/info.css">
+    <link type="text/css" rel="Stylesheet" href="../css/titulos.css">
+    <link type="text/css" rel="Stylesheet" href="../css/carrusel.css">
+
+    <script src="https://kit.fontawesome.com/1f2e24570d.js" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+    <header>
+        <div class="contenedor">
+            <h1 class="icon-hand">PROGRAMACIÓN</h1>
+            <input type="checkbox" id="menu-bar">
+            <label class="icon-menu" for="menu-bar"></label>
+            <nav class="menu">
+                <a href="index.html">Pagina principal</a>
+                <a href="lenguajes.html">Inicio</a>
+
+            </nav>
+        </div>
+    </header>
+
+    <!--carrusel imagenes-->
+    <div id="conteItemsCarrusel">
+        <div class="itemCarrusel" id="itemcarrusel-1">
+            <div class="tarjetaCarrusel" id="tarjetacarrusel-1">
+                <img src="img/python1.gif" alt="imagen-1-python">
+            </div>
+            <div class="flechasCarrusel">
+                <a href="#itemcarrusel-3">
+                    <i class="fa-solid fa-chevron-left"></i></a>
+                <a href="#itemcarrusel-2">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+        <div class="itemCarrusel" id="itemcarrusel-2">
+            <div class="tarjetaCarrusel" id="tarjetacarrusel-2">
+                <img src="img/python2.gif" alt="imagen-1-python">
+            </div>
+            <div class="flechasCarrusel">
+                <a href="#itemcarrusel-1">
+                    <i class="fa-solid fa-chevron-left"></i></a>
+                <a href="#itemcarrusel-3">
+                    <i class="fa-solid fa-chevron-right"></i></a>
+            </div>
+        </div>
+        <div class="itemCarrusel" id="itemcarrusel-3">
+            <div class="tarjetaCarrusel" id="tarjetacarrusel-3">
+                <img src="img/aaa.jpg" alt="imagen-1-python">
+            </div>
+            <div class="flechasCarrusel">
+                <a href="#itemcarrusel-2">
+                    <i class="fa-solid fa-chevron-left"></i></a>
+                <a href="#itemcarrusel-1">
+                    <i class="fa-solid fa-chevron-right"></i></a>
+            </div>
+        </div>
+    </div>
+    <div id="contePuntos">
+        <a href="#itemcarrusel-1">*</a>
+        <a href="#itemcarrusel-2">*</a>
+        <a href="#itemcarrusel-3">*</a>
+    </div>
+
+    <br>
+    <section id="titulos">
+        <div class="contenedor">
+            <h3>¿Que son los lenguajes de bajo nivel?</h3><br>
+            <a>Como el código máquina y el ensamblador son denominados lenguajes de bajo nivel. Estos lenguajes se
+                caracterizan por ofrecer al programador control total sobre el hardware en el que se ejecuta permitiendo
+                conseguir el máximo de la velocidad y capacidades del ordenador.</a><br><br>
+            <a>Por su parte, el lenguaje de bajo nivel se caracteriza por incluir muchos detalles bajo el capó. Esto
+                significa que el código escrito en un lenguaje de bajo nivel es mucho más rápido y eficiente que el
+                código escrito en un lenguaje de alto nivel. Los ejemplos principales son Assembly.</a><br><br>
+            <center><img src="img/le.jpeg"></center><br>
+            <h2>Cuáles son las ventajas de los lenguajes de bajo nivel</h2><br>
+            <a>Aunque la mayoría de los programadores utilizan lenguajes de alto nivel por su facilidad a la hora de
+                escribir código y por poder ejecutarse en cualquier máquina, muchas veces es necesario utilizar
+                lenguajes de bajo nivel por sus beneficios:</a><br><br>
+            <p>-Los lenguajes de bajo nivel se caracterizan por utilizar una codificación sencilla y adaptable.</p><br>
+            <p>-Las instrucciones son directas y de fácil conversión.</p><br>
+            <p>-Programando en un lenguaje de alto nivel se consigue una gran velocidad y rendimiento.</p><br>
+            <p>-Interactúan directamente con el hardware sin necesidad de utilizar compiladores ni intérpretes
+                adicionales.</p><br><br>
+            <h3>Clasificación de los lenguajes de programación de bajo nivel</h3><br><br>
+            <h2>Código binario</h2><br>
+            <p>Se trata del lenguaje más básico de cualquier máquina o dispositivo electrónico. Consiste en utilizar
+                solo dos números para representar todas las instrucciones y funciones que puede realizar la máquina, el
+                1 que representa “todo” y el 0 que es lo contrario “nada”.</p><br>
+            <p>El código binario representa en unos y ceros los estados físicos de una máquina, ya que en el campo de la
+                electricidad y electrónica el cero quiere decir que no pasa corriente y el uno que sí circula.</p><br>
+            <h2>Lenguaje máquina</h2><br>
+            <p>Este lenguaje de programación de bajo nivel utiliza unos y ceros para dar instrucciones a las máquinas,
+                aunque también admite el uso de valores hexadecimales. Está compuesto por una serie de instrucciones
+                para indicarle a una máquina qué debe de hacer cuándo debe realizarlo.</p><br>
+            <p>Para programar en lenguaje máquina es necesario poseer un profundo conocimiento de la arquitectura física
+                del ordenador o máquina. Con este tipo de lenguaje de bajo nivel un programador puede sacar el máximo
+                partido a todos los recursos disponibles en un dispositivo.</p><br>
+            <h2>Ensamblador</h2><br>
+            <p>El ensamblador es el lenguaje de bajo nivel más sencillo de utilizar, ya que surge ante la gran
+                dificultad que supone programar en código binario o máquina. En ensamblador se pueden expresar las
+                instrucciones directas a la máquina en un lenguaje más natural y sencillo para el programador y que
+                puede ser comprendido por la propia máquina.</p><br>
+            <p>Existen diferentes tipos de lenguaje ensamblador que varían según el escenario o máquina en el que se
+                utiliza (ensamblador cruzado, ensamblador residente, macroensambladores, ensambladores de fase y
+                microensambladores).</p><br>
+        </div>
+    </section>
+
+
+    <section id="info">
+        <h2>lenguajes de programacion de alto nivel</h2>
+        <div class="contenedor">
+            <div class="info-pet">
+                <a href="c++.html">
+                    <img src="img/c++.png" alt="html"></a>
+                <h4>C++</h4>
+            </div>
+
+            <div class="info-pet">
+                <a href="python.html">
+                    <img src="img/python1.jpg" alt="html"></a>
+                <h4>Phyton</h4>
+            </div>
+
+            <div class="info-pet">
+                <a href="csharp.html">
+                    <img src="img/csharp.png" alt="html"></a>
+                <h4>CSharp</h4>
+            </div>
+
+            <div class="info-pet">
+                <a href="java.html">
+                    <img src="img/java.jpg" alt="html"></a>
+                <h4>Java</h4>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="contenedor">
+            <p class="copy">proyecto final&copy;2023</p>
+            <div class="sociales">
+                <a href="https://www.facebook.com"><img src="img/facebook.png" width="50" height="50">
+                    <a href="https://www.instagram.com"><img src="img/instagram.jpg" width="50" height="50">
+                        <a href="https://twitter.com/?lang=es"><img src="img/twitter.png" width="50" height="50">
+            </div>
+        </div>
+    </footer>
+
+    </main>
+</body>
+
+</html>

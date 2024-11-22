@@ -1,0 +1,128 @@
+.footer {
+    background-color: #002e5d;
+    color: #ffffff;
+    padding: 40px 0 20px;
+}
+
+.contenedor-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 20px;
+    gap: 20px;
+    /* Espacio entre columnas */
+}
+
+.footer-links {
+    text-align: center;
+    /* Centrado para pantallas pequeñas */
+    margin: 15px;
+    flex: 1 1 200px;
+}
+
+.footer-links h4 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #84b6f4;
+    text-transform: uppercase;
+}
+
+.footer-links ul {
+    padding: 0;
+}
+
+.footer-links ul li {
+    margin-bottom: 8px;
+}
+
+.footer-links ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-links ul li a:hover {
+    color: #84b6f4;
+}
+
+/* Estilos para los iconos sociales */
+.social-link {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+.social-link a {
+    background-color: #84b6f4;
+    color: #ffffff;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.social-link a:hover {
+    background-color: #69a1d1;
+}
+
+/* Texto de copyright */
+.copy {
+    font-size: 14px;
+    color: #ffffff;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Responsividad para pantallas pequeñas */
+@media (max-width: 768px) {
+    .footer-row {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .footer-links {
+        text-align: center;
+        flex: 1 1 100%;
+
+        font-size: 30px;
+    }
+
+    .social-link {
+        justify-content: center;
+
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-links h4 {
+        font-size: 30px;
+    }
+
+    .footer-links ul li {
+        font-size: 22px;
+    }
+
+    .social-link a {
+        width: 35px;
+        height: 35px;
+    }
+
+    .copy {
+        font-size: 30px;
+    }
+}
