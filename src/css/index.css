@@ -41,6 +41,48 @@ main {
     background: rgba(116, 118, 120, 0.5);
 }
 
+/* Presentación Canva */
+#presentacion-canva {
+    margin: 40px ;
+    padding: 2rem;
+    background: linear-gradient(135deg, #e0f7fa, #fce4ec);
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 800px;
+    font-family: "Afacad Flux", sans-serif;
+}
+
+#presentacion-canva h3 {
+    font-size: 2rem;
+    color: #000;
+    margin-bottom: 15px;
+}
+
+#presentacion-canva p {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+#presentacion-canva .boton-presentacion {
+    display: inline-block;
+    background-color: #419dde;
+    color: #ffffff;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#presentacion-canva .boton-presentacion:hover {
+    background-color: #419dde;
+    transform: translateY(-3px);
+}
+
 /* Media Queries */
 @media (max-width: 1024px) {
     #banner h2 {
@@ -75,6 +117,19 @@ main {
         width: 90%;
         padding: 1rem;
     }
+
+    #presentacion-canva h3 {
+        font-size: 1.5rem;
+    }
+
+    #presentacion-canva p {
+        font-size: 1rem;
+    }
+
+    #presentacion-canva .boton-presentacion {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -89,5 +144,22 @@ main {
 
     .contenedor {
         padding: 0.5rem;
+    }
+
+    #presentacion-canva {
+        padding: 15px;
+    }
+
+    #presentacion-canva h3 {
+        font-size: 1.2rem;
+    }
+
+    #presentacion-canva p {
+        font-size: 0.9rem;
+    }
+
+    #presentacion-canva .boton-presentacion {
+        font-size: 0.8rem;
+        padding: 6px 12px;
     }
 }
