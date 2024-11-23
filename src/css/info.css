@@ -144,6 +144,23 @@ h3 {
     margin-bottom: 0%;
 }
 
+#banner a {
+    display: block;
+    width: 150px;
+    color: #000000;
+    text-decoration: none;
+    padding: 0.5rem;
+    margin-top: 1.25rem;
+    border: 3px solid #419dde;
+    text-align: center;
+}
+
+.boton-leer p {
+    font-size: 30px;
+    font-weight: 400;
+    color: #363636;
+    margin: 0;
+}
 .contenedor-servicioss {
     display: flex;
     flex-wrap: wrap;
