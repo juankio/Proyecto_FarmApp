@@ -84,7 +84,7 @@ main {
 }
 
 #presentacion-canva .boton-presentacion:hover {
-    background-color: #004d40;
+    background-color: rgb(8, 155, 212);
     transform: translateY(-3px);
 }
 
