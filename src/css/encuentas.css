@@ -1,0 +1,149 @@
+/* Estilos Generales */
+body {
+    font-family: "Fredoka", sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #e3f2fd;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Contenedor de la Encuesta */
+#encuesta-container {
+    text-align: center;
+    max-width: 900px;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 30px 20px;
+}
+
+.encuesta-titulo {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #419dde;
+    margin-bottom: 15px;
+}
+
+.encuesta-descripcion {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+/* Contenedor responsivo para iframe */
+.iframe-container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 75%; /* Aspect ratio 4:3 */
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.iframe-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Footer */
+.footer {
+    background-color: #419dde;
+    color: #ffffff;
+    padding: 20px 10px;
+    text-align: center;
+}
+
+.contenedor-footer {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-links h4 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.footer-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links ul li {
+    margin-bottom: 5px;
+}
+
+.footer-links ul li a {
+    text-decoration: none;
+    color: #ffffff;
+    transition: color 0.3s ease;
+}
+
+.footer-links ul li a:hover {
+    color: #e0f2f1;
+}
+
+.social-link a {
+    color: #ffffff;
+    margin: 0 10px;
+    font-size: 1.5rem;
+    transition: color 0.3s ease;
+}
+
+.social-link a:hover {
+    color: #e0f2f1;
+}
+
+.copy {
+    margin-top: 20px;
+    font-size: 0.9rem;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    #encuesta-container {
+        padding: 20px;
+    }
+
+    .encuesta-titulo {
+        font-size: 2rem;
+    }
+
+    .encuesta-descripcion {
+        font-size: 1rem;
+    }
+
+    .iframe-container {
+        padding-bottom: 100%; /* Ajuste para un formato 1:1 más espacioso en móviles */
+    }
+}
+
+@media (max-width: 480px) {
+    .encuesta-titulo {
+        font-size: 1.8rem;
+    }
+
+    .encuesta-descripcion {
+        font-size: 0.9rem;
+    }
+
+    .iframe-container {
+        padding-bottom: 120%; /* Más alto en pantallas muy pequeñas */
+    }
+}
