@@ -14,7 +14,7 @@ body {
     justify-content: space-around;
     padding: 50px;
     border-radius: 15px;
-    margin: 20px auto;
+    margin: 10rem auto;
     max-width: 1200px;
     flex-wrap: wrap;
 }

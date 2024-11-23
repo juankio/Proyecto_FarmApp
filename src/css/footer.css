@@ -28,7 +28,7 @@
 }
 
 .footer-links h4 {
-    font-size: 3rem;
+    font-size: 2rem;
     font-weight: bold;
     margin-bottom: 10px;
     color: #84b6f4;
@@ -49,7 +49,7 @@
     transition: color 0.3s;
 }
 a{
-    font-size: 2rem;
+    font-size: 1rem;
 }
 
 .footer-links ul li a:hover {
