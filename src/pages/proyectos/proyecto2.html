@@ -53,8 +53,6 @@
 
             <ul class="ul_links">
                 <li><a href="../feria.html" class="link">Regresar</a></li>
-                <li><a href="./login.html" class="link">Inicia sesión</a></li>
-                <li><a href="./formulario.html" class="link">Registrate</a></li>
             </ul>
         </nav>
     </header>
@@ -244,36 +242,6 @@
 
             <script src="../../css/carousel.js"></script>
         </section>
-
-
-
-
-
-
-
-        <script>
-            const carruselItems = document.querySelector('.carrusel-items');
-            const btnLeft = document.querySelector('.carrusel-btn-left');
-            const btnRight = document.querySelector('.carrusel-btn-right');
-
-            let currentIndex = 0;
-            const totalItems = document.querySelectorAll('.carrusel-item').length;
-
-            btnLeft.addEventListener('click', () => {
-                currentIndex = (currentIndex - 1 + totalItems) % totalItems;
-                updateCarrusel();
-            });
-
-            btnRight.addEventListener('click', () => {
-                currentIndex = (currentIndex + 1) % totalItems;
-                updateCarrusel();
-            });
-
-            function updateCarrusel() {
-                carruselItems.style.transform = `translateX(-${currentIndex * 100}%)`;
-            }
-
-        </script>
 
         <!-- Video -->
         <section id="bienvenidos2">
