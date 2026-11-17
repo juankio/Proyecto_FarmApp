@@ -239,6 +239,10 @@ input[type="submit"]:hover {
 
 /* Iconos SVG personalizados */
 .lg-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
   width: 38px;
   height: 38px;
   margin-bottom: 14px;
@@ -250,6 +254,7 @@ input[type="submit"]:hover {
 }
 
 .lg-icon svg {
+  display: block;
   width: 100%;
   height: 100%;
   stroke: currentColor;
