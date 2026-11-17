@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
 import { useAuthStore } from '../../stores/auth';
+import { LOGO_URL } from '../../data/logo';
 
 const auth = useAuthStore();
 </script>
@@ -9,9 +10,7 @@ const auth = useAuthStore();
   <header class="glass-header">
     <div class="inner">
       <RouterLink to="/" class="brand">
-        <svg class="heart" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M2 12h4l2.5-6 4 12 2.5-6H22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
+        <img class="brand-logo" :src="LOGO_URL" alt="FarmApp" />
         <span>FarmApp</span>
       </RouterLink>
 
@@ -44,7 +43,7 @@ const auth = useAuthStore();
 }
 .inner { height: 100%; padding: 0 18px; display: flex; align-items: center; justify-content: space-between; }
 .brand { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 1.3rem; letter-spacing: -0.03em; color: var(--ink); }
-.heart { width: 22px; height: 22px; color: var(--blue); }
+.brand-logo { width: 30px; height: 30px; object-fit: contain; }
 nav { display: flex; align-items: center; gap: 4px; }
 nav a, nav button { padding: 9px 16px; border-radius: 999px; font-size: 0.88rem; font-weight: 600; color: var(--ink); border: 0; background: transparent; cursor: pointer; transition: background .2s, transform .2s; }
 nav a:hover, nav button:hover { background: rgba(255,255,255,.6); transform: translateY(-1px); }
