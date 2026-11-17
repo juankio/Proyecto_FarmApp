@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
+import { useAuthStore } from '../stores/auth';
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -89,12 +90,40 @@ export const router = createRouter({
       meta: { title: 'Ingreso' },
     },
     {
+      path: '/admin',
+      name: 'admin',
+      component: () => import('../views/AdminView.vue'),
+      meta: { title: 'Panel', requiresAdmin: true },
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
       component: () => import('../views/NotFoundView.vue'),
       meta: { title: 'Página no encontrada' },
     },
   ],
+});
+
+router.beforeEach(async (to) => {
+  if (!to.meta.requiresAdmin) return true;
+
+  const auth = useAuthStore();
+
+  if (!auth.isAuthenticated) {
+    return { path: '/login', query: { redirect: to.fullPath } };
+  }
+
+  if (!auth.user) {
+    try {
+      await auth.fetchMe();
+    } catch {
+      auth.logout();
+      return { path: '/login', query: { redirect: to.fullPath } };
+    }
+  }
+
+  if (!auth.isAdmin) return { path: '/', query: { denied: '1' } };
+  return true;
 });
 
 router.afterEach((to) => {

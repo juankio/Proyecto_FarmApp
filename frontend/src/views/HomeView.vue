@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router';
+import { RouterLink, useRoute } from 'vue-router';
 import AppButton from '../components/ui/AppButton.vue';
 import AppCard from '../components/ui/AppCard.vue';
 import PageHero from '../components/layout/PageHero.vue';
@@ -12,6 +12,8 @@ import { LOGO_URL } from '../data/logo';
 import { services } from '../data/services';
 import { faq } from '../data/faq';
 import { proyectos } from '../data/proyectos';
+
+const route = useRoute();
 
 const stats = [
   { valor: '12', label: 'Medicamentos' },
@@ -57,6 +59,10 @@ const destacados = proyectos.filter((p) => p.slug !== 'codigox').slice(0, 4);
       </div>
     </template>
   </PageHero>
+
+  <div v-if="route.query.denied" class="denied form-message error">
+    No tienes permisos para acceder al panel de administración.
+  </div>
 
   <section class="section reveal">
     <div class="welcome glass">
@@ -277,6 +283,10 @@ const destacados = proyectos.filter((p) => p.slug !== 'codigox').slice(0, 4);
   50% {
     opacity: 0.55;
   }
+}
+
+.denied {
+  margin-top: 16px;
 }
 
 .welcome {

@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { RouterLink, useRoute } from 'vue-router';
+import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { navegacion } from '../../data/site';
 import { LOGO_URL } from '../../data/logo';
 import { useAuthStore } from '../../stores/auth';
 
 const auth = useAuthStore();
 const route = useRoute();
+const router = useRouter();
 const abierto = ref(false);
 
 watch(
@@ -15,6 +16,12 @@ watch(
     abierto.value = false;
   },
 );
+
+function salir(): void {
+  auth.logout();
+  abierto.value = false;
+  if (route.path.startsWith('/admin')) router.push('/');
+}
 </script>
 
 <template>
@@ -32,8 +39,10 @@ watch(
       </nav>
 
       <div class="actions">
+        <span v-if="auth.user" class="user-name">{{ auth.user.nombres }}</span>
+        <RouterLink v-if="auth.isAdmin" to="/admin" class="panel">Panel</RouterLink>
         <RouterLink v-if="!auth.isAuthenticated" to="/login" class="login">Ingresar</RouterLink>
-        <button v-else class="login" type="button" @click="auth.logout()">Salir</button>
+        <button v-else class="login" type="button" @click="salir">Salir</button>
 
         <button
           class="burger"
@@ -52,8 +61,13 @@ watch(
         <RouterLink v-for="item in navegacion" :key="item.to" :to="item.to">
           {{ item.label }}
         </RouterLink>
+        <RouterLink v-if="auth.isAdmin" to="/admin">Panel de administración</RouterLink>
         <RouterLink to="/encuesta">Encuesta</RouterLink>
-        <RouterLink to="/registro">Crear cuenta</RouterLink>
+        <RouterLink v-if="!auth.isAuthenticated" to="/registro">Crear cuenta</RouterLink>
+        <div v-if="auth.user" class="mobile-user">
+          <span>{{ auth.user.nombres }} {{ auth.user.apellidos }}</span>
+          <small>{{ auth.user.email }}</small>
+        </div>
       </nav>
     </Transition>
   </header>
@@ -131,6 +145,33 @@ watch(
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
+}
+
+.user-name {
+  display: none;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.panel {
+  padding: 10px 15px;
+  border-radius: 12px;
+  border: 1px solid rgba(12, 74, 112, 0.14);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--ink-soft);
+  font-size: 0.84rem;
+  font-weight: 650;
+  transition: background 0.2s, transform 0.2s var(--ease);
+}
+
+.panel:hover {
+  background: #fff;
+  transform: translateY(-1px);
 }
 
 .login {
@@ -228,6 +269,25 @@ watch(
   color: var(--blue-deep);
 }
 
+.mobile-user {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 6px;
+  padding: 12px 14px;
+  border-top: 1px solid rgba(12, 74, 112, 0.1);
+}
+
+.mobile-user span {
+  font-size: 0.88rem;
+  font-weight: 650;
+}
+
+.mobile-user small {
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
 .menu-enter-active,
 .menu-leave-active {
   transition: opacity 0.22s ease, transform 0.24s var(--ease);
@@ -237,6 +297,12 @@ watch(
 .menu-leave-to {
   opacity: 0;
   transform: translateY(-8px);
+}
+
+@media (min-width: 1180px) {
+  .user-name {
+    display: block;
+  }
 }
 
 @media (max-width: 980px) {
@@ -257,6 +323,9 @@ watch(
   }
   .login {
     padding: 10px 14px;
+  }
+  .panel {
+    padding: 10px 12px;
   }
 }
 </style>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { RouterLink, useRouter } from 'vue-router';
+import { computed, ref } from 'vue';
+import { RouterLink, useRoute, useRouter } from 'vue-router';
 import PageHero from '../components/layout/PageHero.vue';
 import AppCard from '../components/ui/AppCard.vue';
 import AppInput from '../components/ui/AppInput.vue';
@@ -9,6 +9,7 @@ import { ApiError } from '../composables/useApi';
 import { useAuthStore } from '../stores/auth';
 
 const auth = useAuthStore();
+const route = useRoute();
 const router = useRouter();
 
 const email = ref('');
@@ -18,15 +19,28 @@ const mensaje = ref('');
 const tipo = ref<'info' | 'ok' | 'error'>('info');
 const cargando = ref(false);
 
+const destino = computed(() =>
+  typeof route.query.redirect === 'string' ? route.query.redirect : '/',
+);
+
 async function enviar(): Promise<void> {
   cargando.value = true;
   mensaje.value = 'Iniciando sesión...';
   tipo.value = 'info';
+
   try {
     await auth.login(email.value, contrasena.value);
+
+    if (destino.value.startsWith('/admin') && !auth.isAdmin) {
+      mensaje.value = 'Tu cuenta no tiene permisos de administrador.';
+      tipo.value = 'error';
+      setTimeout(() => router.push('/?denied=1'), 1400);
+      return;
+    }
+
     mensaje.value = '¡Bienvenido de vuelta!';
     tipo.value = 'ok';
-    setTimeout(() => router.push('/'), 800);
+    setTimeout(() => router.push(destino.value), 700);
   } catch (error) {
     mensaje.value = error instanceof ApiError ? error.message : 'Ocurrió un error inesperado';
     tipo.value = 'error';

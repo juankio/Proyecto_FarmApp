@@ -1,16 +1,38 @@
 <script setup lang="ts">
-import { nextTick, onMounted, watch } from 'vue';
-import { RouterView, useRoute } from 'vue-router';
+import { nextTick, onBeforeUnmount, onMounted, watch } from 'vue';
+import { RouterView, useRoute, useRouter } from 'vue-router';
 import AppHeader from './components/layout/AppHeader.vue';
 import AppFooter from './components/layout/AppFooter.vue';
 import { useReveal } from './composables/useReveal';
+import { useAuthStore } from './stores/auth';
 
 const route = useRoute();
+const router = useRouter();
+const auth = useAuthStore();
 const { start, revealAll } = useReveal();
 
+function sesionExpirada(): void {
+  auth.logout();
+  router.push({ path: '/login', query: { redirect: route.fullPath } });
+}
+
 onMounted(async () => {
+  window.addEventListener('farmapp:unauthorized', sesionExpirada);
+
+  if (auth.token && !auth.user) {
+    try {
+      await auth.fetchMe();
+    } catch {
+      auth.logout();
+    }
+  }
+
   await nextTick();
   start();
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('farmapp:unauthorized', sesionExpirada);
 });
 
 watch(

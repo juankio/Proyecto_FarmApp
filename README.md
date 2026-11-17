@@ -50,8 +50,22 @@ Credenciales del administrador sembrado: `admin@farmapp.local` / `Admin1234`. La
 | `/contactos` | Formulario de contacto y canales directos |
 | `/registro` | Registro de usuarios |
 | `/login` | Ingreso de usuarios |
+| `/admin` | Panel de administración (solo rol admin) |
 
 Las fichas disponibles son `codigox`, `exfolpiel`, `fenix`, `gummy-vit`, `nails-grow`, `tentaciones-de-afrodita` y `selene`.
+
+## Panel de administración
+
+Entra en `/admin` con la cuenta administradora. El guard del router exige sesión y rol `admin`; un usuario normal es devuelto a la portada con un aviso. La sesión se guarda en `sessionStorage` (`farmapp_token` y `farmapp_user`) y se restaura al recargar.
+
+El panel tiene cuatro pestañas:
+
+- **Resumen** — totales de medicamentos, encuestas y contactos, promedio de calificación y porcentaje de recomendación.
+- **Medicamentos** — búsqueda, paginación y CRUD completo contra `/api/medicamentos`.
+- **Encuestas** — respuestas con calificación, comentario, recomendación y fecha.
+- **Contactos** — mensajes recibidos con enlace directo para responder por correo.
+
+Si el token expira, cualquier respuesta `401` cierra la sesión y devuelve al login.
 
 ## Diseño
 

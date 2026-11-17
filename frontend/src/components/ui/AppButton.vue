@@ -2,7 +2,7 @@
 withDefaults(
   defineProps<{
     type?: 'button' | 'submit';
-    variant?: 'primary' | 'secondary' | 'ghost' | 'light';
+    variant?: 'primary' | 'secondary' | 'ghost' | 'light' | 'danger';
     size?: 'md' | 'sm' | 'lg';
     disabled?: boolean;
     block?: boolean;
@@ -90,6 +90,21 @@ withDefaults(
 
 .ghost:hover:not(:disabled) {
   background: rgba(10, 132, 255, 0.08);
+}
+
+.danger {
+  background: linear-gradient(150deg, #ff7a7a, #c62828);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.36),
+    0 14px 28px -12px rgba(198, 40, 40, 0.7);
+}
+
+.danger:hover:not(:disabled) {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.44),
+    0 20px 36px -14px rgba(198, 40, 40, 0.8);
 }
 
 .light {

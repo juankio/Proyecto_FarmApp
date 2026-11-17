@@ -53,7 +53,10 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   }
 
   if (!body.success) {
-    if (response.status === 401) clearToken();
+    if (response.status === 401 && token) {
+      clearToken();
+      window.dispatchEvent(new Event('farmapp:unauthorized'));
+    }
     throw new ApiError(response.status, body.error ?? 'ERROR', body.message);
   }
   return body.data as T;
@@ -65,6 +68,10 @@ export function apiGet<T>(path: string): Promise<T> {
 
 export function apiPost<T>(path: string, data: unknown): Promise<T> {
   return request<T>(path, { method: 'POST', body: JSON.stringify(data) });
+}
+
+export function apiPut<T>(path: string, data: unknown): Promise<T> {
+  return request<T>(path, { method: 'PUT', body: JSON.stringify(data) });
 }
 
 export function apiDelete<T>(path: string): Promise<T> {
