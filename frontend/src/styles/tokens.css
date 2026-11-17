@@ -1,0 +1,15 @@
+:root {
+  --ink: #0b3557;
+  --muted: #4a6b82;
+  --blue: #0a84ff;
+  --blue-deep: #0062cc;
+  --line: rgba(255, 255, 255, 0.72);
+  --glass: linear-gradient(135deg, rgba(255, 255, 255, 0.44), rgba(255, 255, 255, 0.18));
+  --glass-strong: linear-gradient(135deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.42));
+  --depth: 0 30px 70px rgba(9, 62, 98, 0.20), 0 6px 18px rgba(9, 62, 98, 0.10);
+  --inset: inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(255, 255, 255, 0.45), inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+  --radius: 24px;
+  --radius-lg: 30px;
+  --shell: calc(100% - 32px);
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}

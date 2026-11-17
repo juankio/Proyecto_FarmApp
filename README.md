@@ -66,3 +66,16 @@ Los formularios de registro, ingreso, encuesta y contacto envían `fetch` al API
 ## Ramas
 
 `main` es producción, `dev` es desarrollo y `test` es QA. Nunca se hace push directo a `main`.
+
+## Frontend Vue 3
+
+ La carpeta `frontend/` contiene el frontend nuevo en Vue 3 + Vite + Pinia. El backend sigue en `backend/`.
+
+```bash
+cd frontend
+bun install
+bun run dev      # http://localhost:5173, proxy /api -> localhost:3000
+bun run build    # typecheck + dist/
+```
+
+El servidor Express debe estar corriendo en el puerto 3000 para que la API responda. La carpeta `src/` se conserva como referencia del sitio original; la fuente activa es `frontend/src/`.
