@@ -97,7 +97,7 @@ p {
   position: sticky !important;
   top: 14px !important;
   left: auto !important;
-  width: min(1120px, calc(100% - 28px)) !important;
+  width: calc(100% - 32px) !important;
   height: 62px !important;
   margin: 14px auto 0 !important;
   padding: 0 !important;
@@ -171,8 +171,8 @@ p {
 
 /* Hero */
 #banner {
-  max-width: 1120px;
-  margin: 26px auto 0 !important;
+  max-width: none;
+  margin: 26px 16px 0 !important;
   padding: 34px 20px !important;
   height: auto !important;
   min-height: 0 !important;
@@ -187,11 +187,11 @@ p {
 }
 
 #banner .contenedor {
-  width: min(100%, 860px) !important;
+  width: 100% !important;
 }
 
 .banner-texto {
-  width: min(100%, 860px) !important;
+  width: 100% !important;
   margin: 0 auto !important;
   padding: 54px 48px !important;
   border-radius: 30px !important;
@@ -217,9 +217,9 @@ p {
 }
 
 main {
-  max-width: 1120px !important;
-  margin: 0 auto !important;
-  padding: 10px 20px 72px !important;
+  max-width: none !important;
+  margin: 0 16px !important;
+  padding: 10px 4px 72px !important;
 }
 
 /* Botones */
@@ -286,7 +286,7 @@ input[type="submit"]:hover {
 }
 
 .servicios .contenedor-servicios {
-  width: 320px !important;
+  width: calc(33.333% - 14px) !important;
   max-width: 100% !important;
   padding: 28px !important;
   border-radius: 24px !important;
@@ -501,6 +501,7 @@ select:focus {
   border-radius: 24px !important;
   box-shadow: var(--lg-inset), var(--lg-depth) !important;
   padding: 22px !important;
+  width: calc(33.333% - 14px) !important;
   transition: transform 0.25s, box-shadow 0.25s !important;
 }
 
@@ -541,4 +542,18 @@ select:focus {
   backdrop-filter: blur(18px);
   border-radius: 28px !important;
   margin: 20px 0 0 !important;
+}
+
+/* Aprovechar todo el ancho disponible */
+.contenedor,
+#banner .contenedor {
+  max-width: none !important;
+}
+
+main section {
+  max-width: 100% !important;
+}
+
+body {
+  overflow-x: hidden;
 }
