@@ -8,6 +8,7 @@
 
     <!-- Archivos CSS -->
     <link type="text/css" rel="stylesheet" href="../css/encuentas.css">
+    <link type="text/css" rel="stylesheet" href="../css/form-messages.css">
     <link type="text/css" rel="stylesheet" href="../css/footer.css">
 
     <!-- Fuentes e Iconos -->
@@ -24,11 +25,33 @@
                 Tu opinión es muy importante para nosotros. Completa esta encuesta para ayudarnos a mejorar y brindar un
                 mejor servicio.
             </p>
-            <div class="iframe-container">
-                <iframe class="encuesta"
-                    src="https://docs.google.com/forms/d/e/1FAIpQLSfO9IcjguFQUvMzuA9mIuwkYs34dCi-Z-VzmPhkVWMUx72SFg/viewform?embedded=true"
-                    frameborder="0" marginheight="0" marginwidth="0">Cargando...</iframe>
-            </div>
+            <form id="encuesta-form" class="encuesta-form">
+                <label for="encuesta-nombre">Nombre (opcional)</label>
+                <input id="encuesta-nombre" class="controls" type="text" name="nombre" maxlength="80">
+
+                <label for="encuesta-email">Email (opcional)</label>
+                <input id="encuesta-email" class="controls" type="email" name="email" maxlength="120">
+
+                <label for="encuesta-calificacion">¿Cómo calificas FarmApp?</label>
+                <select id="encuesta-calificacion" class="controls" name="calificacion" required>
+                    <option value="">Selecciona una opción</option>
+                    <option value="1">1 - Deficiente</option>
+                    <option value="2">2 - Regular</option>
+                    <option value="3">3 - Aceptable</option>
+                    <option value="4">4 - Buena</option>
+                    <option value="5">5 - Excelente</option>
+                </select>
+
+                <label for="encuesta-comentario">Cuéntanos tu opinión</label>
+                <textarea id="encuesta-comentario" class="controls" name="comentario" minlength="10" maxlength="1000" required></textarea>
+
+                <label class="encuesta-check">
+                    <input type="checkbox" name="recomendaria"> Recomendaría FarmApp a otra persona
+                </label>
+
+                <div id="form-messages" class="form-message" hidden></div>
+                <button class="botons" type="submit">Enviar encuesta</button>
+            </form>
         </section>
     </main>
 
@@ -66,6 +89,11 @@
         </div>
         <p class="copy"><b>Proyecto realizado por CódigoX &copy; 2024</b></p>
     </footer>
+
+    <script type="module">
+        import { wireForms } from '../js/forms.js';
+        wireForms();
+    </script>
 </body>
 
 </html>

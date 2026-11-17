@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contactos | FarmApp</title>
+  <link rel="stylesheet" type="text/css" href="../css/formulario.css">
+  <link rel="stylesheet" type="text/css" href="../css/estilos.css">
+  <link rel="stylesheet" type="text/css" href="../css/form-messages.css">
+  <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
+  <link rel="icon" href="https://res.cloudinary.com/dc4vyurnu/image/upload/v1732289390/logo_farmapp_z0lidf.png">
+</head>
+
+<body>
+  <main id="hero">
+    <div class="capa">
+      <section class="form-register">
+        <center>
+          <h4>Escríbenos</h4>
+          <p>¿Tienes una pregunta o sugerencia? Te leemos.</p>
+        </center>
+
+        <form class="caja" id="contacto-form">
+          <input class="controls" type="text" name="nombre" placeholder="Nombre" minlength="2" maxlength="80" required>
+          <input class="controls" type="email" name="email" placeholder="Email" maxlength="120" required>
+          <input class="controls" type="text" name="asunto" placeholder="Asunto" minlength="3" maxlength="120" required>
+          <textarea class="controls" name="mensaje" placeholder="Mensaje" minlength="10" maxlength="2000" required></textarea>
+
+          <div id="form-messages" class="form-message" hidden></div>
+          <input class="botons" type="submit" value="Enviar mensaje">
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <script type="module">
+    import { wireForms } from '../js/forms.js';
+    wireForms();
+  </script>
+</body>
+
+</html>

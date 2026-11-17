@@ -1,0 +1,68 @@
+.form-message {
+  margin: 14px 0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 14px;
+  text-align: center;
+}
+
+.form-message[hidden] {
+  display: none;
+}
+
+.form-message.ok {
+  background: #e6f4ea;
+  color: #1b5e20;
+}
+
+.form-message.error {
+  background: #fdecea;
+  color: #b71c1c;
+}
+
+.form-message.info {
+  background: #e3f2fd;
+  color: #002e5d;
+}
+
+.encuesta-form {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 24px;
+  border-radius: 15px;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(0, 46, 93, 0.15);
+}
+
+.encuesta-form label {
+  display: block;
+  margin: 12px 0 6px;
+  font-family: 'Fredoka', sans-serif;
+  color: #002e5d;
+}
+
+.encuesta-form .controls {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #a6d4ff;
+  border-radius: 8px;
+  font-family: 'Afacad Flux', sans-serif;
+  font-size: 15px;
+}
+
+.encuesta-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.encuesta-check {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+}
+
+.encuesta-form button {
+  width: 100%;
+  margin-top: 8px;
+}
