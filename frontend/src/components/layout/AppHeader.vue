@@ -1,53 +1,262 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router';
-import { useAuthStore } from '../../stores/auth';
+import { ref, watch } from 'vue';
+import { RouterLink, useRoute } from 'vue-router';
+import { navegacion } from '../../data/site';
 import { LOGO_URL } from '../../data/logo';
+import { useAuthStore } from '../../stores/auth';
 
 const auth = useAuthStore();
+const route = useRoute();
+const abierto = ref(false);
+
+watch(
+  () => route.fullPath,
+  () => {
+    abierto.value = false;
+  },
+);
 </script>
 
 <template>
-  <header class="glass-header">
-    <div class="inner">
-      <RouterLink to="/" class="brand">
-        <img class="brand-logo" :src="LOGO_URL" alt="FarmApp" />
+  <header class="header">
+    <div class="bar glass">
+      <RouterLink to="/" class="brand" aria-label="FarmApp, ir al inicio">
+        <img :src="LOGO_URL" alt="Logo de FarmApp" />
         <span>FarmApp</span>
       </RouterLink>
 
-      <nav>
-        <RouterLink to="/">Inicio</RouterLink>
-        <RouterLink to="/servicios">Servicios</RouterLink>
-        <RouterLink to="/feria">Feria</RouterLink>
-        <RouterLink to="/contactos">Contacto</RouterLink>
-        <RouterLink v-if="!auth.isAuthenticated" to="/login" class="accent">Ingresar</RouterLink>
-        <button v-else class="accent" @click="auth.logout()">Salir</button>
+      <nav class="desktop" aria-label="Navegación principal">
+        <RouterLink v-for="item in navegacion" :key="item.to" :to="item.to">
+          {{ item.label }}
+        </RouterLink>
       </nav>
+
+      <div class="actions">
+        <RouterLink v-if="!auth.isAuthenticated" to="/login" class="login">Ingresar</RouterLink>
+        <button v-else class="login" type="button" @click="auth.logout()">Salir</button>
+
+        <button
+          class="burger"
+          type="button"
+          :aria-expanded="abierto"
+          aria-label="Abrir menú"
+          @click="abierto = !abierto"
+        >
+          <span :class="{ open: abierto }" />
+        </button>
+      </div>
     </div>
+
+    <Transition name="menu">
+      <nav v-if="abierto" class="mobile glass" aria-label="Navegación móvil">
+        <RouterLink v-for="item in navegacion" :key="item.to" :to="item.to">
+          {{ item.label }}
+        </RouterLink>
+        <RouterLink to="/encuesta">Encuesta</RouterLink>
+        <RouterLink to="/registro">Crear cuenta</RouterLink>
+      </nav>
+    </Transition>
   </header>
 </template>
 
 <style scoped>
-.glass-header {
+.header {
   position: sticky;
-  top: 14px;
+  top: 12px;
   z-index: 1000;
   width: var(--shell);
-  margin: 14px auto 0;
-  height: 62px;
-  border-radius: 20px;
-  background: var(--glass-strong);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid var(--line);
-  box-shadow: var(--inset), 0 8px 30px rgba(0, 0, 0, 0.06);
+  margin: 12px auto 0;
 }
-.inner { height: 100%; padding: 0 18px; display: flex; align-items: center; justify-content: space-between; }
-.brand { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 1.3rem; letter-spacing: -0.03em; color: var(--ink); }
-.brand-logo { width: 30px; height: 30px; object-fit: contain; }
-nav { display: flex; align-items: center; gap: 4px; }
-nav a, nav button { padding: 9px 16px; border-radius: 999px; font-size: 0.88rem; font-weight: 600; color: var(--ink); border: 0; background: transparent; cursor: pointer; transition: background .2s, transform .2s; }
-nav a:hover, nav button:hover { background: rgba(255,255,255,.6); transform: translateY(-1px); }
-nav .accent { background: var(--blue); color: #fff; box-shadow: 0 8px 20px rgba(0,98,204,.25); }
-nav .accent:hover { background: var(--blue-deep); }
-@media (max-width: 767px) { nav a:not(.accent) { display: none; } }
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  height: 66px;
+  padding: 0 14px 0 18px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.72);
+  -webkit-backdrop-filter: blur(26px) saturate(190%);
+  backdrop-filter: blur(26px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  box-shadow: var(--inset), 0 12px 34px -18px rgba(8, 47, 77, 0.42);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 800;
+  font-size: 1.24rem;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  flex-shrink: 0;
+}
+
+.brand img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.desktop {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.desktop a {
+  padding: 9px 14px;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 550;
+  color: var(--ink-soft);
+  transition: background 0.2s, color 0.2s;
+}
+
+.desktop a:hover {
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--ink);
+}
+
+.desktop a.router-link-active {
+  background: rgba(10, 132, 255, 0.12);
+  color: var(--blue-deep);
+  font-weight: 650;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.login {
+  padding: 10px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  background: linear-gradient(150deg, #2396ff, var(--blue-deep));
+  color: #fff;
+  font-size: 0.86rem;
+  font-weight: 650;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 10px 22px -12px rgba(0, 98, 204, 0.8);
+  transition: transform 0.2s var(--ease);
+}
+
+.login:hover {
+  transform: translateY(-1px);
+}
+
+.burger {
+  display: none;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border-radius: 12px;
+  border: 1px solid rgba(12, 74, 112, 0.1);
+  background: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+}
+
+.burger span,
+.burger span::before,
+.burger span::after {
+  display: block;
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--ink);
+  transition: transform 0.28s var(--ease), opacity 0.2s;
+  content: '';
+}
+
+.burger span {
+  position: relative;
+}
+
+.burger span::before {
+  position: absolute;
+  top: -6px;
+}
+
+.burger span::after {
+  position: absolute;
+  top: 6px;
+}
+
+.burger span.open {
+  background: transparent;
+}
+
+.burger span.open::before {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.burger span.open::after {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+.mobile {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+  padding: 12px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.92);
+  -webkit-backdrop-filter: blur(26px);
+  backdrop-filter: blur(26px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: var(--inset), 0 20px 44px -22px rgba(8, 47, 77, 0.5);
+}
+
+.mobile a {
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-weight: 550;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+.mobile a:hover,
+.mobile a.router-link-active {
+  background: rgba(10, 132, 255, 0.1);
+  color: var(--blue-deep);
+}
+
+.menu-enter-active,
+.menu-leave-active {
+  transition: opacity 0.22s ease, transform 0.24s var(--ease);
+}
+
+.menu-enter-from,
+.menu-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+@media (max-width: 980px) {
+  .desktop {
+    display: none;
+  }
+  .burger {
+    display: grid;
+  }
+  .mobile {
+    display: flex;
+  }
+}
+
+@media (max-width: 420px) {
+  .brand span {
+    display: none;
+  }
+  .login {
+    padding: 10px 14px;
+  }
+}
 </style>

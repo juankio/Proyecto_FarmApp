@@ -1,30 +1,113 @@
 <script setup lang="ts">
-import AppCard from '../components/ui/AppCard.vue';
-import HeroPanel from '../components/layout/HeroPanel.vue';
+import { RouterLink } from 'vue-router';
+import PageHero from '../components/layout/PageHero.vue';
+import SectionHeader from '../components/ui/SectionHeader.vue';
 import ServiceCard from '../components/ui/ServiceCard.vue';
-import { services as serviciosIconos } from '../data/services';
-import { servicios as serviciosFotos } from '../data/servicios';
+import ImageTile from '../components/ui/ImageTile.vue';
+import AppCard from '../components/ui/AppCard.vue';
+import AppButton from '../components/ui/AppButton.vue';
+import { services } from '../data/services';
+import { accesos } from '../data/site';
 </script>
 
 <template>
-  <HeroPanel title="Servicios para tu salud" description="FarmApp ofrece una variedad de servicios diseñados para mejorar el acceso a la información médica." />
+  <PageHero
+    eyebrow="Servicios"
+    title="Servicios para tu salud y beneficio"
+    lede="FarmApp ofrece una variedad de servicios diseñados para mejorar el acceso a la información médica, desde el vademécum hasta la ubicación de droguerías."
+  >
+    <template #actions>
+      <AppButton size="lg" @click="$router.push('/feria')">Ver la feria</AppButton>
+      <AppButton size="lg" variant="secondary" @click="$router.push('/contactos')">
+        Hablar con nosotros
+      </AppButton>
+    </template>
+  </PageHero>
 
-  <h2 class="section-title">Lo que puedes hacer</h2>
-  <div class="grid">
-    <ServiceCard v-for="s in serviciosIconos" :key="s.title" v-bind="s" />
-  </div>
+  <section class="section reveal">
+    <SectionHeader
+      eyebrow="Qué ofrecemos"
+      title="Conoce más de nuestros servicios"
+      lede="Cinco capacidades que combinan información confiable, geolocalización y contacto directo."
+    />
+    <div class="grid grid-3">
+      <ServiceCard v-for="s in services" :key="s.title" v-bind="s" />
+    </div>
+  </section>
 
-  <h2 class="section-title">Nuestros servicios</h2>
-  <div class="grid">
-    <AppCard v-for="s in serviciosFotos" :key="s.nombre" class="foto">
-      <img :src="s.imagen" :alt="s.nombre" loading="lazy" />
-      <h3>{{ s.nombre }}</h3>
+  <section class="section reveal">
+    <SectionHeader
+      eyebrow="Accesos directos"
+      title="Empieza por donde necesites"
+      lede="Cada acceso te lleva a una fuente externa confiable o a nuestro equipo de soporte."
+    />
+    <div class="grid grid-4">
+      <ImageTile
+        v-for="a in accesos"
+        :key="a.nombre"
+        :src="a.imagen"
+        :title="a.nombre"
+        :text="a.descripcion"
+        :href="a.href"
+        fit="contain"
+        ratio="square"
+      />
+    </div>
+  </section>
+
+  <section class="section reveal">
+    <AppCard tone="dark" class="cta">
+      <div class="cta-copy">
+        <h2>¿Tienes una droguería o una marca de cuidado personal?</h2>
+        <p>
+          Publica tus productos en la feria empresarial de FarmApp y llega a más personas. También
+          puedes escribirnos para resolver dudas sobre medicamentos y órdenes médicas.
+        </p>
+      </div>
+      <div class="cta-actions">
+        <RouterLink to="/contactos"><AppButton variant="light">Escríbenos</AppButton></RouterLink>
+        <RouterLink to="/feria"><AppButton variant="light">Ver empresas</AppButton></RouterLink>
+      </div>
     </AppCard>
-  </div>
+  </section>
 </template>
 
 <style scoped>
-.foto { text-align: center; }
-.foto img { width: 100%; height: 170px; object-fit: contain; border-radius: 16px; background: rgba(255,255,255,.5); }
-.foto h3 { font-size: 1.05rem; margin-top: 14px; }
+.cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  padding: clamp(28px, 4vw, 48px);
+  border-radius: var(--radius-lg);
+}
+
+.cta-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 62ch;
+}
+
+.cta h2,
+.cta p {
+  color: #fff;
+}
+
+.cta p {
+  color: rgba(234, 246, 251, 0.76);
+}
+
+.cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+@media (max-width: 820px) {
+  .cta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
 </style>

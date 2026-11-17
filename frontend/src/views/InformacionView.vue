@@ -1,14 +1,138 @@
 <script setup lang="ts">
+import { RouterLink } from 'vue-router';
+import PageHero from '../components/layout/PageHero.vue';
+import SectionHeader from '../components/ui/SectionHeader.vue';
 import AppCard from '../components/ui/AppCard.vue';
-import HeroPanel from '../components/layout/HeroPanel.vue';
+import AppButton from '../components/ui/AppButton.vue';
+import { LOGO_URL } from '../data/logo';
+
+const texto =
+  'Este proyecto comenzó con una simple idea: crear una solución innovadora que responda a una necesidad real en el mercado. Desde el principio sabíamos que había una oportunidad para mejorar la forma en que las personas acceden a la información y los servicios que realmente importan. Fue esta convicción la que nos motivó a embarcarnos en esta aventura, con el objetivo de marcar una diferencia significativa. La decisión de llevar a cabo este proyecto no fue tomada a la ligera. Después de muchas conversaciones, investigaciones y análisis de mercado, identificamos que había una gran demanda sin satisfacer. Queríamos crear algo que no solo resolviera un problema inmediato, sino que también tuviera un impacto duradero y positivo en las personas y en los negocios involucrados. Así nació la idea que hoy estamos materializando. A lo largo de este proceso hemos dedicado innumerables horas de trabajo y esfuerzo. Ha sido un viaje lleno de desafíos, pero también de grandes aprendizajes. Cada miembro del equipo ha aportado sus habilidades y pasión para hacer de este proyecto una realidad. Sabemos que aún queda mucho por hacer, pero el progreso que hemos logrado hasta ahora es un reflejo del compromiso y la dedicación que hemos puesto en cada etapa del desarrollo. Hemos trabajado arduamente para construir algo que realmente funcione y que sea relevante para los usuarios. Este proyecto no solo es el resultado de una idea, sino del trabajo conjunto, la perseverancia y la voluntad de superar obstáculos. Creemos firmemente que el esfuerzo invertido valdrá la pena y que estamos construyendo algo que tendrá un impacto significativo.';
+
+const valores = [
+  { titulo: 'Información confiable', texto: 'Fuentes verificadas y actualizadas sobre medicamentos.' },
+  { titulo: 'Cercanía', texto: 'Conectamos personas con droguerías y farmacias de su zona.' },
+  { titulo: 'Comunidad', texto: 'Impulsamos emprendimientos locales desde nuestra feria.' },
+];
 </script>
 
 <template>
-  <HeroPanel title="Sobre FarmApp" description="Conoce más sobre nosotros y nuestro propósito." />
-  <AppCard>
-    <h2>Misión</h2>
-    <p>Facilitar el acceso a información confiable sobre medicamentos para que cada persona tome decisiones informadas sobre su salud.</p>
-    <h2>Visión</h2>
-    <p>Ser la plataforma de referencia en información farmacéutica en Latinoamérica.</p>
-  </AppCard>
+  <PageHero
+    eyebrow="Nosotros"
+    title="El origen de nuestro proyecto: una idea, un propósito y un esfuerzo conjunto"
+    lede="FarmApp nació para resolver una necesidad real: acceder a información farmacéutica clara, confiable y cercana."
+  >
+    <template #actions>
+      <AppButton size="lg" @click="$router.push('/servicios')">Ver servicios</AppButton>
+      <AppButton size="lg" variant="secondary" @click="$router.push('/feria')">
+        Conocer la feria
+      </AppButton>
+    </template>
+
+    <template #media>
+      <div class="origin">
+        <div class="ring" />
+        <img :src="LOGO_URL" alt="Logo de FarmApp" />
+        <span class="pill blue">CódigoX · 2024</span>
+      </div>
+    </template>
+  </PageHero>
+
+  <section class="section reveal">
+    <AppCard class="story">
+      <p>{{ texto }}</p>
+    </AppCard>
+  </section>
+
+  <section class="section reveal">
+    <SectionHeader eyebrow="Lo que nos mueve" title="Nuestros valores" />
+    <div class="grid grid-3">
+      <AppCard v-for="v in valores" :key="v.titulo" hover>
+        <h3>{{ v.titulo }}</h3>
+        <p>{{ v.texto }}</p>
+      </AppCard>
+    </div>
+  </section>
+
+  <section class="section reveal">
+    <AppCard tone="dark" class="cta">
+      <div>
+        <h2>¿Quieres saber más sobre FarmApp?</h2>
+        <p>Escríbenos o explora nuestra presentación interactiva en Canva.</p>
+      </div>
+      <div class="actions">
+        <RouterLink to="/contactos"><AppButton variant="light">Escríbenos</AppButton></RouterLink>
+        <a href="https://farmapp.my.canva.site/presentacion-farmapp" target="_blank" rel="noopener">
+          <AppButton variant="light">Ver presentación</AppButton>
+        </a>
+      </div>
+    </AppCard>
+  </section>
 </template>
+
+<style scoped>
+.origin {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(100%, 360px);
+  aspect-ratio: 1 / 1;
+}
+
+.ring {
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: radial-gradient(circle at 40% 35%, rgba(255, 255, 255, 0.9), rgba(90, 200, 250, 0.24) 60%, transparent 74%);
+}
+
+.origin img {
+  position: relative;
+  width: 54%;
+  filter: drop-shadow(0 22px 34px rgba(8, 47, 77, 0.32));
+}
+
+.origin .pill {
+  position: absolute;
+  bottom: 8%;
+}
+
+.story p {
+  font-size: 1.02rem;
+  line-height: 1.85;
+  color: var(--ink-soft);
+}
+
+.cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  padding: clamp(28px, 4vw, 48px);
+  border-radius: var(--radius-lg);
+}
+
+.cta h2,
+.cta p {
+  color: #fff;
+}
+
+.cta p {
+  color: rgba(234, 246, 251, 0.78);
+  margin-top: 8px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+@media (max-width: 820px) {
+  .cta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+</style>

@@ -1,58 +1,123 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { RouterLink } from 'vue-router';
+import PageHero from '../components/layout/PageHero.vue';
+import SectionHeader from '../components/ui/SectionHeader.vue';
+import ImageTile from '../components/ui/ImageTile.vue';
 import AppCard from '../components/ui/AppCard.vue';
-import HeroPanel from '../components/layout/HeroPanel.vue';
-import { empresas } from '../data/empresas';
-import { productos } from '../data/productos';
+import AppButton from '../components/ui/AppButton.vue';
+import { proyectos } from '../data/proyectos';
+import { cenacap } from '../data/cenacap';
 
-const route = useRoute();
-const router = useRouter();
-const activa = computed(() => empresas.find((e) => e.nombre === route.query.empresa) ?? null);
-
-function verEmpresa(nombre: string): void {
-  void router.push({ path: '/feria', query: { empresa: nombre } });
-}
+const empresas = proyectos.map((p) => ({
+  ...p,
+  tile: p.empresaImagen,
+}));
 </script>
 
 <template>
-  <HeroPanel title="Feria empresarial" description="Conoce a las empresas y productos que hacen parte de nuestro ecosistema de salud y bienestar." />
+  <PageHero
+    eyebrow="Feria empresarial"
+    title="Nuestras empresas y sus productos"
+    lede="Aprenda y conozca más sobre nosotros, con nuestras ideas donde tendremos variedades de productos con gran accesibilidad de compra."
+  >
+    <template #actions>
+      <AppButton size="lg" @click="$router.push('/info-cenacap')">
+        Conocer Cenacap
+      </AppButton>
+      <AppButton size="lg" variant="secondary" @click="$router.push('/servicios')">
+        Ver servicios
+      </AppButton>
+    </template>
+  </PageHero>
 
-  <AppCard v-if="activa" class="detalle">
-    <button class="cerrar" @click="router.push('/feria')">✕</button>
-    <img :src="activa.imagen" :alt="activa.nombre" />
-    <div>
-      <h2>{{ activa.nombre }}</h2>
-      <p>{{ activa.descripcion }}</p>
+  <section class="section reveal">
+    <AppCard class="intro">
+      <p>
+        En este apartado podrás encontrar una lista completa de todos los stands disponibles,
+        organizada de manera clara y sencilla. Cada stand está identificado por su número
+        correspondiente, lo que te permitirá ubicarlos fácilmente dentro del evento.
+      </p>
+    </AppCard>
+  </section>
+
+  <section class="section reveal">
+    <SectionHeader
+      eyebrow="Stands"
+      title="Nuestras empresas"
+      lede="Siete marcas, cada una con su propio producto, historia y galería."
+    />
+    <div class="grid grid-3">
+      <ImageTile
+        v-for="e in empresas"
+        :key="e.slug"
+        :src="e.tile"
+        :title="e.empresa"
+        :text="e.descripcion"
+        :badge="`Stand ${e.numero}`"
+        :to="`/proyectos/${e.slug}`"
+        ratio="wide"
+      />
     </div>
-  </AppCard>
+  </section>
 
-  <h2 class="section-title">Nuestras empresas</h2>
-  <div class="grid">
-    <AppCard v-for="e in empresas" :key="e.nombre" class="empresa" @click="verEmpresa(e.nombre)">
-      <img :src="e.imagen" :alt="e.nombre" loading="lazy" />
-      <h3>{{ e.nombre }}</h3>
-      <p>{{ e.descripcion }}</p>
-    </AppCard>
-  </div>
+  <section class="section reveal">
+    <SectionHeader
+      eyebrow="Catálogo"
+      title="Nuestros productos"
+      lede="Los productos que las empresas presentan en la feria, con acceso directo a su ficha."
+    />
+    <div class="grid grid-4">
+      <ImageTile
+        v-for="p in proyectos"
+        :key="p.slug"
+        :src="p.logo"
+        :title="p.producto"
+        :text="p.empresa"
+        :to="`/proyectos/${p.slug}`"
+        fit="contain"
+        ratio="square"
+      />
+    </div>
+  </section>
 
-  <h2 class="section-title">Nuestros productos</h2>
-  <div class="grid">
-    <AppCard v-for="p in productos" :key="p.nombre" class="producto">
-      <img :src="p.imagen" :alt="p.nombre" loading="lazy" />
-      <h3>{{ p.nombre }}</h3>
-    </AppCard>
-  </div>
+  <section class="section reveal">
+    <div class="cenacap glass">
+      <div>
+        <span class="eyebrow">Invitados</span>
+        <h2>{{ cenacap.titulo }}</h2>
+        <p>{{ cenacap.descripcion }}</p>
+      </div>
+      <RouterLink to="/info-cenacap">
+        <AppButton variant="secondary">Ver información de Cenacap</AppButton>
+      </RouterLink>
+    </div>
+  </section>
 </template>
 
 <style scoped>
-.empresa, .producto { cursor: pointer; transition: transform .25s, box-shadow .25s; }
-.empresa:hover, .producto:hover { transform: translateY(-4px); box-shadow: var(--inset), 0 34px 70px rgba(9,62,98,.22); }
-.empresa img, .producto img { width: 100%; height: 180px; object-fit: cover; border-radius: 16px; margin-bottom: 14px; }
-h3 { font-size: 1.1rem; margin: 0 0 8px; }
-p { font-size: .9rem; }
-.detalle { display: flex; gap: 24px; align-items: center; margin-bottom: 28px; position: relative; }
-.detalle img { width: 180px; height: 180px; object-fit: cover; border-radius: 18px; }
-.detalle h2 { font-size: 1.6rem; margin-bottom: 8px; }
-.cerrar { position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border: 0; border-radius: 50%; background: rgba(255,255,255,.7); cursor: pointer; }
+.intro {
+  text-align: center;
+  font-size: 1rem;
+}
+
+.cenacap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 26px;
+  padding: clamp(26px, 4vw, 44px);
+  border-radius: var(--radius-lg);
+  background: var(--glass-strong);
+}
+
+.cenacap h2 {
+  margin: 8px 0 6px;
+}
+
+@media (max-width: 760px) {
+  .cenacap {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
 </style>

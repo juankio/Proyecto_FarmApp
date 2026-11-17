@@ -7,18 +7,69 @@ defineEmits<{ close: [] }>();
 
 <template>
   <Teleport to="body">
-    <div v-if="open" class="backdrop" @click.self="$emit('close')">
-      <div class="modal">
-        <h2>{{ title }}</h2>
-        <div class="content"><slot /></div>
-        <AppButton @click="$emit('close')">Cerrar</AppButton>
+    <Transition name="modal">
+      <div v-if="open" class="backdrop" @click.self="$emit('close')">
+        <div class="modal">
+          <h2>{{ title }}</h2>
+          <div class="content"><slot /></div>
+          <AppButton block @click="$emit('close')">Cerrar</AppButton>
+        </div>
       </div>
-    </div>
+    </Transition>
   </Teleport>
 </template>
 
 <style scoped>
-.backdrop { position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center; background: rgba(9, 62, 98, 0.35); backdrop-filter: blur(8px); }
-.modal { width: min(90%, 460px); padding: 32px; border-radius: 26px; background: rgba(255,255,255,.9); border: 1px solid rgba(255,255,255,.85); box-shadow: var(--inset), var(--depth); }
-.content { margin: 16px 0 24px; }
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(8, 47, 77, 0.4);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.modal {
+  width: min(100%, 480px);
+  padding: 34px;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: var(--inset), var(--depth-lg);
+}
+
+.modal h2 {
+  font-size: 1.4rem;
+  margin-bottom: 14px;
+}
+
+.content {
+  margin: 0 0 24px;
+  color: var(--muted);
+  font-size: 0.94rem;
+}
+
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.24s ease;
+}
+
+.modal-enter-active .modal,
+.modal-leave-active .modal {
+  transition: transform 0.28s var(--ease), opacity 0.28s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+
+.modal-enter-from .modal,
+.modal-leave-to .modal {
+  transform: translateY(16px) scale(0.97);
+  opacity: 0;
+}
 </style>

@@ -1,5 +1,13 @@
 <script setup lang="ts">
-defineProps<{ modelValue: string; type?: string; placeholder?: string; required?: boolean }>();
+defineProps<{
+  modelValue: string;
+  type?: string;
+  placeholder?: string;
+  required?: boolean;
+  autocomplete?: string;
+  name?: string;
+}>();
+
 defineEmits<{ 'update:modelValue': [value: string] }>();
 </script>
 
@@ -10,6 +18,8 @@ defineEmits<{ 'update:modelValue': [value: string] }>();
     :value="modelValue"
     :placeholder="placeholder"
     :required="required"
+    :autocomplete="autocomplete"
+    :name="name"
     @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
   />
 </template>
@@ -17,17 +27,33 @@ defineEmits<{ 'update:modelValue': [value: string] }>();
 <style scoped>
 .app-input {
   width: 100%;
-  height: 52px;
+  height: 50px;
   padding: 0 16px;
   border: 1px solid rgba(10, 132, 255, 0.16);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.84);
   color: var(--ink);
-  font-size: 0.98rem;
-  box-shadow: inset 0 1px 3px rgba(9, 62, 98, 0.06);
+  font-size: 0.96rem;
+  box-shadow: inset 0 1px 3px rgba(8, 47, 77, 0.05);
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
 }
-.app-input::placeholder { color: #7c95a6; }
-.app-input:focus { border-color: var(--blue); background: #fff; box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.16); }
+
+.app-input::placeholder {
+  color: var(--muted-2);
+}
+
+.app-input:focus {
+  border-color: var(--blue);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.15);
+}
+
+select.app-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%234f7189' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 42px;
+}
 </style>

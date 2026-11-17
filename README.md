@@ -1,28 +1,72 @@
 # FarmApp
 
-Sitio informativo farmacéutico con backend propio en Node + Express y base de datos SQLite. El frontend sigue siendo HTML y CSS estático; Express lo sirve en el mismo origen que la API.
+Aplicativo farmacéutico con frontend en **Vue 3 + Vite + TypeScript + Pinia** y backend en **Node + Express + SQLite**. El frontend vive en `frontend/` y consume la API de `backend/` mediante proxy en desarrollo.
 
 ## Requisitos
 
 - [Bun](https://bun.sh) 1.1 o superior. No se usa npm.
 
-## Arranque
+## Arranque rápido
+
+Dos terminales:
 
 ```bash
+# 1) API + base de datos
 cd backend
 cp .env.example .env
 # edita JWT_SECRET y ADMIN_SEED_PASSWORD en .env
 bun install
 bun run migrate
 bun run seed
-bun run dev
+bun run dev            # http://localhost:3000
 ```
 
-Abre `http://localhost:3000`. La API responde en `http://localhost:3000/api`.
+```bash
+# 2) Frontend
+cd frontend
+bun install
+bun run dev            # http://localhost:5173
+```
 
-El seed crea un administrador con los valores de `ADMIN_SEED_EMAIL` y `ADMIN_SEED_PASSWORD` de `.env`, y doce medicamentos de ejemplo. Puedes repetir `bun run seed` sin duplicar datos.
+Vite hace proxy de `/api` hacia `http://localhost:3000`, así que no hay que configurar CORS.
+
+Credenciales del administrador sembrado: `admin@farmapp.local` / `Admin1234`. La regla de contraseña es mínimo 8 caracteres, una mayúscula y un número.
+
+## Rutas del frontend
+
+| Ruta | Contenido |
+| --- | --- |
+| `/` | Portada, bienvenida, accesos, servicios, productos y preguntas frecuentes |
+| `/servicios` | Los cinco servicios y los cuatro accesos directos |
+| `/feria` | Las siete empresas de la feria y el catálogo de productos |
+| `/proyectos/:slug` | Ficha de cada producto: precios, objetivo, ingredientes, misión, visión y galería |
+| `/blog` | Últimos avances y novedades |
+| `/informacion` | Origen del proyecto y valores |
+| `/info-cenacap` | Información de la feria empresarial Cenacap |
+| `/lenguajes` | Lenguajes de programación de bajo y alto nivel |
+| `/calculadora` | Calculadora funcional con teclado e historial |
+| `/banner-yt` | Banner de servicios |
+| `/encuesta` | Encuesta de satisfacción conectada al API |
+| `/contactos` | Formulario de contacto y canales directos |
+| `/registro` | Registro de usuarios |
+| `/login` | Ingreso de usuarios |
+
+Las fichas disponibles son `codigox`, `exfolpiel`, `fenix`, `gummy-vit`, `nails-grow`, `tentaciones-de-afrodita` y `selene`.
+
+## Diseño
+
+El sistema visual está en `frontend/src/styles/`:
+
+- `tokens.css` — colores, glass, sombras, radios y tipografía.
+- `global.css` — fondo con patrones SVG, secciones, rejillas, formularios, acordeón y utilidades.
+
+Componentes reutilizables en `frontend/src/components/`: `AppButton`, `AppCard`, `AppInput`, `AppModal`, `AppAccordion`, `ServiceCard`, `ImageTile`, `SectionHeader`, `PageHero`, `AppHeader` y `AppFooter`. Las animaciones de entrada usan `IntersectionObserver` mediante `composables/useReveal.ts`.
+
+Todo el contenido real (empresas, productos, logos, galerías, FAQ, blog y textos) está centralizado en `frontend/src/data/`.
 
 ## Comandos
+
+### Backend
 
 | Comando | Qué hace |
 | --- | --- |
@@ -32,6 +76,15 @@ El seed crea un administrador con los valores de `ADMIN_SEED_EMAIL` y `ADMIN_SEE
 | `bun run seed` | Carga el administrador y el catálogo inicial |
 | `bun run test` | Pruebas de la API |
 | `bun run typecheck` | Comprobación de tipos |
+
+### Frontend
+
+| Comando | Qué hace |
+| --- | --- |
+| `bun run dev` | Vite en `http://localhost:5173` |
+| `bun run build` | Typecheck y build de producción en `dist/` |
+| `bun run typecheck` | `vue-tsc --noEmit` |
+| `bun run preview` | Sirve el build de producción |
 
 ## API
 
@@ -53,29 +106,16 @@ Todas las respuestas usan `{ success, data, message, error }`. `error` es un có
 | POST | `/api/contactos` | público |
 | GET | `/api/contactos` | admin |
 
-Los formularios de registro, ingreso, encuesta y contacto envían `fetch` al API a través de `src/js/api-client.js`. El token de sesión se guarda en `sessionStorage` y se envía como `Authorization: Bearer`.
+El token de sesión se guarda en `sessionStorage` y se envía como `Authorization: Bearer`.
 
 ## Estructura
 
 - `backend/src/` — servidor Express, capas de rutas, controladores, servicios, repositorios y esquemas Zod.
 - `backend/src/db/migrations/` — esquema SQLite versionado.
 - `data/farmapp.db` — base de datos local, ignorada por Git.
-- `src/` — frontend estático.
-- `src/legacy/` — artefactos del proyecto original (CódigoX 2024), conservados como referencia.
+- `frontend/src/` — frontend Vue 3: vistas, componentes, datos, estilos, stores y router.
+- `src/` — sitio HTML original (CódigoX 2024), conservado como referencia.
 
 ## Ramas
 
 `main` es producción, `dev` es desarrollo y `test` es QA. Nunca se hace push directo a `main`.
-
-## Frontend Vue 3
-
- La carpeta `frontend/` contiene el frontend nuevo en Vue 3 + Vite + Pinia. El backend sigue en `backend/`.
-
-```bash
-cd frontend
-bun install
-bun run dev      # http://localhost:5173, proxy /api -> localhost:3000
-bun run build    # typecheck + dist/
-```
-
-El servidor Express debe estar corriendo en el puerto 3000 para que la API responda. La carpeta `src/` se conserva como referencia del sitio original; la fuente activa es `frontend/src/`.
