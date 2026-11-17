@@ -1,12 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
   --lg-ink: #0b3557;
   --lg-muted: #4a6b82;
   --lg-blue: #0a84ff;
-  --lg-line: rgba(255, 255, 255, 0.88);
-  --lg-depth: 0 24px 60px rgba(9, 62, 98, 0.18), 0 4px 14px rgba(9, 62, 98, 0.10);
-  --lg-inset: inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(255, 255, 255, 0.4);
+  --lg-line: rgba(255, 255, 255, 0.72);
+  --lg-depth: 0 30px 70px rgba(9, 62, 98, 0.20), 0 6px 18px rgba(9, 62, 98, 0.10);
+  --lg-inset: inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(255, 255, 255, 0.45), inset 0 0 0 1px rgba(255, 255, 255, 0.18);
 }
 
 html {
@@ -19,10 +19,11 @@ body {
   color: var(--lg-ink) !important;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
   background:
+    url(../img/bg-caustics.svg) center 120px / 100% 620px no-repeat,
     url(../img/bg-dots.svg) 18px 120px / 256px 256px no-repeat,
     url(../img/bg-rings.svg) right 40px top 180px / 304px 304px no-repeat,
     linear-gradient(180deg, #93d0e8 0%, #addcee 340px, #cfeaf5 560px, #edf7fb 820px, #ffffff 1200px);
-  background-attachment: fixed, fixed, fixed;
+  background-attachment: fixed, fixed, fixed, fixed;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -44,11 +45,11 @@ body > * {
 }
 
 h1, h2, h3, h4 {
-  font-family: 'Manrope', 'Inter', sans-serif !important;
+  font-family: 'Inter', -apple-system, sans-serif !important;
   color: var(--lg-ink) !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.04em !important;
-  line-height: 1.1 !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.025em !important;
+  line-height: 1.15 !important;
 }
 
 p {
@@ -69,11 +70,27 @@ p {
 .encuesta-form,
 #login .contenedor,
 .footer {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.66), rgba(255, 255, 255, 0.30)) !important;
-  -webkit-backdrop-filter: blur(26px) saturate(185%);
-  backdrop-filter: url(#lg-refraction) blur(26px) saturate(185%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.44), rgba(255, 255, 255, 0.18)) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(190%);
+  backdrop-filter: url(#lg-refraction) blur(30px) saturate(190%);
   border: 1px solid var(--lg-line) !important;
   box-shadow: var(--lg-inset), var(--lg-depth) !important;
+  position: relative;
+}
+
+.header::after,
+.banner-texto::after,
+.contenedor-servicios::after,
+.form-register::after,
+.formulario::after,
+.encuesta-form::after,
+#login .contenedor::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.06) 38%, transparent 62%);
+  pointer-events: none;
 }
 
 .header {
@@ -107,7 +124,8 @@ p {
 
 .navbar .logo {
   font-size: 1.3rem !important;
-  font-weight: 800 !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.03em !important;
   color: var(--lg-ink) !important;
 }
 
@@ -183,15 +201,18 @@ p {
 .banner-texto h1,
 .banner-texto h2,
 .banner-texto h3 {
-  font-size: clamp(2.2rem, 4.6vw, 3.6rem) !important;
-  margin: 0 0 16px !important;
+  font-size: clamp(2rem, 4vw, 3rem) !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.035em !important;
+  margin: 0 0 18px !important;
   text-align: center !important;
 }
 
 .banner-texto p {
-  font-size: 1.12rem !important;
-  max-width: 600px;
-  margin: 0 auto 26px !important;
+  font-size: 1.08rem !important;
+  font-weight: 400 !important;
+  max-width: 580px;
+  margin: 0 auto 28px !important;
   text-align: center !important;
 }
 
