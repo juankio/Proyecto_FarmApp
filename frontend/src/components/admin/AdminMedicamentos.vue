@@ -4,6 +4,7 @@ import AppButton from '../ui/AppButton.vue';
 import AppInput from '../ui/AppInput.vue';
 import AdminDialog from './AdminDialog.vue';
 import AppPagination from '../ui/AppPagination.vue';
+import AppSkeleton from '../ui/AppSkeleton.vue';
 import MedicamentoForm from './MedicamentoForm.vue';
 import { ApiError, apiDelete, apiGet } from '../../composables/useApi';
 import type { Medicamento, Paginado } from '../../types/catalogo';
@@ -105,7 +106,37 @@ onMounted(cargar);
       <button v-if="filtro" type="button" class="btn-mini" @click="limpiar">Limpiar</button>
     </form>
 
-    <div v-if="cargando" class="loading">Cargando medicamentos...</div>
+    <div v-if="cargando" aria-busy="true">
+      <p class="sr-only" role="status">Cargando medicamentos...</p>
+      <div class="table-scroll" aria-hidden="true">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Medicamento</th>
+              <th>Laboratorio</th>
+              <th>Presentación</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="n in 6" :key="n">
+              <td>
+                <AppSkeleton width="72%" height="13px" radius="5px" />
+                <AppSkeleton width="44%" height="9px" radius="5px" style="margin-top: 7px" />
+              </td>
+              <td><AppSkeleton width="84%" height="11px" radius="5px" /></td>
+              <td><AppSkeleton width="64%" height="11px" radius="5px" /></td>
+              <td>
+                <div class="row-actions">
+                  <AppSkeleton width="58px" height="28px" radius="9px" />
+                  <AppSkeleton width="58px" height="28px" radius="9px" />
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
     <template v-else>
       <div v-if="error" class="form-message error">{{ error }}</div>

@@ -16,6 +16,16 @@ withDefaults(
     <div class="glow glow-a" />
     <div class="glow glow-b" />
 
+    <div class="hero-bubbles" aria-hidden="true">
+      <span class="hero-bubble" style="--x: 7%; --size: 10px; --duration: 14s; --delay: -3s; --drift: 12px" />
+      <span class="hero-bubble" style="--x: 21%; --size: 18px; --duration: 18s; --delay: -11s; --drift: -14px" />
+      <span class="hero-bubble" style="--x: 42%; --size: 8px; --duration: 12s; --delay: -6s; --drift: 10px" />
+      <span class="hero-bubble" style="--x: 60%; --size: 22px; --duration: 20s; --delay: -15s; --drift: -18px" />
+      <span class="hero-bubble" style="--x: 77%; --size: 12px; --duration: 15s; --delay: -2s; --drift: 14px" />
+      <span class="hero-bubble" style="--x: 91%; --size: 16px; --duration: 17s; --delay: -8s; --drift: -12px" />
+      <span class="hero-bubble" style="--x: 52%; --size: 28px; --duration: 22s; --delay: -19s; --drift: 20px" />
+    </div>
+
     <div class="copy">
       <span v-if="eyebrow" class="eyebrow">{{ eyebrow }}</span>
       <h1>{{ title }}</h1>
@@ -65,6 +75,63 @@ withDefaults(
 
 .page-hero.compact {
   padding: clamp(30px, 4vw, 54px);
+}
+
+.hero-bubbles {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-bubble {
+  position: absolute;
+  bottom: -40px;
+  left: var(--x);
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: radial-gradient(
+    circle at 32% 26%,
+    rgba(255, 255, 255, 0.95),
+    rgba(255, 255, 255, 0.18) 48%,
+    rgba(126, 224, 192, 0.16) 70%,
+    transparent 72%
+  );
+  box-shadow:
+    inset -2px -3px 6px rgba(255, 255, 255, 0.5),
+    0 0 14px rgba(255, 255, 255, 0.25);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-bubble {
+    animation: hero-bubble-rise var(--duration) linear var(--delay) infinite;
+  }
+}
+
+@keyframes hero-bubble-rise {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.82);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.55;
+  }
+  50% {
+    transform: translate3d(var(--drift), -52vh, 0) scale(1);
+    opacity: 0.45;
+  }
+  86% {
+    opacity: 0.18;
+  }
+  100% {
+    transform: translate3d(0, -96vh, 0) scale(1.08);
+    opacity: 0;
+  }
 }
 
 .page-hero::before {
@@ -236,6 +303,12 @@ h1 {
   }
   h1 {
     max-width: 22ch;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-bubble:nth-child(n + 6) {
+    display: none;
   }
 }
 </style>

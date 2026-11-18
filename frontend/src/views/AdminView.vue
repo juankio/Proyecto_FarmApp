@@ -62,10 +62,14 @@ const avatar = computed(() =>
     </aside>
 
     <div class="admin-main">
-      <AdminResumen v-if="tab === 'resumen'" />
-      <AdminMedicamentos v-else-if="tab === 'medicamentos'" />
-      <AdminEncuestas v-else-if="tab === 'encuestas'" />
-      <AdminContactos v-else />
+      <Transition name="admin-panel" mode="out-in">
+        <div :key="tab" class="admin-panel">
+          <AdminResumen v-if="tab === 'resumen'" />
+          <AdminMedicamentos v-else-if="tab === 'medicamentos'" />
+          <AdminEncuestas v-else-if="tab === 'encuestas'" />
+          <AdminContactos v-else />
+        </div>
+      </Transition>
     </div>
   </div>
 </template>

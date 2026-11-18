@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
+import AppSkeleton from '../ui/AppSkeleton.vue';
 import { ApiError, apiGet } from '../../composables/useApi';
 import type { Contacto, Encuesta, Medicamento, Paginado } from '../../types/catalogo';
 import { formatFecha } from '../../utils/format';
@@ -54,7 +55,47 @@ const encuestasRecientes = computed(() => ultimos(encuestas.value));
 </script>
 
 <template>
-  <div v-if="cargando" class="admin-card loading">Cargando resumen...</div>
+  <div v-if="cargando" aria-busy="true">
+    <p class="sr-only" role="status">Cargando resumen...</p>
+
+    <div class="stat-grid" aria-hidden="true">
+      <div v-for="n in 4" :key="n" class="stat-card skeleton-stat">
+        <AppSkeleton width="58px" height="30px" radius="8px" />
+        <AppSkeleton width="82%" height="11px" radius="5px" />
+      </div>
+    </div>
+
+    <div class="admin-two skeleton-list" aria-hidden="true">
+      <div class="admin-card">
+        <AppSkeleton width="42%" height="18px" radius="6px" />
+        <div class="admin-list skeleton-list">
+          <div v-for="n in 3" :key="n" class="admin-item skeleton-item">
+            <div class="skeleton-row">
+              <AppSkeleton width="38%" height="14px" radius="6px" />
+              <AppSkeleton width="68px" height="12px" radius="6px" />
+            </div>
+            <AppSkeleton width="100%" height="10px" radius="5px" />
+            <AppSkeleton width="76%" height="10px" radius="5px" />
+            <AppSkeleton width="46%" height="9px" radius="5px" />
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <AppSkeleton width="52%" height="18px" radius="6px" />
+        <div class="stat-grid skeleton-list">
+          <div v-for="n in 2" :key="n" class="stat-card skeleton-stat">
+            <AppSkeleton width="54px" height="28px" radius="8px" />
+            <AppSkeleton width="78%" height="11px" radius="5px" />
+          </div>
+        </div>
+        <div class="skeleton-lines skeleton-list">
+          <AppSkeleton width="100%" height="10px" radius="5px" />
+          <AppSkeleton width="82%" height="10px" radius="5px" />
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div v-else-if="error" class="admin-card">
     <div class="form-message error">{{ error }}</div>

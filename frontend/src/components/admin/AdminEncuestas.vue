@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import AppPagination from '../ui/AppPagination.vue';
+import AppSkeleton from '../ui/AppSkeleton.vue';
 import { ApiError, apiGet } from '../../composables/useApi';
 import type { Encuesta, Paginado } from '../../types/catalogo';
 import { formatFecha } from '../../utils/format';
@@ -54,7 +55,29 @@ onMounted(cargar);
       </div>
     </div>
 
-    <div v-if="cargando" class="loading">Cargando encuestas...</div>
+    <div v-if="cargando" aria-busy="true">
+      <p class="sr-only" role="status">Cargando encuestas...</p>
+      <div class="admin-list" aria-hidden="true">
+        <article v-for="n in 4" :key="n" class="admin-item skeleton-item">
+          <div class="skeleton-row">
+            <div class="skeleton-stack">
+              <AppSkeleton width="132px" height="14px" radius="6px" />
+              <AppSkeleton width="94px" height="9px" radius="5px" />
+            </div>
+            <div class="skeleton-tags">
+              <AppSkeleton width="78px" height="14px" radius="6px" />
+              <AppSkeleton width="86px" height="22px" radius="999px" />
+            </div>
+          </div>
+          <AppSkeleton width="100%" height="10px" radius="5px" />
+          <AppSkeleton width="84%" height="10px" radius="5px" />
+          <div class="skeleton-row">
+            <AppSkeleton width="118px" height="9px" radius="5px" />
+            <AppSkeleton width="52px" height="9px" radius="5px" />
+          </div>
+        </article>
+      </div>
+    </div>
 
     <template v-else>
       <div v-if="error" class="form-message error">{{ error }}</div>

@@ -6,6 +6,7 @@ import AppButton from '../components/ui/AppButton.vue';
 import AppInput from '../components/ui/AppInput.vue';
 import AppModal from '../components/ui/AppModal.vue';
 import AppPagination from '../components/ui/AppPagination.vue';
+import AppSkeleton from '../components/ui/AppSkeleton.vue';
 import { ApiError, apiGet } from '../composables/useApi';
 import type { Medicamento, Paginado } from '../types/catalogo';
 import { site } from '../data/site';
@@ -139,13 +140,23 @@ onBeforeUnmount(() => window.clearTimeout(temporizador));
 
     <div v-if="error" class="form-message error">{{ error }}</div>
 
-    <div v-if="cargando" class="catalog-grid" aria-hidden="true">
-      <div v-for="n in 6" :key="n" class="med-card skeleton">
-        <span class="skeleton-line short" />
-        <span class="skeleton-line title" />
-        <span class="skeleton-line" />
-        <span class="skeleton-line" />
-        <span class="skeleton-line short" />
+    <p v-if="cargando" class="sr-only" role="status">Cargando medicamentos...</p>
+
+    <div v-if="cargando" class="catalog-grid" aria-busy="true">
+      <div v-for="n in 6" :key="n" class="med-card skeleton" aria-hidden="true">
+        <div class="skeleton-top">
+          <AppSkeleton width="46px" height="46px" radius="14px" />
+          <AppSkeleton width="72px" height="20px" radius="999px" />
+        </div>
+        <AppSkeleton width="68%" height="21px" radius="7px" />
+        <AppSkeleton width="44%" height="11px" radius="6px" />
+        <AppSkeleton width="100%" height="10px" radius="5px" />
+        <AppSkeleton width="92%" height="10px" radius="5px" />
+        <AppSkeleton width="62%" height="10px" radius="5px" />
+        <div class="skeleton-actions">
+          <AppSkeleton width="88px" height="12px" radius="6px" />
+          <AppSkeleton width="102px" height="34px" radius="12px" />
+        </div>
       </div>
     </div>
 
@@ -526,41 +537,25 @@ onBeforeUnmount(() => window.clearTimeout(temporizador));
 }
 
 .skeleton {
-  gap: 10px;
-  min-height: 230px;
+  gap: 9px;
+  min-height: 250px;
 }
 
-.skeleton-line {
-  display: block;
-  height: 12px;
-  border-radius: 6px;
-  background: linear-gradient(
-    90deg,
-    rgba(12, 74, 112, 0.07),
-    rgba(12, 74, 112, 0.13),
-    rgba(12, 74, 112, 0.07)
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.4s ease-in-out infinite;
+.skeleton-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 5px;
 }
 
-.skeleton-line.title {
-  height: 22px;
-  width: 65%;
-  margin: 8px 0;
-}
-
-.skeleton-line.short {
-  width: 40%;
-}
-
-@keyframes shimmer {
-  from {
-    background-position: 200% 0;
-  }
-  to {
-    background-position: -200% 0;
-  }
+.skeleton-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 18px;
 }
 
 @media (max-width: 620px) {

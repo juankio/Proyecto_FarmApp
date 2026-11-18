@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, onMounted, watch } from 'vue';
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { RouterView, useRoute, useRouter } from 'vue-router';
 import AppHeader from './components/layout/AppHeader.vue';
 import AppFooter from './components/layout/AppFooter.vue';
@@ -11,10 +11,26 @@ const router = useRouter();
 const auth = useAuthStore();
 const { start, revealAll } = useReveal();
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const navegando = ref(false);
 
 let cuadro = 0;
+let inicioNavegacion = 0;
+let temporizadorBarra: number | undefined;
 let punteroX = 0;
 let punteroY = 0;
+
+const quitarGuardia = router.beforeEach(() => {
+  inicioNavegacion = performance.now();
+  navegando.value = true;
+});
+
+const quitarSeguimiento = router.afterEach(() => {
+  const restante = Math.max(0, 420 - (performance.now() - inicioNavegacion));
+  window.clearTimeout(temporizadorBarra);
+  temporizadorBarra = window.setTimeout(() => {
+    navegando.value = false;
+  }, restante);
+});
 
 function moverAmbiente(event: PointerEvent): void {
   if (event.pointerType === 'touch' || reduceMotion.matches) return;
@@ -68,6 +84,9 @@ onBeforeUnmount(() => {
   window.removeEventListener('farmapp:unauthorized', sesionExpirada);
   window.removeEventListener('pointermove', moverAmbiente);
   cancelAnimationFrame(cuadro);
+  window.clearTimeout(temporizadorBarra);
+  quitarGuardia();
+  quitarSeguimiento();
 });
 
 watch(
@@ -89,6 +108,10 @@ watch(
     <div class="dots" />
     <div class="rings" />
   </div>
+  <div class="sweep" aria-hidden="true" />
+  <div class="route-progress" :class="{ active: navegando }" aria-hidden="true">
+    <span />
+  </div>
 
   <AppHeader />
   <main class="page shell">
@@ -104,19 +127,91 @@ watch(
 </template>
 
 <style>
-.page-enter-active,
+.page-enter-active {
+  transition:
+    opacity 0.38s ease,
+    transform 0.5s var(--ease),
+    filter 0.38s ease;
+}
+
 .page-leave-active {
-  transition: opacity 0.22s ease, transform 0.26s var(--ease);
+  transition:
+    opacity 0.2s ease,
+    transform 0.26s ease,
+    filter 0.2s ease;
 }
 
 .page-enter-from {
   opacity: 0;
-  transform: translateY(10px);
+  transform: translate3d(0, 18px, 0) scale(0.992);
+  filter: blur(5px);
 }
 
 .page-leave-to {
   opacity: 0;
-  transform: translateY(-6px);
+  transform: translate3d(0, -10px, 0) scale(0.997);
+  filter: blur(3px);
+}
+
+.route-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1100;
+  height: 2px;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+.route-progress.active {
+  opacity: 1;
+  transition: none;
+}
+
+.route-progress span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: left center;
+  background: linear-gradient(90deg, var(--aqua), var(--blue), var(--mint));
+  box-shadow: 0 0 12px rgba(10, 132, 255, 0.45);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .route-progress.active span {
+    animation: route-progress 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+}
+
+@keyframes route-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter-active,
+  .page-leave-active {
+    transition: none;
+  }
+
+  .page-enter-from,
+  .page-leave-to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+
+  .route-progress,
+  .route-progress.active {
+    transition: none;
+  }
 }
 
 .ambient {
@@ -176,6 +271,23 @@ watch(
   opacity: 0.8;
 }
 
+.sweep {
+  position: fixed;
+  inset: -30%;
+  z-index: 2;
+  background: linear-gradient(
+    112deg,
+    transparent 42%,
+    rgba(255, 255, 255, 0.32) 47%,
+    rgba(255, 255, 255, 0.62) 50%,
+    rgba(255, 255, 255, 0.32) 53%,
+    transparent 58%
+  );
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
 .orb {
   position: absolute;
   display: block;
@@ -231,6 +343,9 @@ watch(
   .orb-c {
     animation: orb-drift-c 21s ease-in-out infinite alternate;
   }
+  .sweep {
+    animation: light-sweep 11s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
 }
 
 @keyframes aurora-drift {
@@ -266,6 +381,30 @@ watch(
   }
   to {
     transform: rotate(10deg) translate3d(-14px, 12px, 0);
+  }
+}
+
+@keyframes light-sweep {
+  0%,
+  44% {
+    transform: translate3d(-72%, -18%, 0);
+    opacity: 0;
+  }
+  50% {
+    transform: translate3d(-36%, -9%, 0);
+    opacity: 0.42;
+  }
+  62% {
+    transform: translate3d(36%, 9%, 0);
+    opacity: 0.42;
+  }
+  70% {
+    transform: translate3d(72%, 18%, 0);
+    opacity: 0;
+  }
+  100% {
+    transform: translate3d(72%, 18%, 0);
+    opacity: 0;
   }
 }
 
