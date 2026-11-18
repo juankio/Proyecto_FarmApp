@@ -28,6 +28,7 @@ let peticion = 0;
 async function cargar(): Promise<void> {
   const actual = ++peticion;
   cargando.value = true;
+  const inicio = performance.now();
   error.value = '';
 
   const params = new URLSearchParams({ page: String(page.value), limit: String(limit) });
@@ -42,7 +43,11 @@ async function cargar(): Promise<void> {
     if (actual !== peticion) return;
     error.value = e instanceof ApiError ? e.message : 'No se pudo cargar el catálogo.';
   } finally {
-    if (actual === peticion) cargando.value = false;
+    if (actual === peticion) {
+      const restante = Math.max(0, 300 - (performance.now() - inicio));
+      if (restante > 0) await new Promise((resolve) => setTimeout(resolve, restante));
+      cargando.value = false;
+    }
   }
 }
 

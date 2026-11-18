@@ -25,6 +25,7 @@ const eliminando = ref(false);
 
 async function cargar(): Promise<void> {
   cargando.value = true;
+  const inicio = performance.now();
   error.value = '';
   try {
     const query = new URLSearchParams({ page: String(page.value), limit: String(limit) });
@@ -35,6 +36,8 @@ async function cargar(): Promise<void> {
   } catch (e) {
     error.value = e instanceof ApiError ? e.message : 'No se pudieron cargar los medicamentos.';
   } finally {
+    const restante = Math.max(0, 300 - (performance.now() - inicio));
+    if (restante > 0) await new Promise((resolve) => setTimeout(resolve, restante));
     cargando.value = false;
   }
 }

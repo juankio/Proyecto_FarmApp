@@ -29,6 +29,7 @@ function estrellas(n: number): string {
 }
 
 onMounted(async () => {
+  const inicio = performance.now();
   try {
     const [med, enc, con] = await Promise.all([
       apiGet<Paginado<Medicamento>>('/medicamentos?limit=1'),
@@ -43,6 +44,8 @@ onMounted(async () => {
   } catch (e) {
     error.value = e instanceof ApiError ? e.message : 'No se pudo cargar el resumen.';
   } finally {
+    const restante = Math.max(0, 300 - (performance.now() - inicio));
+    if (restante > 0) await new Promise((resolve) => setTimeout(resolve, restante));
     cargando.value = false;
   }
 });

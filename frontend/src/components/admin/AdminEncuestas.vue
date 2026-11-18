@@ -15,6 +15,7 @@ const error = ref('');
 
 async function cargar(): Promise<void> {
   cargando.value = true;
+  const inicio = performance.now();
   error.value = '';
   try {
     const data = await apiGet<Paginado<Encuesta>>(`/encuestas?page=${page.value}&limit=${limit}`);
@@ -23,6 +24,8 @@ async function cargar(): Promise<void> {
   } catch (e) {
     error.value = e instanceof ApiError ? e.message : 'No se pudieron cargar las encuestas.';
   } finally {
+    const restante = Math.max(0, 300 - (performance.now() - inicio));
+    if (restante > 0) await new Promise((resolve) => setTimeout(resolve, restante));
     cargando.value = false;
   }
 }
