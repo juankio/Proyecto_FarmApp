@@ -2,6 +2,7 @@
 import { RouterLink, useRoute } from 'vue-router';
 import AppButton from '../components/ui/AppButton.vue';
 import AppCard from '../components/ui/AppCard.vue';
+import AppSurface from '../components/ui/AppSurface.vue';
 import PageHero from '../components/layout/PageHero.vue';
 import SectionHeader from '../components/ui/SectionHeader.vue';
 import ImageTile from '../components/ui/ImageTile.vue';
@@ -44,18 +45,18 @@ const destacados = proyectos.filter((p) => p.slug !== 'codigox').slice(0, 4);
       <div class="visual">
         <div class="halo" />
         <img class="hero-logo" :src="LOGO_URL" alt="Logo de FarmApp" />
-        <div class="float float-a glass">
+        <AppSurface tone="solid" radius="18px" class="float float-a">
           <img :src="proyectos[1].logo" :alt="proyectos[1].producto" />
           <span>{{ proyectos[1].producto }}</span>
-        </div>
-        <div class="float float-b glass">
+        </AppSurface>
+        <AppSurface tone="solid" radius="18px" class="float float-b">
           <img :src="proyectos[6].logo" :alt="proyectos[6].producto" />
           <span>{{ proyectos[6].producto }}</span>
-        </div>
-        <div class="chip glass">
+        </AppSurface>
+        <AppSurface tone="solid" radius="999px" class="chip">
           <span class="dot" />
           Información actualizada
-        </div>
+        </AppSurface>
       </div>
     </template>
   </PageHero>
@@ -65,7 +66,7 @@ const destacados = proyectos.filter((p) => p.slug !== 'codigox').slice(0, 4);
   </div>
 
   <section class="section reveal">
-    <div class="welcome glass">
+    <AppSurface tone="solid" radius="var(--radius-lg)" class="welcome">
       <div class="welcome-copy">
         <span class="eyebrow">Lea, aprenda y conozca más</span>
         <h2>Bienvenidos a nuestro aplicativo farmacéutico</h2>
@@ -83,7 +84,7 @@ const destacados = proyectos.filter((p) => p.slug !== 'codigox').slice(0, 4);
           <span>{{ s.label }}</span>
         </div>
       </div>
-    </div>
+    </AppSurface>
   </section>
 
   <section class="section reveal">
@@ -213,8 +214,8 @@ const destacados = proyectos.filter((p) => p.slug !== 'codigox').slice(0, 4);
   gap: 6px;
   padding: 12px 14px;
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.82);
-  box-shadow: var(--inset), 0 18px 36px -20px rgba(8, 47, 77, 0.5);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--line-soft);
   animation: float 9s ease-in-out infinite;
 }
 
@@ -254,7 +255,8 @@ const destacados = proyectos.filter((p) => p.slug !== 'codigox').slice(0, 4);
   font-size: 0.76rem;
   font-weight: 600;
   color: var(--ink-soft);
-  background: rgba(255, 255, 255, 0.86);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--line-soft);
 }
 
 .dot {
@@ -296,11 +298,6 @@ const destacados = proyectos.filter((p) => p.slug !== 'codigox').slice(0, 4);
   gap: clamp(24px, 4vw, 48px);
   padding: clamp(28px, 4vw, 52px);
   border-radius: var(--radius-lg);
-  background: var(--glass-strong);
-  -webkit-backdrop-filter: blur(26px) saturate(180%);
-  backdrop-filter: blur(26px) saturate(180%);
-  border: 1px solid var(--line);
-  box-shadow: var(--inset), var(--depth);
 }
 
 .welcome-copy {
@@ -333,9 +330,8 @@ const destacados = proyectos.filter((p) => p.slug !== 'codigox').slice(0, 4);
   gap: 2px;
   padding: 16px 18px;
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.62);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--line-soft);
 }
 
 .stat strong {

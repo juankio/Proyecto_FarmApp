@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 @import './tokens.css';
 
 *,
@@ -16,7 +16,7 @@ body {
   margin: 0;
   min-height: 100vh;
   color: var(--ink);
-  font-family: var(--font);
+  font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.6;
   background-color: #eaf6fb;
@@ -77,8 +77,9 @@ h1,
 h2,
 h3,
 h4,
-h5 {
-  font-family: var(--font);
+h5,
+h6 {
+  font-family: var(--font-display);
   color: var(--ink);
   font-weight: 700;
   letter-spacing: -0.028em;
@@ -129,6 +130,26 @@ input,
 textarea,
 select {
   font-family: var(--font);
+}
+
+/* ---------- Focus visible ---------- */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:not([tabindex="-1"]):focus-visible {
+  outline: 2px solid var(--blue-deep);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---------- Touch targets ---------- */
+.btn,
+.app-button,
+button {
+  min-height: 44px;
+  min-width: 44px;
 }
 
 ::selection {

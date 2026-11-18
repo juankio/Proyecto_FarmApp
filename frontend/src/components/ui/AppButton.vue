@@ -70,16 +70,14 @@ withDefaults(
 }
 
 .secondary {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.92);
   color: var(--ink);
-  border-color: rgba(255, 255, 255, 0.85);
+  border-color: var(--line-soft);
   box-shadow: var(--inset), 0 10px 22px -14px rgba(8, 47, 77, 0.45);
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
 }
 
 .secondary:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.98);
 }
 
 .ghost {

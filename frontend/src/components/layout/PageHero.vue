@@ -55,8 +55,8 @@ withDefaults(
   background:
     radial-gradient(120% 140% at 0% 0%, rgba(255, 255, 255, 0.72), transparent 58%),
     linear-gradient(140deg, rgba(255, 255, 255, 0.56), rgba(255, 255, 255, 0.22));
-  -webkit-backdrop-filter: blur(30px) saturate(190%);
-  backdrop-filter: blur(30px) saturate(190%);
+  -webkit-backdrop-filter: blur(var(--blur-lg)) saturate(190%);
+  backdrop-filter: blur(var(--blur-lg)) saturate(190%);
   border: 1px solid rgba(255, 255, 255, 0.7);
   box-shadow: var(--inset), var(--depth-lg);
 }
