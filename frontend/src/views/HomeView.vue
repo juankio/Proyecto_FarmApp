@@ -427,4 +427,12 @@ const destacados = proyectos.filter((p) => p.slug !== 'codigox').slice(0, 4);
     right: -4%;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-logo,
+  .float,
+  .dot {
+    animation: none;
+  }
+}
 </style>

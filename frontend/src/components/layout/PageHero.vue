@@ -67,6 +67,43 @@ withDefaults(
   padding: clamp(30px, 4vw, 54px);
 }
 
+.page-hero::after {
+  content: '';
+  position: absolute;
+  inset: -40% -60%;
+  z-index: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 42%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 58%
+  );
+  transform: translate3d(-90%, 0, 0) rotate(6deg);
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .page-hero::after {
+    animation: hero-sheen 15s ease-in-out infinite;
+  }
+}
+
+@keyframes hero-sheen {
+  0%,
+  62% {
+    transform: translate3d(-90%, 0, 0) rotate(6deg);
+    opacity: 0;
+  }
+  72% {
+    opacity: 0.55;
+  }
+  100% {
+    transform: translate3d(90%, 0, 0) rotate(6deg);
+    opacity: 0;
+  }
+}
+
 .glow {
   position: absolute;
   border-radius: 50%;
@@ -92,11 +129,40 @@ withDefaults(
   background: radial-gradient(circle, rgba(185, 168, 255, 0.6), transparent 68%);
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .glow-a {
+    animation: glow-drift-a 18s ease-in-out infinite alternate;
+  }
+  .glow-b {
+    animation: glow-drift-b 22s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes glow-drift-a {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(-34px, 26px, 0) scale(1.12);
+  }
+}
+
+@keyframes glow-drift-b {
+  from {
+    transform: translate3d(0, 0, 0) scale(1.04);
+  }
+  to {
+    transform: translate3d(28px, -22px, 0) scale(0.94);
+  }
+}
+
 .copy {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 18px;
+  position: relative;
+  z-index: 1;
 }
 
 .page-hero.centered .copy {
@@ -131,6 +197,7 @@ h1 {
 
 .media {
   position: relative;
+  z-index: 1;
   display: grid;
   place-items: center;
   min-width: 0;

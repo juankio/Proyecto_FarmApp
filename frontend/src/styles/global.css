@@ -21,15 +21,38 @@ body {
   line-height: 1.6;
   background-color: #eaf6fb;
   background-image:
-    radial-gradient(1100px 620px at 12% -8%, rgba(255, 255, 255, 0.85), transparent 62%),
-    radial-gradient(820px 520px at 88% 4%, rgba(126, 224, 192, 0.42), transparent 60%),
-    radial-gradient(760px 620px at 78% 26%, rgba(185, 168, 255, 0.28), transparent 62%),
-    radial-gradient(900px 700px at 8% 38%, rgba(90, 200, 250, 0.34), transparent 64%),
-    url('./assets/bg-caustics.svg') center 90px / 100% 640px no-repeat,
-    url('./assets/bg-dots.svg') 12px 140px / 260px 260px no-repeat,
-    url('./assets/bg-rings.svg') right 30px top 220px / 320px 320px no-repeat,
-    linear-gradient(180deg, #93d2e9 0%, #a9dff1 280px, #cfeaf6 560px, #eaf6fb 860px, #f8fdff 1180px, #ffffff 100%);
-  background-attachment: fixed, fixed, fixed, fixed, fixed, fixed, fixed, fixed;
+    radial-gradient(60vw 42vw at 8% -12%, rgba(0, 113, 227, 0.14), transparent 62%),
+    radial-gradient(52vw 40vw at 102% 2%, rgba(88, 86, 214, 0.12), transparent 62%),
+    radial-gradient(60vw 50vw at 50% 112%, rgba(0, 199, 190, 0.1), transparent 62%),
+    url('../assets/bg-caustics.svg'),
+    url('../assets/bg-dots.svg'),
+    url('../assets/bg-rings.svg'),
+    linear-gradient(
+      180deg,
+      #93d0e8 0%,
+      #addcee 340px,
+      #cfeaf5 560px,
+      #edf7fb 820px,
+      #ffffff 1200px
+    );
+  background-position:
+    center top,
+    center top,
+    center bottom,
+    center 120px,
+    18px 120px,
+    right 40px top 180px,
+    center top;
+  background-size:
+    auto,
+    auto,
+    auto,
+    100% 620px,
+    256px 256px,
+    304px 304px,
+    auto;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
@@ -39,12 +62,28 @@ body::after {
   content: '';
   position: fixed;
   inset-inline: 0;
-  top: 470px;
+  top: 520px;
   height: 190px;
-  background: url('./assets/bg-wave.svg') center bottom / 100% 100% no-repeat;
+  background: url('../assets/bg-wave.svg') center bottom / 100% 100% no-repeat;
   pointer-events: none;
   z-index: 0;
   opacity: 0.9;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body::after {
+    animation: wave-sway 24s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes wave-sway {
+  from {
+    transform: translate3d(-1%, 0, 0) scaleX(1.02);
+  }
+  to {
+    transform: translate3d(1%, -8px, 0) scaleX(1.04);
+  }
 }
 
 h1,
@@ -220,6 +259,32 @@ select {
   z-index: 1;
 }
 
+.glass::before {
+  content: '';
+  position: absolute;
+  top: -60%;
+  bottom: -60%;
+  left: -70%;
+  width: 45%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.62) 46%,
+    rgba(255, 255, 255, 0.28) 54%,
+    transparent 100%
+  );
+  transform: skewX(-18deg) translate3d(0, 0, 0);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  transition: transform 1.15s var(--ease), opacity 0.35s ease;
+}
+
+.glass:hover::before {
+  opacity: 0.85;
+  transform: skewX(-18deg) translate3d(420%, 0, 0);
+}
+
 /* ---------- Utilidades ---------- */
 .stack {
   display: flex;
@@ -276,6 +341,12 @@ select {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+  .glass::before {
+    display: none;
+  }
+  body::after {
+    animation: none;
   }
 }
 
