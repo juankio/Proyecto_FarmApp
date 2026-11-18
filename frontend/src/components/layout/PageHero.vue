@@ -67,6 +67,25 @@ withDefaults(
   padding: clamp(30px, 4vw, 54px);
 }
 
+.page-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(
+    520px circle at var(--mx, 50%) var(--my, 30%),
+    rgba(255, 255, 255, 0.5),
+    transparent 64%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+
+.page-hero:hover::before {
+  opacity: 0.85;
+}
+
 .page-hero::after {
   content: '';
   position: absolute;
