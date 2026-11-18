@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import AdminPagination from './AdminPagination.vue';
+import AppPagination from '../ui/AppPagination.vue';
 import { ApiError, apiGet } from '../../composables/useApi';
-import type { Encuesta, Paginado } from '../../types/admin';
+import type { Encuesta, Paginado } from '../../types/catalogo';
 import { formatFecha } from '../../utils/format';
 
 const items = ref<Encuesta[]>([]);
@@ -84,7 +84,7 @@ onMounted(cargar);
         </article>
       </div>
 
-      <AdminPagination
+      <AppPagination
         v-if="total > limit"
         :page="page"
         :total="total"

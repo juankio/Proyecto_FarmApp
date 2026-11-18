@@ -90,7 +90,7 @@ const destacados = proyectos.filter((p) => p.slug !== 'codigox').slice(0, 4);
     <SectionHeader
       eyebrow="Accesos rápidos"
       title="Conoce más de nuestros servicios"
-      lede="Cuatro puertas de entrada a la información que necesitas, con enlaces directos a fuentes confiables."
+      lede="Cuatro puertas de entrada a la información que necesitas, con nuestro catálogo y fuentes confiables."
     />
     <div class="grid grid-4">
       <ImageTile
@@ -99,6 +99,7 @@ const destacados = proyectos.filter((p) => p.slug !== 'codigox').slice(0, 4);
         :src="a.imagen"
         :title="a.nombre"
         :text="a.descripcion"
+        :to="a.to"
         :href="a.href"
         fit="contain"
         ratio="square"

@@ -1,15 +1,21 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import PageHero from '../components/layout/PageHero.vue';
 import AppCard from '../components/ui/AppCard.vue';
 import AppInput from '../components/ui/AppInput.vue';
 import AppButton from '../components/ui/AppButton.vue';
 import { ApiError, apiPost } from '../composables/useApi';
+import { useAuthStore } from '../stores/auth';
 
-const nombre = ref('');
-const email = ref('');
-const asunto = ref('');
-const mensaje = ref('');
+const route = useRoute();
+const router = useRouter();
+const auth = useAuthStore();
+
+const nombre = ref(auth.user ? `${auth.user.nombres} ${auth.user.apellidos}` : '');
+const email = ref(auth.user?.email ?? '');
+const asunto = ref(typeof route.query.asunto === 'string' ? route.query.asunto : '');
+const mensaje = ref(typeof route.query.mensaje === 'string' ? route.query.mensaje : '');
 const estado = ref('');
 const tipo = ref<'info' | 'ok' | 'error'>('info');
 const enviando = ref(false);
@@ -37,6 +43,7 @@ async function enviar(): Promise<void> {
     email.value = '';
     asunto.value = '';
     mensaje.value = '';
+    if (route.query.asunto || route.query.mensaje) router.replace('/contactos');
   } catch (error) {
     estado.value = error instanceof ApiError ? error.message : 'Ocurrió un error inesperado';
     tipo.value = 'error';

@@ -21,9 +21,7 @@ withDefaults(
   <component
     :is="to ? RouterLink : href ? 'a' : 'div'"
     :to="to"
-    :href="href"
-    :target="href ? '_blank' : undefined"
-    :rel="href ? 'noopener' : undefined"
+    v-bind="href ? { href, target: '_blank', rel: 'noopener' } : {}"
     class="tile glass"
   >
     <div class="thumb" :class="[ratio, fit]">

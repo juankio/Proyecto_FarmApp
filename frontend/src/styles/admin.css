@@ -360,49 +360,6 @@
   color: var(--muted);
 }
 
-.pager {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 16px;
-}
-
-.pager > span {
-  font-size: 0.78rem;
-  color: var(--muted);
-}
-
-.pager-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.pager button {
-  min-width: 38px;
-  height: 34px;
-  padding: 0 12px;
-  border-radius: 10px;
-  border: 1px solid rgba(12, 74, 112, 0.14);
-  background: rgba(255, 255, 255, 0.72);
-  color: var(--ink-soft);
-  font-family: var(--font);
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.pager button:hover:not(:disabled) {
-  background: #fff;
-}
-
-.pager button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
 .stat-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));

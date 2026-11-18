@@ -39,7 +39,7 @@ import { accesos } from '../data/site';
     <SectionHeader
       eyebrow="Accesos directos"
       title="Empieza por donde necesites"
-      lede="Cada acceso te lleva a una fuente externa confiable o a nuestro equipo de soporte."
+      lede="Cada acceso te lleva a nuestro catálogo, a una fuente externa confiable o a nuestro equipo de soporte."
     />
     <div class="grid grid-4">
       <ImageTile
@@ -48,6 +48,7 @@ import { accesos } from '../data/site';
         :src="a.imagen"
         :title="a.nombre"
         :text="a.descripcion"
+        :to="a.to"
         :href="a.href"
         fit="contain"
         ratio="square"

@@ -39,6 +39,7 @@ Credenciales del administrador sembrado: `admin@farmapp.local` / `Admin1234`. La
 | `/` | Portada, bienvenida, accesos, servicios, productos y preguntas frecuentes |
 | `/servicios` | Los cinco servicios y los cuatro accesos directos |
 | `/feria` | Las siete empresas de la feria y el catálogo de productos |
+| `/medicamentos` | Catálogo público con búsqueda, ficha y consulta |
 | `/proyectos/:slug` | Ficha de cada producto: precios, objetivo, ingredientes, misión, visión y galería |
 | `/blog` | Últimos avances y novedades |
 | `/informacion` | Origen del proyecto y valores |
@@ -66,6 +67,12 @@ El panel tiene cuatro pestañas:
 - **Contactos** — mensajes recibidos con enlace directo para responder por correo.
 
 Si el token expira, cualquier respuesta `401` cierra la sesión y devuelve al login.
+
+## Catálogo público
+
+`/medicamentos` consulta `GET /api/medicamentos` (ruta pública) con búsqueda por nombre o laboratorio y paginación. Cada tarjeta abre una ficha con laboratorio, presentación, concentración y descripción. El botón **Consultar** lleva a `/contactos` con el asunto y el mensaje ya escritos; si hay sesión iniciada, también precarga nombre y email.
+
+El catálogo no vende medicamentos ni procesa pedidos: informa y canaliza la consulta al formulario o a WhatsApp. Está enlazado desde el menú, el footer y las tarjetas de acceso de Inicio y Servicios.
 
 ## Diseño
 

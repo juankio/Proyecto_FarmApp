@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import { ApiError, apiGet } from '../../composables/useApi';
-import type { Contacto, Encuesta, Medicamento, Paginado } from '../../types/admin';
+import type { Contacto, Encuesta, Medicamento, Paginado } from '../../types/catalogo';
 import { formatFecha } from '../../utils/format';
 
 const cargando = ref(true);

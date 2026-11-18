@@ -21,18 +21,27 @@ export const navegacion: NavItem[] = [
   { label: 'Inicio', to: '/' },
   { label: 'Servicios', to: '/servicios' },
   { label: 'Feria', to: '/feria' },
+  { label: 'Medicamentos', to: '/medicamentos' },
   { label: 'Blog', to: '/blog' },
   { label: 'Nosotros', to: '/informacion' },
   { label: 'Contacto', to: '/contactos' },
 ];
 
-export const accesos = [
+export type Acceso = {
+  nombre: string;
+  imagen: string;
+  descripcion: string;
+  to?: string;
+  href?: string;
+};
+
+export const accesos: Acceso[] = [
   {
     nombre: 'Medicamentos',
     imagen:
       'https://res.cloudinary.com/dc4vyurnu/image/upload/v1731731665/magnesium_t4bs8u.gif',
-    href: 'https://www.vademecum.es/medicamentos-a_1',
-    descripcion: 'Consulta el vademécum y aprende sobre cada medicamento.',
+    to: '/medicamentos',
+    descripcion: 'Explora nuestro catálogo y resuelve tus dudas.',
   },
   {
     nombre: 'Ubicaciones',
@@ -49,7 +58,7 @@ export const accesos = [
   {
     nombre: 'Órdenes médicas',
     imagen: 'https://res.cloudinary.com/dc4vyurnu/image/upload/v1731731667/ordenes_bzoct8.gif',
-    href: '/contactos',
+    to: '/contactos',
     descripcion: 'Resuelve tus dudas sobre órdenes y fórmulas médicas.',
   },
 ];

@@ -49,7 +49,7 @@ watch(
   <main class="page shell">
     <RouterView v-slot="{ Component }">
       <Transition name="page" mode="out-in">
-        <div :key="route.fullPath" class="view-root">
+        <div :key="route.path" class="view-root">
           <component :is="Component" />
         </div>
       </Transition>

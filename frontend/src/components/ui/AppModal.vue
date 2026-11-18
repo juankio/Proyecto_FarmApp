@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import AppButton from './AppButton.vue';
 
-defineProps<{ open: boolean; title: string }>();
+withDefaults(
+  defineProps<{
+    open: boolean;
+    title: string;
+    closeVariant?: 'primary' | 'secondary' | 'ghost';
+  }>(),
+  { closeVariant: 'primary' },
+);
 defineEmits<{ close: [] }>();
 </script>
 
@@ -12,7 +19,7 @@ defineEmits<{ close: [] }>();
         <div class="modal">
           <h2>{{ title }}</h2>
           <div class="content"><slot /></div>
-          <AppButton block @click="$emit('close')">Cerrar</AppButton>
+          <AppButton block :variant="closeVariant" @click="$emit('close')">Cerrar</AppButton>
         </div>
       </div>
     </Transition>

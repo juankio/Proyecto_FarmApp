@@ -65,6 +65,7 @@ const columnas = [
 
       <div class="col">
         <h4>Explora</h4>
+        <RouterLink to="/medicamentos">Medicamentos</RouterLink>
         <RouterLink to="/lenguajes">Lenguajes de programación</RouterLink>
         <RouterLink to="/info-cenacap">Cenacap</RouterLink>
         <RouterLink to="/banner-yt">Banner</RouterLink>

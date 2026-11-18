@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import AppInput from '../ui/AppInput.vue';
 import AppButton from '../ui/AppButton.vue';
 import { ApiError, apiPost, apiPut } from '../../composables/useApi';
-import type { Medicamento } from '../../types/admin';
+import type { Medicamento } from '../../types/catalogo';
 
 const props = defineProps<{ medicamento: Medicamento | null }>();
 const emit = defineEmits<{ saved: []; close: [] }>();

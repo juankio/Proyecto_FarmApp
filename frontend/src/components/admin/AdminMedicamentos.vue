@@ -3,10 +3,10 @@ import { onMounted, ref } from 'vue';
 import AppButton from '../ui/AppButton.vue';
 import AppInput from '../ui/AppInput.vue';
 import AdminDialog from './AdminDialog.vue';
-import AdminPagination from './AdminPagination.vue';
+import AppPagination from '../ui/AppPagination.vue';
 import MedicamentoForm from './MedicamentoForm.vue';
 import { ApiError, apiDelete, apiGet } from '../../composables/useApi';
-import type { Medicamento, Paginado } from '../../types/admin';
+import type { Medicamento, Paginado } from '../../types/catalogo';
 
 const items = ref<Medicamento[]>([]);
 const total = ref(0);
@@ -145,7 +145,7 @@ onMounted(cargar);
         </table>
       </div>
 
-      <AdminPagination
+      <AppPagination
         v-if="total > limit"
         :page="page"
         :total="total"

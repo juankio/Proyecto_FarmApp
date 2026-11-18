@@ -15,11 +15,11 @@ function ir(page: number): void {
 </script>
 
 <template>
-  <div class="pager">
+  <nav class="pager" aria-label="Paginación">
     <span>{{ desde }}–{{ hasta }} de {{ total }}</span>
     <div class="pager-actions">
       <button type="button" :disabled="page <= 1" @click="ir(page - 1)">Anterior</button>
       <button type="button" :disabled="page >= paginas" @click="ir(page + 1)">Siguiente</button>
     </div>
-  </div>
+  </nav>
 </template>

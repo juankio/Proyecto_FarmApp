@@ -24,6 +24,12 @@ export const router = createRouter({
       meta: { title: 'Feria empresarial' },
     },
     {
+      path: '/medicamentos',
+      name: 'medicamentos',
+      component: () => import('../views/MedicamentosView.vue'),
+      meta: { title: 'Medicamentos' },
+    },
+    {
       path: '/proyectos/:slug',
       name: 'proyecto',
       component: () => import('../views/ProyectoView.vue'),
