@@ -281,15 +281,22 @@ async function salir(): Promise<void> {
   }
 }
 
-@media (max-width: 420px) {
-  .brand span {
+@media (max-width: 680px) {
+  .user-name,
+  .panel,
+  .login {
     display: none;
   }
-  .login {
-    padding: 10px 14px;
+  .bar {
+    padding: 0 10px 0 14px;
+    gap: 8px;
   }
-  .panel {
-    padding: 10px 12px;
+}
+
+@media (max-width: 420px) {
+  .brand {
+    font-size: 1.12rem;
+    gap: 8px;
   }
 }
 </style>
