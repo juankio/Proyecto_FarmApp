@@ -18,7 +18,7 @@ export function optimizarCloudinary(url: string, ancho?: number): string {
   const partes: string[] = [];
   if (ancho) {
     partes.push(`w_${ancho}`);
-    partes.push('dpr_auto');
+    if (!esGif) partes.push('dpr_auto');
   }
   partes.push('q_auto:good');
   if (!esGif) partes.push('f_auto');
