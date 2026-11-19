@@ -24,7 +24,10 @@ export class ApiError extends Error {
 
 function baseUrl(): string {
   const env = import.meta.env.VITE_API_BASE;
-  if (typeof env === 'string' && env.trim()) return env.trim().replace(/\/$/, '');
+  if (typeof env === 'string' && env.trim()) {
+    const base = env.trim().replace(/\/$/, '');
+    return base.endsWith('/api') ? base : `${base}/api`;
+  }
   return '/api';
 }
 
