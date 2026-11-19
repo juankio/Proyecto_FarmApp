@@ -15,13 +15,16 @@ export function optimizarCloudinary(url: string, ancho?: number): string {
   if (yaTransformado) return url;
 
   const esGif = /\.gif(\?|$)/i.test(url);
+  // Los GIFs no se transforman: Cloudinary rechaza parámetros como w_/q_auto en animaciones.
+  if (esGif) return url;
+
   const partes: string[] = [];
   if (ancho) {
     partes.push(`w_${ancho}`);
-    if (!esGif) partes.push('dpr_auto');
+    partes.push('dpr_auto');
   }
   partes.push('q_auto:good');
-  if (!esGif) partes.push('f_auto');
+  partes.push('f_auto');
 
   const transform = partes.join(',');
   return url.replace(marker, `${marker}${transform}/`);
