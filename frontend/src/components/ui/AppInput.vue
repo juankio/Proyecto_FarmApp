@@ -29,13 +29,12 @@ defineEmits<{ 'update:modelValue': [value: string] }>();
   width: 100%;
   height: 50px;
   padding: 0 16px;
-  border: 1px solid rgba(10, 132, 255, 0.16);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.84);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xs);
+  background: rgba(255, 255, 255, 0.055);
   color: var(--ink);
   font-size: 0.96rem;
-  box-shadow: inset 0 1px 3px rgba(8, 47, 77, 0.05);
-  outline: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
   transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
 }
 
@@ -45,13 +44,16 @@ defineEmits<{ 'update:modelValue': [value: string] }>();
 
 .app-input:focus {
   border-color: var(--blue);
-  background: #fff;
-  box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.15);
+  background: rgba(255, 255, 255, 0.085);
+  outline: none;
+  box-shadow:
+    0 0 0 4px rgba(10, 132, 255, 0.18),
+    0 0 24px -6px rgba(10, 132, 255, 0.55);
 }
 
 select.app-input {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%234f7189' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2393a4c0' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 16px center;
   padding-right: 42px;

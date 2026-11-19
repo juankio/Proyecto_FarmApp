@@ -133,7 +133,6 @@ function teclaFisica(event: KeyboardEvent): void {
 
 .calc {
   padding: 22px;
-  outline: none;
 }
 
 .display {
@@ -145,8 +144,11 @@ function teclaFisica(event: KeyboardEvent): void {
   padding: 18px;
   margin-bottom: 18px;
   border-radius: 18px;
-  background: linear-gradient(160deg, rgba(8, 47, 77, 0.92), rgba(10, 90, 140, 0.86));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  background:
+    radial-gradient(120% 140% at 80% 0%, rgba(90, 200, 250, 0.22), transparent 60%),
+    linear-gradient(160deg, rgba(10, 24, 46, 0.9), rgba(6, 12, 26, 0.92));
+  border: 1px solid var(--line);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 18px 40px -24px rgba(0, 0, 0, 0.8);
   overflow: hidden;
 }
 
@@ -175,19 +177,21 @@ function teclaFisica(event: KeyboardEvent): void {
 .key {
   height: 58px;
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.07);
   color: var(--ink);
   font-size: 1.15rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 8px 16px -12px rgba(8, 47, 77, 0.5);
-  transition: transform 0.16s var(--ease), background 0.16s;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  transition: transform 0.18s var(--spring), background 0.18s, border-color 0.18s, box-shadow 0.18s;
 }
 
 .key:hover {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.28);
   transform: translateY(-2px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 12px 24px -14px rgba(0, 0, 0, 0.8);
 }
 
 .key:active {
@@ -195,14 +199,16 @@ function teclaFisica(event: KeyboardEvent): void {
 }
 
 .key.op {
-  background: rgba(10, 132, 255, 0.12);
-  color: var(--blue-deep);
+  background: rgba(10, 132, 255, 0.16);
+  border-color: rgba(90, 200, 250, 0.3);
+  color: var(--aqua);
 }
 
 .key.eq {
-  background: linear-gradient(150deg, #2396ff, var(--blue-deep));
+  background: linear-gradient(150deg, #3d9bff, var(--blue-deep));
   color: #fff;
   border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 12px 26px -12px rgba(10, 132, 255, 0.8);
 }
 
 .history {
@@ -222,10 +228,11 @@ function teclaFisica(event: KeyboardEvent): void {
 
 .history li {
   font-size: 0.85rem;
-  color: var(--muted);
-  padding: 8px 12px;
+  color: var(--ink-soft);
+  padding: 9px 12px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--line-soft);
   font-variant-numeric: tabular-nums;
 }
 

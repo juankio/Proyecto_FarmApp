@@ -1,0 +1,116 @@
+.logo-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(100%, 380px);
+  aspect-ratio: 1 / 1;
+}
+
+.logo-glow {
+  position: absolute;
+  inset: 6%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, rgba(255, 255, 255, 0.95), rgba(90, 200, 250, 0.3) 58%, transparent 74%);
+  filter: blur(8px);
+}
+
+.logo-stage img {
+  position: relative;
+  width: 62%;
+  max-height: 260px;
+  object-fit: contain;
+  filter: drop-shadow(0 26px 44px rgba(10, 132, 255, 0.45));
+}
+
+.logo-stage .pill {
+  position: absolute;
+  bottom: 6%;
+}
+
+.intro {
+  font-size: 1rem;
+  text-align: center;
+}
+
+.price {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: center;
+}
+
+.price-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--aqua);
+}
+
+.price strong {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+}
+
+.mini-title {
+  display: inline-block;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--aqua);
+  margin-bottom: 10px;
+}
+
+.mini-title.light {
+  color: #9fdcf7;
+}
+
+.light-text {
+  color: rgba(234, 246, 251, 0.82);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chips li {
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid var(--line);
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.variant img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 16px;
+  margin-bottom: 16px;
+}
+
+.variant h3 {
+  margin-bottom: 8px;
+}
+
+.not-found {
+  text-align: center;
+  padding: 60px 30px;
+}
+
+.not-found h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.not-found p {
+  margin-bottom: 22px;
+}

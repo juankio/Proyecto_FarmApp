@@ -10,7 +10,7 @@ withDefaults(
 </script>
 
 <template>
-  <div class="app-empty-state">
+  <div class="surface surface--glass app-empty-state">
     <div class="app-empty-state__icon">
       <slot name="icon">{{ icon }}</slot>
     </div>
@@ -30,16 +30,18 @@ withDefaults(
   text-align: center;
   gap: var(--space-3);
   padding: var(--space-6);
+  border-radius: var(--radius);
 }
 
 .app-empty-state__icon {
   display: grid;
   place-items: center;
-  width: 56px;
-  height: 56px;
-  border-radius: var(--radius);
-  background: rgba(10, 132, 255, 0.08);
-  color: var(--blue-deep);
+  width: 58px;
+  height: 58px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(145deg, rgba(10, 132, 255, 0.2), rgba(185, 168, 255, 0.1));
+  border: 1px solid rgba(90, 200, 250, 0.26);
+  color: var(--aqua);
   font-size: 1.5rem;
 }
 

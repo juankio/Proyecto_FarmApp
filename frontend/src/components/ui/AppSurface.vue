@@ -22,13 +22,19 @@ const blurMap: Record<'sm' | 'md' | 'lg', string> = {
   lg: 'var(--blur-lg)',
 };
 
+const toneClass = computed(() => ({
+  glass: 'surface--glass',
+  solid: 'surface--raised',
+  dark: 'surface--dark',
+}[props.tone]));
+
 const blurValue = computed(() => (props.blur === 'none' ? '' : blurMap[props.blur]));
 </script>
 
 <template>
   <div
-    class="app-surface"
-    :class="tone"
+    class="surface"
+    :class="toneClass"
     :style="{
       borderRadius: radius,
       boxShadow: shadow,
@@ -39,27 +45,3 @@ const blurValue = computed(() => (props.blur === 'none' ? '' : blurMap[props.blu
     <slot />
   </div>
 </template>
-
-<style scoped>
-.app-surface {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-}
-
-.glass {
-  background: var(--glass);
-  border: 1px solid var(--line);
-}
-
-.solid {
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-}
-
-.dark {
-  background: var(--glass-dark);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  color: #eaf6fb;
-}
-</style>

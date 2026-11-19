@@ -1,5 +1,7 @@
 <script setup lang="ts">
-withDefaults(
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+
+const props = withDefaults(
   defineProps<{
     open: boolean;
     title: string;
@@ -8,17 +10,83 @@ withDefaults(
   { width: '560px' },
 );
 
-defineEmits<{ close: [] }>();
+const emit = defineEmits<{ close: [] }>();
+
+const modalRef = ref<HTMLElement | null>(null);
+let trigger: HTMLElement | null = null;
+
+function focusables(): HTMLElement[] {
+  if (!modalRef.value) return [];
+  return Array.from(
+    modalRef.value.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
+    ),
+  );
+}
+
+function handleClose(): void {
+  emit('close');
+  trigger?.focus();
+}
+
+function onKeydown(event: KeyboardEvent): void {
+  if (!props.open) return;
+  if (event.key === 'Escape') {
+    event.preventDefault();
+    emit('close');
+    trigger?.focus();
+    return;
+  }
+  if (event.key !== 'Tab') return;
+  const list = focusables();
+  if (!list.length) {
+    event.preventDefault();
+    modalRef.value?.focus();
+    return;
+  }
+  const first = list[0];
+  const last = list[list.length - 1];
+  if (event.shiftKey) {
+    if (document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    }
+  } else if (document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
+}
+
+watch(
+  () => props.open,
+  async (isOpen) => {
+    if (isOpen) {
+      trigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      await nextTick();
+      modalRef.value?.focus();
+    } else {
+      trigger?.focus();
+      trigger = null;
+    }
+  },
+);
+
+onMounted(() => {
+  window.addEventListener('keydown', onKeydown);
+});
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', onKeydown);
+});
 </script>
 
 <template>
   <Teleport to="body">
     <Transition name="admin-modal">
-      <div v-if="open" class="backdrop" @click.self="$emit('close')">
-        <div class="dialog" :style="{ maxWidth: width }" role="dialog" aria-modal="true">
+      <div v-if="open" class="backdrop" @click.self="handleClose">
+        <div ref="modalRef" class="dialog" :style="{ maxWidth: width }" tabindex="-1" role="dialog" aria-modal="true" :aria-label="title">
           <header>
             <h2>{{ title }}</h2>
-            <button type="button" aria-label="Cerrar" @click="$emit('close')">✕</button>
+            <button type="button" aria-label="Cerrar" @click="handleClose">✕</button>
           </header>
           <div class="body">
             <slot />
@@ -37,9 +105,9 @@ defineEmits<{ close: [] }>();
   display: grid;
   place-items: center;
   padding: 20px;
-  background: rgba(8, 47, 77, 0.44);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  background: rgba(2, 4, 10, 0.62);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
   overflow-y: auto;
 }
 
@@ -47,8 +115,9 @@ defineEmits<{ close: [] }>();
   width: 100%;
   margin: auto;
   border-radius: var(--radius-lg);
-  background: rgba(255, 255, 255, 0.96);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  outline: none;
+  background: var(--glass-strong);
+  border: 1px solid var(--line);
   box-shadow: var(--inset), var(--depth-lg);
   overflow: hidden;
 }
@@ -59,7 +128,7 @@ header {
   justify-content: space-between;
   gap: 16px;
   padding: 20px 24px;
-  border-bottom: 1px solid rgba(12, 74, 112, 0.1);
+  border-bottom: 1px solid var(--line-soft);
 }
 
 header h2 {
@@ -69,18 +138,20 @@ header h2 {
 header button {
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  border: 1px solid rgba(12, 74, 112, 0.12);
-  background: rgba(255, 255, 255, 0.8);
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: var(--radius-2xs);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.08);
   color: var(--ink-soft);
   font-size: 0.82rem;
   cursor: pointer;
 }
 
 header button:hover {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.14);
 }
 
 .body {

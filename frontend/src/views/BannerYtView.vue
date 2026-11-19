@@ -105,7 +105,7 @@ p {
   display: inline-block;
   margin-top: 12px;
   font-size: 0.86rem;
-  font-weight: 650;
-  color: var(--blue-deep);
+  font-weight: 600;
+  color: var(--aqua);
 }
 </style>

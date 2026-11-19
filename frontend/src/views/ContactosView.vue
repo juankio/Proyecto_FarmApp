@@ -145,8 +145,8 @@ async function enviar(): Promise<void> {
   display: inline-block;
   margin-top: 10px;
   font-size: 0.84rem;
-  font-weight: 650;
-  color: var(--blue-deep);
+  font-weight: 600;
+  color: var(--aqua);
 }
 
 @media (max-width: 860px) {

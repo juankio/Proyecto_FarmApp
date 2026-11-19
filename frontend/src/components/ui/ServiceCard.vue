@@ -3,7 +3,7 @@ defineProps<{ title: string; description: string; icon: string }>();
 </script>
 
 <template>
-  <article class="service glass">
+  <article class="surface surface--glass service">
     <span class="icon-wrap">
       <svg class="lg-icon" viewBox="0 0 24 24" aria-hidden="true" v-html="icon" />
     </span>
@@ -17,20 +17,15 @@ defineProps<{ title: string; description: string; icon: string }>();
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 12px;
+  gap: 14px;
   padding: 26px;
   border-radius: var(--radius);
-  background: var(--glass);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid var(--line);
-  box-shadow: var(--inset), var(--depth-sm);
-  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
 }
 
 .service:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--inset), var(--depth);
+  transform: translateY(-6px);
+  box-shadow: var(--inset), var(--glow-blue);
 }
 
 .icon-wrap {
@@ -39,9 +34,10 @@ defineProps<{ title: string; description: string; icon: string }>();
   width: 52px;
   height: 52px;
   border-radius: 16px;
-  background: linear-gradient(145deg, rgba(10, 132, 255, 0.16), rgba(90, 200, 250, 0.08));
-  border: 1px solid rgba(10, 132, 255, 0.2);
-  color: var(--blue-deep);
+  background: linear-gradient(145deg, rgba(10, 132, 255, 0.24), rgba(90, 200, 250, 0.1));
+  border: 1px solid rgba(90, 200, 250, 0.3);
+  color: var(--aqua);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
 .lg-icon {
@@ -56,7 +52,7 @@ defineProps<{ title: string; description: string; icon: string }>();
 }
 
 h3 {
-  font-size: 1.06rem;
+  font-size: 1.08rem;
   margin-top: 2px;
 }
 

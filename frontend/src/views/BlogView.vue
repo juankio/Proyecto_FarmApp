@@ -5,6 +5,7 @@ import SectionHeader from '../components/ui/SectionHeader.vue';
 import AppCard from '../components/ui/AppCard.vue';
 import AppButton from '../components/ui/AppButton.vue';
 import { posts } from '../data/blog';
+import { optimizarCloudinary } from '../utils/imagen';
 
 const fechas = ['Actualidad', 'Novedades', 'Proyecto'];
 </script>
@@ -28,7 +29,7 @@ const fechas = ['Actualidad', 'Novedades', 'Proyecto'];
     <div class="grid grid-3">
       <AppCard v-for="(post, i) in posts" :key="post.titulo" hover class="post">
         <div class="thumb">
-          <img :src="post.imagen" :alt="post.titulo" loading="lazy" />
+          <img :src="optimizarCloudinary(post.imagen, 600)" :alt="post.titulo" loading="lazy" decoding="async" />
         </div>
         <span class="pill blue">{{ fechas[i] }}</span>
         <h3>{{ post.titulo }}</h3>
@@ -64,7 +65,7 @@ const fechas = ['Actualidad', 'Novedades', 'Proyecto'];
 .thumb {
   border-radius: 16px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .thumb img {

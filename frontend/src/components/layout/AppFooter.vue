@@ -84,14 +84,16 @@ const columnas = [
 .footer {
   position: relative;
   z-index: 1;
-  margin-top: 40px;
-  padding: 54px 0 26px;
-  border-radius: 36px 36px 0 0;
-  background: linear-gradient(150deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.5));
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
-  backdrop-filter: blur(28px) saturate(180%);
-  border-top: 1px solid rgba(255, 255, 255, 0.85);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 -20px 50px -30px rgba(8, 47, 77, 0.3);
+  margin-top: 56px;
+  padding: 60px 0 28px;
+  border-radius: 40px 40px 0 0;
+  background:
+    radial-gradient(80% 60% at 50% 0%, rgba(10, 132, 255, 0.14), transparent 62%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03));
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  backdrop-filter: blur(30px) saturate(180%);
+  border-top: 1px solid var(--line);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 -30px 70px -40px rgba(0, 0, 0, 0.8);
 }
 
 .inner {
@@ -103,10 +105,10 @@ const columnas = [
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
+  gap: 10px;
   font-weight: 800;
   font-size: 1.3rem;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.045em;
   color: var(--ink);
   margin-bottom: 12px;
 }
@@ -114,6 +116,7 @@ const columnas = [
 .brand img {
   width: 34px;
   height: 34px;
+  filter: drop-shadow(0 6px 16px rgba(10, 132, 255, 0.5));
 }
 
 .brand-col p {
@@ -130,18 +133,18 @@ const columnas = [
 .social a {
   display: grid;
   place-items: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  transition: transform 0.2s var(--ease), background 0.2s;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-xs);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid var(--line);
+  transition: transform 0.24s var(--spring), background 0.22s, border-color 0.22s;
 }
 
 .social a:hover {
   transform: translateY(-2px);
-  background: #fff;
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.26);
 }
 
 .social svg {
@@ -166,23 +169,23 @@ const columnas = [
 }
 
 h4 {
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--blue-deep);
+  letter-spacing: 0.14em;
+  color: var(--aqua);
   margin-bottom: 4px;
 }
 
 .col a {
   font-size: 0.89rem;
   color: var(--muted);
-  transition: color 0.2s, transform 0.2s;
+  transition: color 0.2s, transform 0.2s var(--ease);
   width: fit-content;
 }
 
 .col a:hover {
-  color: var(--blue-deep);
-  transform: translateX(2px);
+  color: var(--aqua);
+  transform: translateX(3px);
 }
 
 .bottom {
@@ -191,9 +194,9 @@ h4 {
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
-  margin-top: 42px;
+  margin-top: 44px;
   padding-top: 20px;
-  border-top: 1px solid rgba(12, 74, 112, 0.1);
+  border-top: 1px solid var(--line-soft);
 }
 
 .bottom p {
@@ -220,7 +223,7 @@ h4 {
     gap: 26px;
   }
   .footer {
-    border-radius: 26px 26px 0 0;
+    border-radius: 28px 28px 0 0;
   }
 }
 </style>

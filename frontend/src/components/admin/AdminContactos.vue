@@ -108,7 +108,7 @@ onMounted(cargar);
 
 <style scoped>
 .admin-meta a {
-  color: var(--blue);
+  color: var(--blue-deep);
   font-weight: 600;
 }
 

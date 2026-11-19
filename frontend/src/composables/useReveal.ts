@@ -2,7 +2,9 @@ import { onBeforeUnmount } from 'vue';
 
 let observer: IntersectionObserver | null = null;
 let mutation: MutationObserver | null = null;
+let resizeObs: ResizeObserver | null = null;
 let frame = 0;
+let cuadroScroll = 0;
 
 function ensureObserver(): IntersectionObserver {
   if (observer) return observer;
@@ -15,38 +17,68 @@ function ensureObserver(): IntersectionObserver {
         }
       }
     },
-    { threshold: 0.05, rootMargin: '0px 0px -30px 0px' },
+    { threshold: 0.05, rootMargin: '0px 0px 120px 0px' },
   );
   return observer;
+}
+
+function revelarPorPosicion(): void {
+  const margen = window.innerHeight + 200;
+  document.querySelectorAll<HTMLElement>('.reveal:not(.is-visible)').forEach((el) => {
+    if (el.getBoundingClientRect().top < margen) el.classList.add('is-visible');
+  });
+}
+
+function revelarPendientes(): void {
+  const io = ensureObserver();
+  document.querySelectorAll<HTMLElement>('.reveal:not(.is-visible)').forEach((el) => io.observe(el));
 }
 
 function scheduleReveal(): void {
   if (frame) return;
   frame = window.requestAnimationFrame(() => {
     frame = 0;
-    revealNow();
+    revelarPorPosicion();
+    revelarPendientes();
   });
 }
 
-function revealNow(): void {
-  const pendientes = document.querySelectorAll<HTMLElement>('.reveal:not(.is-visible)');
+function alHacerScroll(): void {
+  if (cuadroScroll) return;
+  cuadroScroll = window.requestAnimationFrame(() => {
+    cuadroScroll = 0;
+    revelarPorPosicion();
+  });
+}
 
-  if (!('IntersectionObserver' in window)) {
-    pendientes.forEach((el) => el.classList.add('is-visible'));
-    return;
-  }
-
-  const io = ensureObserver();
-  pendientes.forEach((el) => io.observe(el));
+function alRedimensionar(): void {
+  scheduleReveal();
 }
 
 export function useReveal() {
   function start(): void {
-    revealNow();
+    revelarPorPosicion();
+    revelarPendientes();
 
     if (mutation) return;
     mutation = new MutationObserver(scheduleReveal);
     mutation.observe(document.body, { childList: true, subtree: true });
+    window.addEventListener('scroll', alHacerScroll, { passive: true });
+    window.addEventListener('load', scheduleReveal);
+
+    if ('ResizeObserver' in window) {
+      resizeObs = new ResizeObserver(alRedimensionar);
+      resizeObs.observe(document.body);
+    }
+
+    // Revelar todo el contenido en el siguiente frame: garantiza que ninguna
+    // sección quede atrapada por scroll instantáneo o layout shift, manteniendo
+    // la transición de entrada (0.85s) visible.
+    window.requestAnimationFrame(() => {
+      document
+        .querySelectorAll<HTMLElement>('.reveal:not(.is-visible)')
+        .forEach((el) => el.classList.add('is-visible'));
+    });
   }
 
   onBeforeUnmount(() => {
@@ -54,8 +86,14 @@ export function useReveal() {
     observer = null;
     mutation?.disconnect();
     mutation = null;
+    resizeObs?.disconnect();
+    resizeObs = null;
+    window.removeEventListener('scroll', alHacerScroll);
+    window.removeEventListener('load', scheduleReveal);
     if (frame) window.cancelAnimationFrame(frame);
+    if (cuadroScroll) window.cancelAnimationFrame(cuadroScroll);
     frame = 0;
+    cuadroScroll = 0;
   });
 
   return { start, revealAll: scheduleReveal };

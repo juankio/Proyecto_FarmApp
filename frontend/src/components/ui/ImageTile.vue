@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
+import { optimizarCloudinary } from '../../utils/imagen';
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     src: string;
     title: string;
@@ -15,6 +17,8 @@ withDefaults(
   }>(),
   { ratio: 'wide', fit: 'cover' },
 );
+
+const srcOptimizada = computed(() => optimizarCloudinary(props.src, 600));
 </script>
 
 <template>
@@ -22,10 +26,10 @@ withDefaults(
     :is="to ? RouterLink : href ? 'a' : 'div'"
     :to="to"
     v-bind="href ? { href, target: '_blank', rel: 'noopener' } : {}"
-    class="tile glass"
+    class="surface surface--glass tile"
   >
     <div class="thumb" :class="[ratio, fit]">
-      <img :src="src" :alt="alt ?? title" loading="lazy" />
+      <img :src="srcOptimizada" :alt="alt ?? title" loading="lazy" decoding="async" />
       <span v-if="badge" class="badge">{{ badge }}</span>
     </div>
     <div class="body">
@@ -41,37 +45,32 @@ withDefaults(
   display: flex;
   flex-direction: column;
   border-radius: var(--radius);
-  overflow: hidden;
-  isolation: isolate;
-  background: var(--glass);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid var(--line);
-  box-shadow: var(--inset), var(--depth);
-  transition: transform 0.32s var(--ease), box-shadow 0.32s var(--ease);
   cursor: pointer;
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
 }
 
 .tile:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--inset), var(--depth-lg);
+  transform: translateY(-7px);
+  box-shadow: var(--inset), var(--glow-blue);
 }
 
 .thumb {
   position: relative;
   width: 100%;
-  background: linear-gradient(140deg, rgba(255, 255, 255, 0.72), rgba(230, 245, 252, 0.5));
+  background:
+    radial-gradient(120% 120% at 20% 0%, rgba(90, 200, 250, 0.16), transparent 60%),
+    linear-gradient(150deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
   overflow: hidden;
 }
 
 .thumb img {
   width: 100%;
   height: 100%;
-  transition: transform 0.5s var(--ease);
+  transition: transform 0.6s var(--ease);
 }
 
 .tile:hover .thumb img {
-  transform: scale(1.045);
+  transform: scale(1.05);
 }
 
 .thumb.cover img {
@@ -80,7 +79,7 @@ withDefaults(
 
 .thumb.contain img {
   object-fit: contain;
-  padding: 14px;
+  padding: 16px;
 }
 
 .thumb.wide {
@@ -101,12 +100,14 @@ withDefaults(
   left: 12px;
   padding: 5px 11px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.88);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  color: var(--blue-deep);
-  font-size: 0.72rem;
+  background: rgba(10, 132, 255, 0.18);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(90, 200, 250, 0.3);
+  color: #a9e2ff;
+  font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
@@ -137,17 +138,17 @@ p {
   padding-top: 8px;
   font-size: 0.82rem;
   font-weight: 600;
-  color: var(--blue-deep);
-  opacity: 0.85;
+  color: var(--aqua);
+  opacity: 0.9;
 }
 
 .more i {
   font-style: normal;
   display: inline-block;
-  transition: transform 0.25s var(--ease);
+  transition: transform 0.3s var(--ease);
 }
 
 .tile:hover .more i {
-  transform: translateX(4px);
+  transform: translateX(5px);
 }
 </style>

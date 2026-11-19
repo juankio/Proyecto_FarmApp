@@ -97,8 +97,8 @@ const iniciales: Record<string, string> = {
 .num {
   font-size: 0.9rem;
   font-weight: 800;
-  color: var(--blue-deep);
-  background: rgba(10, 132, 255, 0.12);
+  color: var(--aqua);
+  background: rgba(90, 200, 250, 0.12);
   border-radius: 10px;
   padding: 6px 10px;
   line-height: 1;
@@ -121,7 +121,7 @@ const iniciales: Record<string, string> = {
   width: 46px;
   height: 46px;
   border-radius: 13px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 10px 20px -12px rgba(8, 47, 77, 0.6);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 10px 22px -12px rgba(0, 0, 0, 0.7);
 }
 
 .lang-icon {

@@ -24,8 +24,8 @@ withDefaults(
   position: relative;
   flex: none;
   overflow: hidden;
-  background: rgba(12, 74, 112, 0.075);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.055);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .app-skeleton::after {
@@ -35,12 +35,12 @@ withDefaults(
   background: linear-gradient(
     100deg,
     transparent 18%,
-    rgba(255, 255, 255, 0.72) 46%,
-    rgba(255, 255, 255, 0.34) 58%,
+    rgba(255, 255, 255, 0.22) 46%,
+    rgba(255, 255, 255, 0.1) 58%,
     transparent 82%
   );
   transform: translate3d(-110%, 0, 0);
-  animation: skeleton-shimmer 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation: skeleton-shimmer 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 @keyframes skeleton-shimmer {

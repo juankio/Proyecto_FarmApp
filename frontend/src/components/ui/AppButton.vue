@@ -24,21 +24,46 @@ withDefaults(
 
 <style scoped>
 .app-button {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 9px;
   min-height: 48px;
   padding: 0 24px;
-  border-radius: 14px;
+  border-radius: var(--radius-xs);
   border: 1px solid transparent;
   font-size: 0.94rem;
   font-weight: 600;
   letter-spacing: -0.01em;
   cursor: pointer;
   white-space: nowrap;
-  transition: transform 0.22s var(--ease), box-shadow 0.22s var(--ease),
-    background 0.22s, border-color 0.22s;
+  overflow: hidden;
+  transition:
+    transform 0.24s var(--spring),
+    box-shadow 0.24s var(--ease),
+    background 0.24s,
+    border-color 0.24s;
+}
+
+.app-button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  background: linear-gradient(
+    150deg,
+    rgba(255, 255, 255, 0.6) 0%,
+    rgba(255, 255, 255, 0.05) 42%,
+    rgba(255, 255, 255, 0.22) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
 }
 
 .app-button:hover:not(:disabled) {
@@ -46,71 +71,74 @@ withDefaults(
 }
 
 .app-button:active:not(:disabled) {
-  transform: translateY(0) scale(0.985);
+  transform: translateY(0) scale(0.98);
 }
 
 .app-button:disabled {
-  opacity: 0.55;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
 .primary {
-  background: linear-gradient(150deg, #2396ff, var(--blue-deep));
+  background: linear-gradient(150deg, #3d9bff, var(--blue-deep));
   color: #fff;
-  border-color: rgba(255, 255, 255, 0.32);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.42),
-    0 14px 28px -12px rgba(0, 98, 204, 0.75);
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 14px 34px -14px rgba(10, 132, 255, 0.75);
 }
 
 .primary:hover:not(:disabled) {
+  background: linear-gradient(150deg, #5aa8ff, #0a74e8);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    0 20px 36px -14px rgba(0, 98, 204, 0.85);
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    0 22px 48px -16px rgba(10, 132, 255, 0.9);
 }
 
 .secondary {
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.08);
   color: var(--ink);
-  border-color: var(--line-soft);
-  box-shadow: var(--inset), 0 10px 22px -14px rgba(8, 47, 77, 0.45);
+  border-color: var(--line);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
 }
 
 .secondary:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.98);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.28);
 }
 
 .ghost {
   background: transparent;
-  color: var(--blue-deep);
-  border-color: rgba(10, 132, 255, 0.24);
+  color: var(--aqua);
+  border-color: rgba(90, 200, 250, 0.32);
 }
 
 .ghost:hover:not(:disabled) {
-  background: rgba(10, 132, 255, 0.08);
+  background: rgba(90, 200, 250, 0.1);
+  border-color: rgba(90, 200, 250, 0.5);
 }
 
 .danger {
-  background: linear-gradient(150deg, #ff7a7a, #c62828);
+  background: linear-gradient(150deg, #ff8a8a, #d32f2f);
   color: #fff;
-  border-color: rgba(255, 255, 255, 0.28);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.36),
-    0 14px 28px -12px rgba(198, 40, 40, 0.7);
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 14px 34px -14px rgba(211, 47, 47, 0.7);
 }
 
 .danger:hover:not(:disabled) {
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.44),
-    0 20px 36px -14px rgba(198, 40, 40, 0.8);
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 22px 48px -16px rgba(211, 47, 47, 0.85);
 }
 
 .light {
   background: rgba(255, 255, 255, 0.16);
   color: #fff;
   border-color: rgba(255, 255, 255, 0.34);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
 }
 
 .light:hover:not(:disabled) {
@@ -118,16 +146,15 @@ withDefaults(
 }
 
 .sm {
-  min-height: 40px;
+  min-height: 44px;
   padding: 0 16px;
   font-size: 0.86rem;
-  border-radius: 12px;
 }
 
 .lg {
-  min-height: 54px;
-  padding: 0 30px;
-  font-size: 1rem;
+  min-height: 56px;
+  padding: 0 32px;
+  font-size: 1.02rem;
 }
 
 .block {
