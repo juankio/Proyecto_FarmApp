@@ -54,13 +54,8 @@ export const useUiStore = defineStore('ui', () => {
         const guardado = localStorage.getItem(CLAVE_TEMA);
         if (esTema(guardado)) {
           elegido = guardado;
-        } else if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
-          const coincideOscuro = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          elegido = coincideOscuro ? 'dark' : 'light';
         }
-      } else if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
-        const coincideOscuro = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        elegido = coincideOscuro ? 'dark' : 'light';
+        // Tema claro por defecto: no se respeta prefers-color-scheme automáticamente.
       }
     } catch {
       elegido = 'light';
