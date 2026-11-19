@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { computed } from "vue";
 import PageHero from '../components/layout/PageHero.vue';
 import AppButton from '../components/ui/AppButton.vue';
 import AppInput from '../components/ui/AppInput.vue';
@@ -7,68 +7,36 @@ import AppPagination from '../components/ui/AppPagination.vue';
 import AppSkeleton from '../components/ui/AppSkeleton.vue';
 import MedicamentoCard from '../components/medicamentos/MedicamentoCard.vue';
 import MedicamentoDetailModal from '../components/medicamentos/MedicamentoDetailModal.vue';
-import { ApiError, apiGet } from '../composables/useApi';
-import type { Medicamento, Paginado } from '../types/catalogo';
+import { useMedicamentosStore } from '../stores/medicamentos';
+import { usePaginatedQuery } from '../composables/usePaginatedQuery';
+import type { Medicamento } from '../types/catalogo';
 
-const limit = 12;
+const store = useMedicamentosStore();
 
-const items = ref<Medicamento[]>([]);
-const total = ref(0);
-const page = ref(1);
-const busqueda = ref('');
-const filtro = ref('');
-const cargando = ref(true);
-const error = ref('');
-const seleccionado = ref<Medicamento | null>(null);
-
-let temporizador: number | undefined;
-let peticion = 0;
-
-async function cargar(): Promise<void> {
-  const actual = ++peticion;
-  cargando.value = true;
-  const inicio = performance.now();
-  error.value = '';
-
-  const params = new URLSearchParams({ page: String(page.value), limit: String(limit) });
-  if (filtro.value) params.set('q', filtro.value);
-
-  try {
-    const data = await apiGet<Paginado<Medicamento>>(`/medicamentos?${params}`);
-    if (actual !== peticion) return;
-    items.value = data.items;
-    total.value = data.total;
-  } catch (e) {
-    if (actual !== peticion) return;
-    error.value = e instanceof ApiError ? e.message : 'No se pudo cargar el catálogo.';
-  } finally {
-    if (actual === peticion) {
-      const restante = Math.max(0, 300 - (performance.now() - inicio));
-      if (restante > 0) await new Promise((resolve) => setTimeout(resolve, restante));
-      cargando.value = false;
-    }
-  }
-}
-
-function buscar(): void {
-  window.clearTimeout(temporizador);
-  filtro.value = busqueda.value.trim();
-  page.value = 1;
-  cargar();
-}
-
-function limpiar(): void {
-  busqueda.value = '';
-  buscar();
-}
-
-function cambiarPagina(nueva: number): void {
-  page.value = nueva;
-  cargar();
-}
-
+const {
+  items,
+  total,
+  page,
+  busqueda,
+  filtro,
+  cargando,
+  error,
+  limit,
+  buscar,
+  limpiar,
+  cambiarPagina,
+} = usePaginatedQuery<Medicamento>({
+  endpoint: '/medicamentos',
+  limit: 12,
+  fetcher: async (path) => {
+    const url = new URL(path, window.location.origin);
+    const page = Number(url.searchParams.get('page') ?? '1');
+    const q = url.searchParams.get('q') ?? '';
+    return store.fetchList({ page, limit: 12, q });
+  },
+});
 function abrir(medicamento: Medicamento): void {
-  seleccionado.value = medicamento;
+  store.abrirDetalle(medicamento);
 }
 
 const resumen = computed(() => {
@@ -82,18 +50,9 @@ const resumen = computed(() => {
   return `${total.value} medicamentos disponibles`;
 });
 
-watch(busqueda, (valor) => {
-  window.clearTimeout(temporizador);
-  if (valor.trim() === filtro.value) return;
-  temporizador = window.setTimeout(() => {
-    filtro.value = valor.trim();
-    page.value = 1;
-    cargar();
-  }, 380);
-});
-
-onMounted(cargar);
-onBeforeUnmount(() => window.clearTimeout(temporizador));
+function cerrarDetalle(): void {
+  store.cerrarDetalle();
+}
 </script>
 
 <template>
@@ -164,11 +123,11 @@ onBeforeUnmount(() => window.clearTimeout(temporizador));
     </template>
   </section>
 
-  <MedicamentoDetailModal :medicamento="seleccionado" @close="seleccionado = null" />
+  <MedicamentoDetailModal @close="cerrarDetalle" />
 </template>
 
 <style scoped>
-.catalog-tools { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:14px; padding:16px 18px; border-radius:20px; margin-bottom:22px; background:var(--glass-strong); border:1px solid var(--line); box-shadow:var(--inset),var(--depth-sm); -webkit-backdrop-filter:blur(24px) saturate(180%); backdrop-filter:blur(24px) saturate(180%); }
+.catalog-tools { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:14px; padding:16px 18px; border-radius:20px; margin-bottom:22px; background:var(--glass-strong); border:1px solid var(--line); box-shadow:var(--inset),var(--shadow-sm); -webkit-backdrop-filter:blur(24px) saturate(180%); backdrop-filter:blur(24px) saturate(180%); }
 .catalog-search { display:flex; gap:10px; flex:1; min-width:min(100%,320px); max-width:520px; }
 .catalog-search :deep(.app-input) { flex:1; }
 .catalog-meta { display:flex; align-items:center; gap:12px; }
@@ -176,11 +135,11 @@ onBeforeUnmount(() => window.clearTimeout(temporizador));
 .catalog-clear { padding:6px 10px; min-height:44px; display:inline-flex; align-items:center; border:1px solid var(--line); border-radius:9px; background:rgba(90,200,250,0.12); color:var(--aqua); font-family:var(--font); font-size:0.78rem; font-weight:600; cursor:pointer; }
 .catalog-clear:hover { background:rgba(10,132,255,0.18); }
 .catalog-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr)); gap:16px; }
-.med-card { display:flex; flex-direction:column; padding:22px; border-radius:var(--radius); min-height:250px; }
+.med-card { display:flex; flex-direction:column; padding:22px; border-radius:var(--radius-md); min-height:250px; }
 .skeleton { gap:9px; }
 .skeleton-top { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:5px; }
 .skeleton-actions { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:auto; padding-top:18px; }
-.catalog-empty { display:flex; flex-direction:column; align-items:center; gap:10px; padding:clamp(34px,6vw,64px); border-radius:var(--radius-lg); text-align:center; background:var(--glass-strong); border:1px solid var(--line); box-shadow:var(--inset),var(--depth-sm); -webkit-backdrop-filter:blur(24px) saturate(180%); backdrop-filter:blur(24px) saturate(180%); }
+.catalog-empty { display:flex; flex-direction:column; align-items:center; gap:10px; padding:clamp(34px,6vw,64px); border-radius:var(--radius-lg); text-align:center; background:var(--glass-strong); border:1px solid var(--line); box-shadow:var(--inset),var(--shadow-sm); -webkit-backdrop-filter:blur(24px) saturate(180%); backdrop-filter:blur(24px) saturate(180%); }
 .empty-icon { display:grid; place-items:center; width:62px; height:62px; border-radius:20px; background:rgba(90,200,250,0.12); color:var(--aqua); }
 .empty-icon svg { width:30px; height:30px; }
 .catalog-empty h2 { font-size:1.2rem; }

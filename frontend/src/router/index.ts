@@ -115,10 +115,6 @@ router.beforeEach(async (to) => {
 
   const auth = useAuthStore();
 
-  if (!auth.isAuthenticated) {
-    return { path: '/login', query: { redirect: to.fullPath } };
-  }
-
   if (!auth.user) {
     try {
       await auth.fetchMe();
@@ -128,7 +124,12 @@ router.beforeEach(async (to) => {
     }
   }
 
-  if (!auth.isAdmin) return { path: '/', query: { denied: '1' } };
+  if (!auth.isAuthenticated || !auth.isAdmin) {
+    if (!auth.isAuthenticated) {
+      return { path: '/login', query: { redirect: to.fullPath } };
+    }
+    return { path: '/', query: { denied: '1' } };
+  }
   return true;
 });
 

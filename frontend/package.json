@@ -7,7 +7,10 @@
     "dev": "vite --host 0.0.0.0 --port 5173",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview --host 0.0.0.0 --port 5173",
-    "typecheck": "vue-tsc --noEmit"
+    "typecheck": "vue-tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "pinia": "^4.1.0",
@@ -15,9 +18,14 @@
     "vue-router": "^5.5.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.1",
     "@vitejs/plugin-vue": "^6.0.11",
+    "@vitest/ui": "^5.1.1",
+    "@vue/test-utils": "^2.6.0",
+    "jsdom": "^31.0.1",
     "typescript": "~5.9.3",
     "vite": "^8.3.8",
+    "vitest": "^5.1.1",
     "vue-tsc": "^3.3.14"
   }
 }

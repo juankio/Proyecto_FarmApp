@@ -6,8 +6,6 @@ import AppCard from '../components/ui/AppCard.vue';
 import AppButton from '../components/ui/AppButton.vue';
 import { posts } from '../data/blog';
 import { optimizarCloudinary } from '../utils/imagen';
-
-const fechas = ['Actualidad', 'Novedades', 'Proyecto'];
 </script>
 
 <template>
@@ -31,7 +29,7 @@ const fechas = ['Actualidad', 'Novedades', 'Proyecto'];
         <div class="thumb">
           <img :src="optimizarCloudinary(post.imagen, 600)" :alt="post.titulo" loading="lazy" decoding="async" />
         </div>
-        <span class="pill blue">{{ fechas[i] }}</span>
+        <span class="pill blue">{{ post.categoria }}</span>
         <h3>{{ post.titulo }}</h3>
         <p>{{ post.extracto }}</p>
       </AppCard>

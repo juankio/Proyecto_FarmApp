@@ -1,57 +1,51 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import AppButton from '../ui/AppButton.vue';
 import AppInput from '../ui/AppInput.vue';
 import AdminTable from './AdminTable.vue';
 import AdminMedicamentoDialogs from './AdminMedicamentoDialogs.vue';
-import { ApiError, apiDelete, apiGet } from '../../composables/useApi';
-import type { Medicamento, Paginado } from '../../types/catalogo';
+import { useMedicamentosStore } from '@/stores/medicamentos';
+import { usePaginatedQuery } from '@/composables/usePaginatedQuery';
+import type { Medicamento } from '@/types/catalogo';
+import { ApiError } from '@/composables/useApi';
 
-const items = ref<Medicamento[]>([]);
-const total = ref(0);
-const page = ref(1);
-const limit = 10;
-const busqueda = ref('');
-const filtro = ref('');
-const cargando = ref(true);
-const error = ref('');
+const store = useMedicamentosStore();
+
+const lastParams = { page: 1, limit: 10, filtro: '' };
+const {
+  items,
+  total,
+  page,
+  busqueda,
+  filtro,
+  cargando,
+  error,
+  limit,
+  cargar,
+  buscar,
+  limpiar,
+  cambiarPagina,
+} = usePaginatedQuery<Medicamento>({
+  endpoint: '/medicamentos',
+  limit: 10,
+  buildParams: (p, l, f) => {
+    lastParams.page = p;
+    lastParams.limit = l;
+    lastParams.filtro = f;
+    const params = new URLSearchParams({ page: String(p), limit: String(l) });
+    if (f) params.set('q', f);
+    return params;
+  },
+  fetcher: async () => {
+    await store.fetchList({ page: lastParams.page, limit: lastParams.limit, q: lastParams.filtro });
+    return { items: store.items, total: store.total };
+  },
+});
 
 const dialogo = ref(false);
 const editando = ref<Medicamento | null>(null);
 const aEliminar = ref<Medicamento | null>(null);
 const eliminando = ref(false);
-
-async function cargar(): Promise<void> {
-  cargando.value = true;
-  const inicio = performance.now();
-  error.value = '';
-  try {
-    const query = new URLSearchParams({ page: String(page.value), limit: String(limit) });
-    if (filtro.value) query.set('q', filtro.value);
-    const data = await apiGet<Paginado<Medicamento>>(`/medicamentos?${query}`);
-    items.value = data.items;
-    total.value = data.total;
-  } catch (e) {
-    error.value = e instanceof ApiError ? e.message : 'No se pudieron cargar los medicamentos.';
-  } finally {
-    const restante = Math.max(0, 300 - (performance.now() - inicio));
-    if (restante > 0) await new Promise((resolve) => setTimeout(resolve, restante));
-    cargando.value = false;
-  }
-}
-
-function buscar(): void {
-  page.value = 1;
-  filtro.value = busqueda.value.trim();
-  cargar();
-}
-
-function limpiar(): void {
-  busqueda.value = '';
-  filtro.value = '';
-  page.value = 1;
-  cargar();
-}
 
 function abrirNuevo(): void {
   editando.value = null;
@@ -67,7 +61,7 @@ async function confirmarEliminar(): Promise<void> {
   if (!aEliminar.value) return;
   eliminando.value = true;
   try {
-    await apiDelete(`/medicamentos/${aEliminar.value.id}`);
+    await store.eliminar(aEliminar.value.id);
     aEliminar.value = null;
     if (items.value.length === 1 && page.value > 1) page.value -= 1;
     await cargar();
@@ -83,12 +77,9 @@ function guardado(): void {
   cargar();
 }
 
-function cambiarPagina(nueva: number): void {
-  page.value = nueva;
-  cargar();
+function cambiarPaginaWrapper(nueva: number): void {
+  cambiarPagina(nueva);
 }
-
-onMounted(cargar);
 </script>
 
 <template>
@@ -116,7 +107,7 @@ onMounted(cargar);
       :error="error"
       @edit="abrirEditar"
       @delete="(item) => (aEliminar = item)"
-      @update:page="cambiarPagina"
+      @update:page="cambiarPaginaWrapper"
     />
   </div>
 

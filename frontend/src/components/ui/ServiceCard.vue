@@ -5,7 +5,27 @@ defineProps<{ title: string; description: string; icon: string }>();
 <template>
   <article class="surface surface--glass service">
     <span class="icon-wrap">
-      <svg class="lg-icon" viewBox="0 0 24 24" aria-hidden="true" v-html="icon" />
+      <svg class="lg-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <template v-if="icon === 'pill'">
+          <rect x="2.8" y="8" width="18.4" height="8" rx="4" transform="rotate(-35 12 12)" />
+          <path d="M12 5.5v13" />
+        </template>
+        <template v-else-if="icon === 'pin'">
+          <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z" />
+          <circle cx="12" cy="10" r="3" />
+        </template>
+        <template v-else-if="icon === 'spark'">
+          <path d="m12 3 2.2 6.8L21 12l-6.8 2.2L12 21l-2.2-6.8L3 12l6.8-2.2L12 3Z" />
+        </template>
+        <template v-else-if="icon === 'mega'">
+          <path d="M3 11v2a2 2 0 0 0 2 2h2l6 4V5L7 9H5a2 2 0 0 0-2 2Z" />
+          <path d="M17 9a4 4 0 0 1 0 6" />
+        </template>
+        <template v-else-if="icon === 'chat'">
+          <path d="M21 12a8 8 0 0 1-8 8H7l-4 3 1-5a8 8 0 1 1 17-6Z" />
+          <path d="M9 12h.01M13 12h.01M17 12h.01" />
+        </template>
+      </svg>
     </span>
     <h3>{{ title }}</h3>
     <p>{{ description }}</p>
@@ -19,7 +39,7 @@ defineProps<{ title: string; description: string; icon: string }>();
   align-items: flex-start;
   gap: 14px;
   padding: 26px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-md);
   transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
 }
 

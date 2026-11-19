@@ -30,7 +30,7 @@ withDefaults(
   text-align: center;
   gap: var(--space-3);
   padding: var(--space-6);
-  border-radius: var(--radius);
+  border-radius: var(--radius-md);
 }
 
 .app-empty-state__icon {

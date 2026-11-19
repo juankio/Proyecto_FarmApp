@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import { apiGet, apiPost, clearToken, getToken, setToken } from '../composables/useApi';
+import { apiGet, apiPost } from '../composables/useApi';
 
 export type Usuario = {
   id: number;
@@ -11,40 +11,39 @@ export type Usuario = {
   creado_en?: string;
 };
 
-type LoginData = { token: string; usuario: Usuario };
+function esUsuario(value: unknown): value is Usuario {
+  if (typeof value !== 'object' || value === null) return false;
+  const v = value as Record<string, unknown>;
+  return (
+    typeof v.id === 'number' &&
+    typeof v.nombres === 'string' &&
+    typeof v.apellidos === 'string' &&
+    typeof v.email === 'string' &&
+    (v.rol === 'usuario' || v.rol === 'admin') &&
+    (v.creado_en === undefined || typeof v.creado_en === 'string')
+  );
+}
 
-const TOKEN_KEY = 'farmapp_token';
-const USER_KEY = 'farmapp_user';
-
-function leerUsuario(): Usuario | null {
-  const raw = sessionStorage.getItem(USER_KEY);
-  if (!raw) return null;
-  try {
-    return JSON.parse(raw) as Usuario;
-  } catch {
-    sessionStorage.removeItem(USER_KEY);
-    return null;
+function validarUsuario(value: unknown): Usuario {
+  if (!esUsuario(value)) {
+    throw new Error('Respuesta de usuario inválida');
   }
+  return value;
 }
 
 export const useAuthStore = defineStore('auth', () => {
-  const token = ref<string | null>(getToken());
-  const user = ref<Usuario | null>(leerUsuario());
+  const user = ref<Usuario | null>(null);
 
-  const isAuthenticated = computed(() => Boolean(token.value));
+  const isAuthenticated = computed(() => Boolean(user.value));
   const isAdmin = computed(() => user.value?.rol === 'admin');
 
-  function persistir(usuario: Usuario | null): void {
+  function setUser(usuario: Usuario | null): void {
     user.value = usuario;
-    if (usuario) sessionStorage.setItem(USER_KEY, JSON.stringify(usuario));
-    else sessionStorage.removeItem(USER_KEY);
   }
 
   async function login(email: string, contrasena: string): Promise<void> {
-    const data = await apiPost<LoginData>('/auth/login', { email, contrasena });
-    token.value = data.token;
-    setToken(data.token);
-    persistir(data.usuario);
+    await apiPost('/auth/login', { email, contrasena });
+    await fetchMe();
   }
 
   async function register(payload: {
@@ -53,20 +52,30 @@ export const useAuthStore = defineStore('auth', () => {
     email: string;
     contrasena: string;
   }): Promise<void> {
-    await apiPost('/auth/register', payload);
+    const data = await apiPost<unknown>('/auth/register', payload);
+    try {
+      setUser(validarUsuario(data));
+    } catch {
+      // El backend establece la cookie; el estado se resuelve con fetchMe si aplica.
+    }
   }
 
   async function fetchMe(): Promise<Usuario> {
-    const usuario = await apiGet<Usuario>('/auth/me');
-    persistir(usuario);
-    return usuario;
+    const usuario = await apiGet<unknown>('/auth/me');
+    const validado = validarUsuario(usuario);
+    setUser(validado);
+    return validado;
   }
 
-  function logout(): void {
-    token.value = null;
-    clearToken();
-    persistir(null);
+  async function logout(): Promise<void> {
+    try {
+      await apiPost('/auth/logout', {});
+    } catch {
+      // Limpieza local aunque el backend falle.
+    } finally {
+      setUser(null);
+    }
   }
 
-  return { token, user, isAuthenticated, isAdmin, login, register, fetchMe, logout };
+  return { user, isAuthenticated, isAdmin, login, register, fetchMe, logout, setUser };
 });

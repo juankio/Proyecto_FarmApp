@@ -1,5 +1,9 @@
 export function formatFecha(value: string): string {
-  const iso = value.includes('T') ? value : `${value.replace(' ', 'T')}Z`;
+  if (!value) return value;
+
+  // Respetar el offset informado por el backend: no asumir UTC ni añadir 'Z'.
+  // Si viene con espacio en lugar de 'T', normalizar separador sin forzar zona.
+  const iso = value.includes('T') ? value : value.replace(' ', 'T');
   const fecha = new Date(iso);
   if (Number.isNaN(fecha.getTime())) return value;
 

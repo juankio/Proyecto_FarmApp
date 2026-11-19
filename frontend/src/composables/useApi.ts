@@ -5,7 +5,11 @@ export type ApiResponse<T> = {
   error: string | null;
 };
 
-const TOKEN_KEY = 'farmapp_token';
+export type ApiRequestOptions = RequestInit & {
+  timeout?: number;
+};
+
+const DEFAULT_TIMEOUT_MS = 10_000;
 
 export class ApiError extends Error {
   constructor(
@@ -18,32 +22,44 @@ export class ApiError extends Error {
   }
 }
 
-export function getToken(): string | null {
-  return sessionStorage.getItem(TOKEN_KEY);
+function baseUrl(): string {
+  const env = import.meta.env.VITE_API_BASE;
+  if (typeof env === 'string' && env.trim()) return env.trim().replace(/\/$/, '');
+  return '/api';
 }
 
-export function setToken(token: string): void {
-  sessionStorage.setItem(TOKEN_KEY, token);
-}
-
-export function clearToken(): void {
-  sessionStorage.removeItem(TOKEN_KEY);
-}
-
-async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
+async function request<T>(path: string, options: ApiRequestOptions = {}): Promise<T> {
+  const { timeout = DEFAULT_TIMEOUT_MS, ...fetchOptions } = options;
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    ...(options.headers as Record<string, string> | undefined),
+    ...(fetchOptions.headers as Record<string, string> | undefined),
   };
-  const token = getToken();
-  if (token) headers.Authorization = `Bearer ${token}`;
+
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), timeout);
+
+  const externalSignal = fetchOptions.signal;
+  if (externalSignal) {
+    if (externalSignal.aborted) controller.abort();
+    else externalSignal.addEventListener('abort', () => controller.abort(), { once: true });
+  }
 
   let response: Response;
   try {
-    response = await fetch(`/api${path}`, { ...options, headers });
+    response = await fetch(`${baseUrl()}${path}`, {
+      ...fetchOptions,
+      headers,
+      credentials: 'include',
+      signal: controller.signal,
+    });
   } catch {
+    window.clearTimeout(timer);
+    if (controller.signal.aborted) {
+      throw new ApiError(0, 'TIMEOUT', 'La petición excedió el tiempo de espera (10 s).');
+    }
     throw new ApiError(0, 'NETWORK_ERROR', 'No se pudo conectar con el servidor');
   }
+  window.clearTimeout(timer);
 
   let body: ApiResponse<T>;
   try {
@@ -53,8 +69,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   }
 
   if (!body.success) {
-    if (response.status === 401 && token) {
-      clearToken();
+    if (response.status === 401) {
       window.dispatchEvent(new Event('farmapp:unauthorized'));
     }
     throw new ApiError(response.status, body.error ?? 'ERROR', body.message);
@@ -62,18 +77,18 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   return body.data as T;
 }
 
-export function apiGet<T>(path: string): Promise<T> {
-  return request<T>(path);
+export function apiGet<T>(path: string, options?: ApiRequestOptions): Promise<T> {
+  return request<T>(path, { ...options, method: 'GET' });
 }
 
-export function apiPost<T>(path: string, data: unknown): Promise<T> {
-  return request<T>(path, { method: 'POST', body: JSON.stringify(data) });
+export function apiPost<T>(path: string, data: unknown, options?: ApiRequestOptions): Promise<T> {
+  return request<T>(path, { ...options, method: 'POST', body: JSON.stringify(data) });
 }
 
-export function apiPut<T>(path: string, data: unknown): Promise<T> {
-  return request<T>(path, { method: 'PUT', body: JSON.stringify(data) });
+export function apiPut<T>(path: string, data: unknown, options?: ApiRequestOptions): Promise<T> {
+  return request<T>(path, { ...options, method: 'PUT', body: JSON.stringify(data) });
 }
 
-export function apiDelete<T>(path: string): Promise<T> {
-  return request<T>(path, { method: 'DELETE' });
+export function apiDelete<T>(path: string, options?: ApiRequestOptions): Promise<T> {
+  return request<T>(path, { ...options, method: 'DELETE' });
 }

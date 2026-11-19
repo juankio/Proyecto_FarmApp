@@ -10,7 +10,7 @@ const props = withDefaults(
   }>(),
   {
     tone: 'solid',
-    radius: 'var(--radius)',
+    radius: 'var(--radius-md)',
     shadow: 'var(--shadow-sm)',
     blur: 'none',
   },

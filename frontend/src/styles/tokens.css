@@ -11,10 +11,10 @@
   --ink: #f3f7ff;
   --ink-soft: #c6d2e8;
   --muted: #93a4c0;
-  --muted-2: #71829f;
+  --muted-2: #8090ac;
 
   /* Acentos */
-  --blue: #0a84ff;
+  --blue: #1a8cff;
   --blue-bright: #3d9bff;
   --blue-deep: #0062cc;
   --aqua: #5ac8fa;
@@ -52,26 +52,20 @@
   );
 
   /* Profundidad */
-  --depth-sm: 0 10px 28px -14px rgba(0, 0, 0, 0.6);
-  --depth: 0 26px 60px -22px rgba(0, 0, 0, 0.7), 0 8px 24px -14px rgba(2, 6, 18, 0.6);
-  --depth-lg: 0 50px 100px -30px rgba(0, 0, 0, 0.8);
   --inset:
     inset 0 1px 0 rgba(255, 255, 255, 0.22),
     inset 0 -1px 0 rgba(255, 255, 255, 0.05),
     inset 0 0 0 1px rgba(255, 255, 255, 0.05);
   --glow-blue: 0 0 0 1px rgba(90, 200, 250, 0.14), 0 24px 70px -24px rgba(10, 132, 255, 0.5);
 
+  /* Sombras (2) */
   --shadow-sm: 0 10px 26px -14px rgba(0, 0, 0, 0.55);
-  --shadow-md: 0 20px 48px -20px rgba(0, 0, 0, 0.65);
-  --shadow-lg: 0 40px 90px -32px rgba(0, 0, 0, 0.8);
+  --shadow-md: 0 26px 60px -22px rgba(0, 0, 0, 0.7), 0 8px 24px -14px rgba(2, 6, 18, 0.6);
 
-  /* Radios */
-  --radius-2xs: 8px;
-  --radius-xs: 12px;
-  --radius-sm: 16px;
-  --radius: 24px;
+  /* Radios (3) */
+  --radius-sm: 12px;
+  --radius-md: 24px;
   --radius-lg: 32px;
-  --radius-xl: 44px;
 
   /* Espaciado */
   --space-1: 4px;
@@ -102,7 +96,7 @@
 @media (max-width: 767px) {
   :root {
     --shell: calc(100% - 24px);
+    --radius-md: 20px;
     --radius-lg: 26px;
-    --radius-xl: 32px;
   }
 }

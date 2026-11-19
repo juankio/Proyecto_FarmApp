@@ -1,14 +1,24 @@
 <script setup lang="ts">
+import { computed, onMounted } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppSurface from '../ui/AppSurface.vue';
 import AppStat from '../ui/AppStat.vue';
+import { useMedicamentosStore } from '@/stores/medicamentos';
 
-const stats: { valor: string; label: string; tone: 'blue' | 'mint' | 'aqua' | 'lavender' }[] = [
-  { valor: '12', label: 'Medicamentos', tone: 'blue' },
+const medicamentos = useMedicamentosStore();
+
+onMounted(() => {
+  medicamentos.fetchList({ page: 1, limit: 1 }).catch(() => {});
+});
+
+const stats = computed<
+  { valor: string; label: string; tone: 'blue' | 'mint' | 'aqua' | 'lavender' }[]
+>(() => [
+  { valor: String(medicamentos.total), label: 'Medicamentos', tone: 'blue' },
   { valor: '7', label: 'Empresas aliadas', tone: 'mint' },
   { valor: '7', label: 'Productos', tone: 'aqua' },
   { valor: '100%', label: 'Gratis', tone: 'lavender' },
-];
+]);
 </script>
 
 <template>

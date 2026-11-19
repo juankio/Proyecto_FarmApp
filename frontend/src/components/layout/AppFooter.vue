@@ -135,7 +135,9 @@ const columnas = [
   place-items: center;
   width: 44px;
   height: 44px;
-  border-radius: var(--radius-xs);
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: var(--radius-sm);
   background: rgba(255, 255, 255, 0.07);
   border: 1px solid var(--line);
   transition: transform 0.24s var(--spring), background 0.22s, border-color 0.22s;

@@ -1,9 +1,15 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import AppSkeleton from '../ui/AppSkeleton.vue';
-import { ApiError, apiGet } from '../../composables/useApi';
-import type { Contacto, Encuesta, Medicamento, Paginado } from '../../types/catalogo';
-import { formatFecha } from '../../utils/format';
+import { useMedicamentosStore } from '@/stores/medicamentos';
+import { useEncuestasStore } from '@/stores/encuestas';
+import { useContactosStore } from '@/stores/contactos';
+import type { Encuesta } from '@/types/catalogo';
+import { formatFecha } from '@/utils/format';
+
+const medStore = useMedicamentosStore();
+const encStore = useEncuestasStore();
+const conStore = useContactosStore();
 
 const cargando = ref(true);
 const error = ref('');
@@ -31,18 +37,17 @@ function estrellas(n: number): string {
 onMounted(async () => {
   const inicio = performance.now();
   try {
-    const [med, enc, con] = await Promise.all([
-      apiGet<Paginado<Medicamento>>('/medicamentos?limit=1'),
-      apiGet<Paginado<Encuesta>>('/encuestas?limit=50'),
-      apiGet<Paginado<Contacto>>('/contactos?limit=1'),
+    await Promise.all([
+      medStore.fetchList({ page: 1, limit: 1 }),
+      encStore.fetchList({ page: 1, limit: 50 }),
+      conStore.fetchList({ page: 1, limit: 1 }),
     ]);
-
-    medicamentos.value = med.total;
-    encuestasTotal.value = enc.total;
-    contactosTotal.value = con.total;
-    encuestas.value = enc.items;
+    medicamentos.value = medStore.total;
+    encuestasTotal.value = encStore.total;
+    contactosTotal.value = conStore.total;
+    encuestas.value = encStore.items;
   } catch (e) {
-    error.value = e instanceof ApiError ? e.message : 'No se pudo cargar el resumen.';
+    error.value = e instanceof Error ? e.message : 'No se pudo cargar el resumen.';
   } finally {
     const restante = Math.max(0, 300 - (performance.now() - inicio));
     if (restante > 0) await new Promise((resolve) => setTimeout(resolve, restante));
@@ -50,24 +55,18 @@ onMounted(async () => {
   }
 });
 
-function ultimos<T>(lista: T[]): T[] {
-  return lista.slice(0, 3);
-}
-
-const encuestasRecientes = computed(() => ultimos(encuestas.value));
+const encuestasRecientes = computed(() => encuestas.value.slice(0, 3));
 </script>
 
 <template>
   <div v-if="cargando" aria-busy="true">
     <p class="sr-only" role="status">Cargando resumen...</p>
-
     <div class="stat-grid" aria-hidden="true">
       <div v-for="n in 4" :key="n" class="stat-card skeleton-stat">
         <AppSkeleton width="58px" height="30px" radius="8px" />
         <AppSkeleton width="82%" height="11px" radius="5px" />
       </div>
     </div>
-
     <div class="admin-two skeleton-list" aria-hidden="true">
       <div class="admin-card">
         <AppSkeleton width="42%" height="18px" radius="6px" />
@@ -83,7 +82,6 @@ const encuestasRecientes = computed(() => ultimos(encuestas.value));
           </div>
         </div>
       </div>
-
       <div class="admin-card">
         <AppSkeleton width="52%" height="18px" radius="6px" />
         <div class="stat-grid skeleton-list">
@@ -99,31 +97,16 @@ const encuestasRecientes = computed(() => ultimos(encuestas.value));
       </div>
     </div>
   </div>
-
   <div v-else-if="error" class="admin-card">
     <div class="form-message error">{{ error }}</div>
   </div>
-
   <template v-else>
     <div class="stat-grid">
-      <div class="stat-card">
-        <strong>{{ medicamentos }}</strong>
-        <span>Medicamentos registrados</span>
-      </div>
-      <div class="stat-card">
-        <strong>{{ encuestasTotal }}</strong>
-        <span>Encuestas respondidas</span>
-      </div>
-      <div class="stat-card">
-        <strong>{{ contactosTotal }}</strong>
-        <span>Mensajes de contacto</span>
-      </div>
-      <div class="stat-card">
-        <strong>{{ promedio }}</strong>
-        <span>Calificación promedio (de 5)</span>
-      </div>
+      <div class="stat-card"><strong>{{ medicamentos }}</strong><span>Medicamentos registrados</span></div>
+      <div class="stat-card"><strong>{{ encuestasTotal }}</strong><span>Encuestas respondidas</span></div>
+      <div class="stat-card"><strong>{{ contactosTotal }}</strong><span>Mensajes de contacto</span></div>
+      <div class="stat-card"><strong>{{ promedio }}</strong><span>Calificación promedio (de 5)</span></div>
     </div>
-
     <div class="admin-two">
       <div class="admin-card">
         <h2>Últimas encuestas</h2>
@@ -140,32 +123,18 @@ const encuestasRecientes = computed(() => ultimos(encuestas.value));
           </div>
         </div>
       </div>
-
       <div class="admin-card">
         <h2>Actividad de la encuesta</h2>
         <div class="stat-grid">
-          <div class="stat-card">
-            <strong>{{ recomienda }}%</strong>
-            <span>Recomendaría FarmApp</span>
-          </div>
-          <div class="stat-card">
-            <strong>{{ encuestasTotal }}</strong>
-            <span>Total de respuestas</span>
-          </div>
+          <div class="stat-card"><strong>{{ recomienda }}%</strong><span>Recomendaría FarmApp</span></div>
+          <div class="stat-card"><strong>{{ encuestasTotal }}</strong><span>Total de respuestas</span></div>
         </div>
-        <p class="nota">
-          Los porcentajes se calculan sobre las últimas {{ encuestas.length }} respuestas
-          consultadas.
-        </p>
+        <p class="nota">Los porcentajes se calculan sobre las últimas {{ encuestas.length }} respuestas consultadas.</p>
       </div>
     </div>
   </template>
 </template>
 
 <style scoped>
-.nota {
-  margin-top: 14px;
-  font-size: 0.76rem;
-  color: var(--muted);
-}
+.nota { margin-top: 14px; font-size: 0.76rem; color: var(--muted); }
 </style>

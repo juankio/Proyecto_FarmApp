@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onBeforeUnmount, ref } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 import PageHero from '../components/layout/PageHero.vue';
 import AppCard from '../components/ui/AppCard.vue';
@@ -20,6 +20,8 @@ const mensaje = ref('');
 const tipo = ref<'info' | 'ok' | 'error'>('info');
 const cargando = ref(false);
 
+let redireccionTimer: number | undefined;
+
 async function enviar(): Promise<void> {
   if (!terminos.value) {
     mensaje.value = 'Debes aceptar los términos y condiciones.';
@@ -38,7 +40,8 @@ async function enviar(): Promise<void> {
     });
     mensaje.value = 'Registro exitoso. Ya puedes iniciar sesión.';
     tipo.value = 'ok';
-    setTimeout(() => router.push('/login'), 1100);
+    window.clearTimeout(redireccionTimer);
+    redireccionTimer = window.setTimeout(() => router.push('/login'), 1100);
   } catch (error) {
     mensaje.value = error instanceof ApiError ? error.message : 'Ocurrió un error inesperado';
     tipo.value = 'error';
@@ -46,6 +49,10 @@ async function enviar(): Promise<void> {
     cargando.value = false;
   }
 }
+
+onBeforeUnmount(() => {
+  window.clearTimeout(redireccionTimer);
+});
 </script>
 
 <template>

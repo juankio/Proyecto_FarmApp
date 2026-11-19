@@ -16,7 +16,6 @@ withDefaults(
     class="surface surface--raised page-hero"
     :class="{ compact, centered, 'has-media': Boolean($slots.media) }"
   >
-    <div class="hero-sheen" aria-hidden="true" />
     <div class="glow" aria-hidden="true" />
 
     <div class="copy">
@@ -42,7 +41,7 @@ withDefaults(
   align-items: center;
   gap: clamp(28px, 5vw, 64px);
   padding: clamp(38px, 5.4vw, 84px);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-lg);
 }
 
 .page-hero.centered,
@@ -59,21 +58,6 @@ withDefaults(
 
 .page-hero.compact {
   padding: clamp(26px, 4vw, 52px);
-}
-
-.hero-sheen {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  background: radial-gradient(
-    560px circle at var(--mx, 70%) var(--my, 12%),
-    rgba(140, 210, 255, 0.2),
-    transparent 62%
-  );
-  opacity: 0.9;
-  transition: opacity 0.4s ease;
 }
 
 .glow {

@@ -1,11 +1,14 @@
 import { onBeforeUnmount } from 'vue';
 
+// Duración de entrada alineada con --motion-slow (src/styles/motion.css).
+// Mantener sincronizado si se cambia el token.
+const DURACION_REVEAL_MS = 850;
+
 let observer: IntersectionObserver | null = null;
 let mutation: MutationObserver | null = null;
 let resizeObs: ResizeObserver | null = null;
 let frame = 0;
 let cuadroScroll = 0;
-
 function ensureObserver(): IntersectionObserver {
   if (observer) return observer;
   observer = new IntersectionObserver(
@@ -21,14 +24,12 @@ function ensureObserver(): IntersectionObserver {
   );
   return observer;
 }
-
 function revelarPorPosicion(): void {
   const margen = window.innerHeight + 200;
   document.querySelectorAll<HTMLElement>('.reveal:not(.is-visible)').forEach((el) => {
     if (el.getBoundingClientRect().top < margen) el.classList.add('is-visible');
   });
 }
-
 function revelarPendientes(): void {
   const io = ensureObserver();
   document.querySelectorAll<HTMLElement>('.reveal:not(.is-visible)').forEach((el) => io.observe(el));
@@ -50,7 +51,6 @@ function alHacerScroll(): void {
     revelarPorPosicion();
   });
 }
-
 function alRedimensionar(): void {
   scheduleReveal();
 }

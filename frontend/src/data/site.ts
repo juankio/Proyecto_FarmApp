@@ -35,6 +35,18 @@ export type Acceso = {
   href?: string;
 };
 
+export type CanalContacto = {
+  titulo: string;
+  texto: string;
+  href: string;
+};
+
+export const canalesContacto: CanalContacto[] = [
+  { titulo: 'WhatsApp', texto: 'Respuesta rápida en horario laboral.', href: site.redes.whatsapp },
+  { titulo: 'Instagram', texto: '@farmapp01', href: site.redes.instagram },
+  { titulo: 'Facebook', texto: 'FarmApp', href: site.redes.facebook },
+];
+
 export const accesos: Acceso[] = [
   {
     nombre: 'Medicamentos',

@@ -31,7 +31,7 @@ withDefaults(
   gap: 9px;
   min-height: 48px;
   padding: 0 24px;
-  border-radius: var(--radius-xs);
+  border-radius: var(--radius-sm);
   border: 1px solid transparent;
   font-size: 0.94rem;
   font-weight: 600;
@@ -79,8 +79,14 @@ withDefaults(
   cursor: not-allowed;
 }
 
+.app-button:focus-visible {
+  outline: 2px solid var(--aqua);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
 .primary {
-  background: linear-gradient(150deg, #3d9bff, var(--blue-deep));
+  background: linear-gradient(150deg, #1a8cff, var(--blue-deep));
   color: #fff;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.45),
@@ -88,7 +94,7 @@ withDefaults(
 }
 
 .primary:hover:not(:disabled) {
-  background: linear-gradient(150deg, #5aa8ff, #0a74e8);
+  background: linear-gradient(150deg, #2a9bff, #0a6fd4);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.55),
     0 22px 48px -16px rgba(10, 132, 255, 0.9);

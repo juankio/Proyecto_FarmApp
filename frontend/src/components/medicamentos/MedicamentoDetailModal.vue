@@ -1,18 +1,21 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppModal from '../ui/AppModal.vue';
 import AppButton from '../ui/AppButton.vue';
 import { site } from '../../data/site';
-import type { Medicamento } from '../../types/catalogo';
+import { useMedicamentosStore } from '../../stores/medicamentos';
 
-const props = defineProps<{ medicamento: Medicamento | null }>();
+const store = useMedicamentosStore();
+const medicamento = computed(() => store.seleccionado);
+
 const emit = defineEmits<{ (e: 'close'): void }>();
 
-function dosis(m: Medicamento): string {
+function dosis(m: NonNullable<typeof medicamento.value>): string {
   return [m.presentacion, m.concentracion].filter(Boolean).join(' · ');
 }
 
-function consulta(m: Medicamento) {
+function consulta(m: NonNullable<typeof medicamento.value>) {
   const laboratorio = m.laboratorio === 'Genérico' ? '' : ` de ${m.laboratorio}`;
   return {
     path: '/contactos',

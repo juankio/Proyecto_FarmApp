@@ -7,24 +7,35 @@ const clave = 'Clave123';
 
 type Envelope = { success: boolean; data: any; message: string; error: string | null };
 
-async function api(ruta: string, opciones: RequestInit = {}): Promise<{ status: number; body: Envelope }> {
+type ApiResult = { status: number; body: Envelope; cookies: string[] };
+
+async function api(ruta: string, opciones: RequestInit = {}): Promise<ApiResult> {
   const respuesta = await fetch(`${BASE}${ruta}`, {
     ...opciones,
     headers: { 'Content-Type': 'application/json', ...(opciones.headers ?? {}) },
   });
-  return { status: respuesta.status, body: (await respuesta.json()) as Envelope };
+  const setCookie = respuesta.headers.getSetCookie?.() ?? [];
+  const fallback = respuesta.headers.get('set-cookie');
+  const cookies = setCookie.length ? setCookie : (fallback ? [fallback] : []);
+  return { status: respuesta.status, body: (await respuesta.json()) as Envelope, cookies };
 }
 
-function post(ruta: string, datos: unknown, token?: string): RequestInit {
+function post(ruta: string, datos: unknown, extraHeaders: Record<string, string> = {}): RequestInit {
   return {
     method: 'POST',
     body: JSON.stringify(datos),
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    headers: { ...extraHeaders },
   };
+}
+
+function cookieHeader(cookies: string[]): string {
+  return cookies.map((c) => c.split(';')[0]).join('; ');
 }
 
 let tokenUsuario = '';
 let tokenAdmin = '';
+let cookieUsuario = '';
+let cookieAdmin = '';
 
 describe('FarmApp API', () => {
   test('health y frontend estático responden', async () => {
@@ -36,26 +47,35 @@ describe('FarmApp API', () => {
     expect(inicio.status).toBe(200);
   });
 
-  test('registro y duplicado', async () => {
+  test('registro y duplicado (cookie httpOnly)', async () => {
     const datos = { nombres: 'Ana', apellidos: 'Prueba', email: correo, contrasena: clave };
     const creado = await api('/api/auth/register', post('/api/auth/register', datos));
     expect(creado.status).toBe(201);
     expect(creado.body.data.email).toBe(correo);
+    expect(creado.cookies.some((c) => /HttpOnly/i.test(c))).toBe(true);
+    expect(creado.cookies.some((c) => /SameSite/i.test(c))).toBe(true);
 
     const duplicado = await api('/api/auth/register', post('/api/auth/register', datos));
     expect(duplicado.status).toBe(409);
     expect(duplicado.body.error).toBe('EMAIL_DUPLICADO');
   });
 
-  test('login, /me y control de acceso', async () => {
+  test('login, /me por cookie y control de acceso', async () => {
     const sesion = await api('/api/auth/login', post('/api/auth/login', { email: correo, contrasena: clave }));
     expect(sesion.status).toBe(200);
     tokenUsuario = sesion.body.data.token;
     expect(tokenUsuario.length).toBeGreaterThan(20);
+    cookieUsuario = cookieHeader(sesion.cookies);
+    expect(cookieUsuario.length).toBeGreaterThan(0);
+    expect(sesion.cookies.some((c) => /HttpOnly/i.test(c))).toBe(true);
 
-    const perfil = await api('/api/auth/me', { headers: { Authorization: `Bearer ${tokenUsuario}` } });
+    const perfil = await api('/api/auth/me', { headers: { Cookie: cookieUsuario } });
     expect(perfil.status).toBe(200);
     expect(perfil.body.data.rol).toBe('usuario');
+
+    // compatibilidad header
+    const perfilHeader = await api('/api/auth/me', { headers: { Authorization: `Bearer ${tokenUsuario}` } });
+    expect(perfilHeader.status).toBe(200);
 
     const sinToken = await api('/api/auth/me');
     expect(sinToken.status).toBe(401);
@@ -67,6 +87,13 @@ describe('FarmApp API', () => {
     }));
     expect(admin.status).toBe(200);
     tokenAdmin = admin.body.data.token;
+    cookieAdmin = cookieHeader(admin.cookies);
+  });
+
+  test('logout limpia cookie', async () => {
+    const salida = await api('/api/auth/logout', post('/api/auth/logout', {}, { Cookie: cookieUsuario }));
+    expect(salida.status).toBe(200);
+    expect(salida.cookies.length).toBeGreaterThan(0);
   });
 
   test('catálogo de medicamentos', async () => {
@@ -90,13 +117,13 @@ describe('FarmApp API', () => {
 
     const sinRol = await api('/api/medicamentos', post('/api/medicamentos', {
       nombre: 'Prueba temporal', laboratorio: 'Lab', presentacion: 'Tableta',
-    }, tokenUsuario));
+    }, { Authorization: `Bearer ${tokenUsuario}` }));
     expect(sinRol.status).toBe(403);
 
     const nombre = `Temporal ${Date.now()}`;
     const creado = await api('/api/medicamentos', post('/api/medicamentos', {
       nombre, laboratorio: 'Lab Prueba', presentacion: 'Tableta', concentracion: '10 mg',
-    }, tokenAdmin));
+    }, { Authorization: `Bearer ${tokenAdmin}` }));
     expect(creado.status).toBe(201);
 
     const borrado = await api(`/api/medicamentos/${creado.body.data.id}`, {

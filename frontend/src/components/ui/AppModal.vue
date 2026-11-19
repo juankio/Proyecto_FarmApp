@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { computed, ref } from 'vue';
 import AppButton from './AppButton.vue';
+import { useFocusTrap } from '../../composables/useFocusTrap';
 
 const props = withDefaults(
   defineProps<{
@@ -13,64 +14,9 @@ const props = withDefaults(
 const emit = defineEmits<{ close: [] }>();
 
 const modalRef = ref<HTMLElement | null>(null);
-let previouslyFocused: HTMLElement | null = null;
+const isOpen = computed(() => props.open);
 
-function focusables(): HTMLElement[] {
-  if (!modalRef.value) return [];
-  return Array.from(
-    modalRef.value.querySelectorAll<HTMLElement>(
-      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
-    ),
-  );
-}
-
-function onKeydown(event: KeyboardEvent): void {
-  if (!props.open) return;
-  if (event.key === 'Escape') {
-    event.preventDefault();
-    emit('close');
-    return;
-  }
-  if (event.key !== 'Tab') return;
-  const list = focusables();
-  if (!list.length) {
-    event.preventDefault();
-    modalRef.value?.focus();
-    return;
-  }
-  const first = list[0];
-  const last = list[list.length - 1];
-  if (event.shiftKey) {
-    if (document.activeElement === first) {
-      event.preventDefault();
-      last.focus();
-    }
-  } else if (document.activeElement === last) {
-    event.preventDefault();
-    first.focus();
-  }
-}
-
-watch(
-  () => props.open,
-  async (isOpen) => {
-    if (isOpen) {
-      previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-      await nextTick();
-      modalRef.value?.focus();
-    } else if (previouslyFocused) {
-      previouslyFocused.focus();
-      previouslyFocused = null;
-    }
-  },
-);
-
-onMounted(() => {
-  window.addEventListener('keydown', onKeydown);
-});
-onBeforeUnmount(() => {
-  window.removeEventListener('keydown', onKeydown);
-});
+useFocusTrap(isOpen, modalRef, () => emit('close'));
 </script>
 
 <template>

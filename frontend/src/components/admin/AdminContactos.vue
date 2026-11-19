@@ -1,45 +1,39 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
 import AppPagination from '../ui/AppPagination.vue';
 import AppSkeleton from '../ui/AppSkeleton.vue';
-import { ApiError, apiGet } from '../../composables/useApi';
-import type { Contacto, Paginado } from '../../types/catalogo';
-import { formatFecha } from '../../utils/format';
+import { useContactosStore } from '@/stores/contactos';
+import { usePaginatedQuery } from '@/composables/usePaginatedQuery';
+import type { Contacto } from '@/types/catalogo';
+import { formatFecha } from '@/utils/format';
 
-const items = ref<Contacto[]>([]);
-const total = ref(0);
-const page = ref(1);
-const limit = 8;
-const cargando = ref(true);
-const error = ref('');
+const store = useContactosStore();
 
-async function cargar(): Promise<void> {
-  cargando.value = true;
-  const inicio = performance.now();
-  error.value = '';
-  try {
-    const data = await apiGet<Paginado<Contacto>>(`/contactos?page=${page.value}&limit=${limit}`);
-    items.value = data.items;
-    total.value = data.total;
-  } catch (e) {
-    error.value = e instanceof ApiError ? e.message : 'No se pudieron cargar los mensajes.';
-  } finally {
-    const restante = Math.max(0, 300 - (performance.now() - inicio));
-    if (restante > 0) await new Promise((resolve) => setTimeout(resolve, restante));
-    cargando.value = false;
-  }
-}
-
-function cambiarPagina(nueva: number): void {
-  page.value = nueva;
-  cargar();
-}
+const lastParams = { page: 1, limit: 8 };
+const {
+  items,
+  total,
+  page,
+  cargando,
+  error,
+  limit,
+  cambiarPagina,
+} = usePaginatedQuery<Contacto>({
+  endpoint: '/contactos',
+  limit: 8,
+  buildParams: (p, l) => {
+    lastParams.page = p;
+    lastParams.limit = l;
+    return new URLSearchParams({ page: String(p), limit: String(l) });
+  },
+  fetcher: async () => {
+    await store.fetchList({ page: lastParams.page, limit: lastParams.limit });
+    return { items: store.items, total: store.total };
+  },
+});
 
 function responder(item: Contacto): string {
   return `mailto:${item.email}?subject=${encodeURIComponent(`Re: ${item.asunto}`)}`;
 }
-
-onMounted(cargar);
 </script>
 
 <template>

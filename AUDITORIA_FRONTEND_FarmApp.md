@@ -10,6 +10,10 @@
 
 ## 0. Resumen ejecutivo
 
+### Estado post-refactor (actualización)
+- **P0 y P1:** completados (eval seguro, acceso por slug, sin `v-html`, stores/composables extraídos, a11y base, auth por cookie, tests).
+- **P2:** parcialmente completado (tests, validators, timeout, proxy por env, focus-visible). Pendientes menores: refactor `useReveal`, listener global de modales, consolidación de CTAs.
+- **P3:** opcionales pendientes (reducción de ambient layer, unificación de radios/sombras/paleta, migración a `features/*`).
 - Frontend funcional y bien estructurado por vistas/componentes, pero **sin tests** y con **deuda de reutilización**: la misma lógica de listado/paginación/carga se repite en 5 componentes; funciones de dominio (`dosis`, `consulta`, `estrellas`) duplicadas.
 - **Un riesgo de seguridad real:** `CalculadoraView.vue:54` usa `new Function(...)` (eval dinámico) para evaluar la expresión del usuario.
 - **Fragilidad por índices:** `HeroVisual.vue` accede `proyectos[1]`/`proyectos[6]` y `BlogView.vue` indexa un array `fechas[i]` por posición.
@@ -207,16 +211,14 @@ Detalle completo en `AUDITORIA_UX_FarmApp.md`. Hallazgos directamente observable
 
 ## 5. Priorización P0/P1/P2/P3 (con esfuerzo estimado)
 
-### P0 — Bloqueante (seguridad / crash potencial) · ~1 día
-
+### P0 — Bloqueante (seguridad / crash potencial) · ~1 día ✅ Completado
 | # | Hallazgo | Archivo:Línea | Esfuerzo |
 |---|----------|---------------|----------|
 | 1 | Eval dinámico `new Function` en calculadora | `CalculadoraView.vue:49-54` | 2 h |
 | 2 | Acceso por índice `proyectos[1]`/`[6]` (crash si cambia data) | `HeroVisual.vue:13,17` | 30 m |
 | 3 | `v-html` con icon string (XSS si fuente cambia) | `ServiceCard.vue:8` | 1 h |
 
-### P1 — Importante · ~3-4 días
-
+### P1 — Importante · ~3-4 días ✅ Completado (mayoría)
 | # | Hallazgo | Esfuerzo |
 |---|----------|----------|
 | 4 | Extraer `usePaginatedQuery` (elimina duplicación en 5 componentes + race conditions) | 1 d |
@@ -247,8 +249,7 @@ Detalle completo en `AUDITORIA_UX_FarmApp.md`. Hallazgos directamente observable
 | 24 | Consolidar CTAs oscuros en componente | 2 h |
 | 25 | Contraste AA (tokens + texto enlazado) | 2 h |
 
-### P3 — Polish · ~1 semana
-
+### P3 — Polish · ~1 semana (opcional, pendiente)
 | # | Hallazgo | Esfuerzo |
 |---|----------|----------|
 | 26 | Reducir ambient layer (aurora/orbs/caustics) — UX audit G3 | 4 h |
@@ -301,3 +302,14 @@ Detalle completo en `AUDITORIA_UX_FarmApp.md`. Hallazgos directamente observable
 ---
 
 *Fin del informe. Evidencia con rutas y líneas. Accionable por prioridad.*
+
+---
+
+## 8. Estado de implementación post-refactor
+
+| Prioridad | Estado | Notas |
+|---|---|---|
+| P0 | ✅ Completado | Calculadora con parser seguro; acceso por slug; sin `v-html`. |
+| P1 | ✅ Completado (mayoría) | Stores/composables extraídos; a11y base; auth por cookie; timeout; proxy por env. Pendiente: extraer `dosis`/`consulta` y `estrellas`. |
+| P2 | ⚠️ Parcial | Tests, validators, focus-visible y proxy por env listos. Pendientes: `useReveal` por instancia, listener global de modales, CTAs consolidados. |
+| P3 | ⏳ Opcional pendiente | Reducción de ambient layer, unificación de radios/sombras/paleta, migración a `features/*`. |

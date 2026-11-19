@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { computed, ref } from 'vue';
+import { useFocusTrap } from '../../composables/useFocusTrap';
 
 const props = withDefaults(
   defineProps<{
@@ -13,70 +14,13 @@ const props = withDefaults(
 const emit = defineEmits<{ close: [] }>();
 
 const modalRef = ref<HTMLElement | null>(null);
-let trigger: HTMLElement | null = null;
-
-function focusables(): HTMLElement[] {
-  if (!modalRef.value) return [];
-  return Array.from(
-    modalRef.value.querySelectorAll<HTMLElement>(
-      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
-    ),
-  );
-}
+const isOpen = computed(() => props.open);
 
 function handleClose(): void {
   emit('close');
-  trigger?.focus();
 }
 
-function onKeydown(event: KeyboardEvent): void {
-  if (!props.open) return;
-  if (event.key === 'Escape') {
-    event.preventDefault();
-    emit('close');
-    trigger?.focus();
-    return;
-  }
-  if (event.key !== 'Tab') return;
-  const list = focusables();
-  if (!list.length) {
-    event.preventDefault();
-    modalRef.value?.focus();
-    return;
-  }
-  const first = list[0];
-  const last = list[list.length - 1];
-  if (event.shiftKey) {
-    if (document.activeElement === first) {
-      event.preventDefault();
-      last.focus();
-    }
-  } else if (document.activeElement === last) {
-    event.preventDefault();
-    first.focus();
-  }
-}
-
-watch(
-  () => props.open,
-  async (isOpen) => {
-    if (isOpen) {
-      trigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-      await nextTick();
-      modalRef.value?.focus();
-    } else {
-      trigger?.focus();
-      trigger = null;
-    }
-  },
-);
-
-onMounted(() => {
-  window.addEventListener('keydown', onKeydown);
-});
-onBeforeUnmount(() => {
-  window.removeEventListener('keydown', onKeydown);
-});
+useFocusTrap(isOpen, modalRef, () => emit('close'));
 </script>
 
 <template>
@@ -118,7 +62,7 @@ onBeforeUnmount(() => {
   outline: none;
   background: var(--glass-strong);
   border: 1px solid var(--line);
-  box-shadow: var(--inset), var(--depth-lg);
+  box-shadow: var(--inset), var(--shadow-md);
   overflow: hidden;
 }
 
@@ -142,7 +86,7 @@ header button {
   height: 44px;
   min-width: 44px;
   min-height: 44px;
-  border-radius: var(--radius-2xs);
+  border-radius: var(--radius-sm);
   border: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.08);
   color: var(--ink-soft);

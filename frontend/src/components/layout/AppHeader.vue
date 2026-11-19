@@ -9,8 +9,8 @@ const auth = useAuthStore();
 const route = useRoute();
 const router = useRouter();
 
-function salir(): void {
-  auth.logout();
+async function salir(): Promise<void> {
+  await auth.logout();
   if (route.path.startsWith('/admin')) router.push('/');
 }
 </script>

@@ -1,12 +1,19 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { RouterLink, useRoute } from 'vue-router';
+import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { navegacion } from '../../data/site';
 import { useAuthStore } from '../../stores/auth';
 
 const auth = useAuthStore();
 const route = useRoute();
+const router = useRouter();
 const abierto = ref(false);
+
+async function salir(): Promise<void> {
+  await auth.logout();
+  abierto.value = false;
+  if (route.path.startsWith('/admin')) router.push('/');
+}
 
 watch(
   () => route.fullPath,
@@ -21,7 +28,7 @@ watch(
     class="burger"
     type="button"
     :aria-expanded="abierto"
-    aria-label="Abrir menú"
+    :aria-label="abierto ? 'Cerrar menú' : 'Abrir menú'"
     @click="abierto = !abierto"
   >
     <span :class="{ open: abierto }" />
@@ -35,6 +42,7 @@ watch(
       <RouterLink v-if="auth.isAdmin" to="/admin">Panel de administración</RouterLink>
       <RouterLink to="/encuesta">Encuesta</RouterLink>
       <RouterLink v-if="!auth.isAuthenticated" to="/registro">Crear cuenta</RouterLink>
+      <button v-if="auth.isAuthenticated" type="button" class="mobile-logout" @click="salir">Salir</button>
       <div v-if="auth.user" class="mobile-user">
         <span>{{ auth.user.nombres }} {{ auth.user.apellidos }}</span>
         <small>{{ auth.user.email }}</small>
@@ -47,8 +55,10 @@ watch(
 .burger {
   display: none;
   place-items: center;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   padding: 0;
   border-radius: 12px;
   border: 1px solid var(--line);
@@ -116,6 +126,23 @@ watch(
 .mobile a.router-link-active {
   background: rgba(10, 132, 255, 0.16);
   color: #bcdcff;
+}
+
+.mobile-logout {
+  margin-top: 4px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.mobile-logout:hover {
+  background: rgba(255, 255, 255, 0.16);
 }
 
 .mobile-user {

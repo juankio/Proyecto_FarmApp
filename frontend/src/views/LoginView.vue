@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onBeforeUnmount, ref } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import PageHero from '../components/layout/PageHero.vue';
 import AppCard from '../components/ui/AppCard.vue';
@@ -14,7 +14,6 @@ const router = useRouter();
 
 const email = ref('');
 const contrasena = ref('');
-const recordar = ref(false);
 const mensaje = ref('');
 const tipo = ref<'info' | 'ok' | 'error'>('info');
 const cargando = ref(false);
@@ -22,6 +21,13 @@ const cargando = ref(false);
 const destino = computed(() =>
   typeof route.query.redirect === 'string' ? route.query.redirect : '/',
 );
+
+let redireccionTimer: number | undefined;
+
+function programarRedireccion(callback: () => void, delay: number): void {
+  window.clearTimeout(redireccionTimer);
+  redireccionTimer = window.setTimeout(callback, delay);
+}
 
 async function enviar(): Promise<void> {
   cargando.value = true;
@@ -34,13 +40,13 @@ async function enviar(): Promise<void> {
     if (destino.value.startsWith('/admin') && !auth.isAdmin) {
       mensaje.value = 'Tu cuenta no tiene permisos de administrador.';
       tipo.value = 'error';
-      setTimeout(() => router.push('/?denied=1'), 1400);
+      programarRedireccion(() => router.push('/?denied=1'), 1400);
       return;
     }
 
     mensaje.value = '¡Bienvenido de vuelta!';
     tipo.value = 'ok';
-    setTimeout(() => router.push(destino.value), 700);
+    programarRedireccion(() => router.push(destino.value), 700);
   } catch (error) {
     mensaje.value = error instanceof ApiError ? error.message : 'Ocurrió un error inesperado';
     tipo.value = 'error';
@@ -48,6 +54,10 @@ async function enviar(): Promise<void> {
     cargando.value = false;
   }
 }
+
+onBeforeUnmount(() => {
+  window.clearTimeout(redireccionTimer);
+});
 </script>
 
 <template>
@@ -84,11 +94,6 @@ async function enviar(): Promise<void> {
             required
           />
         </div>
-
-        <label class="check">
-          <input v-model="recordar" type="checkbox" />
-          Recordarme
-        </label>
 
         <AppButton type="submit" block size="lg" :disabled="cargando">
           {{ cargando ? 'Ingresando...' : 'Ingresar' }}

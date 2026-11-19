@@ -44,7 +44,7 @@ const srcOptimizada = computed(() => optimizarCloudinary(props.src, 600));
 .tile {
   display: flex;
   flex-direction: column;
-  border-radius: var(--radius);
+  border-radius: var(--radius-md);
   cursor: pointer;
   transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
 }

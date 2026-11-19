@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import AppSurface from '../ui/AppSurface.vue';
 import { LOGO_URL } from '../../data/logo';
-import { proyectos } from '../../data/proyectos';
+import { useProyectosStore } from '../../stores/proyectos';
 import { optimizarCloudinary } from '../../utils/imagen';
+
+const store = useProyectosStore();
+const exfolpiel = store.getBySlug('exfolpiel')!;
+const selene = store.getBySlug('selene')!;
 </script>
 
 <template>
@@ -10,12 +14,12 @@ import { optimizarCloudinary } from '../../utils/imagen';
     <div class="halo" />
     <img class="hero-logo" :src="optimizarCloudinary(LOGO_URL, 400)" alt="Logo de FarmApp" />
     <AppSurface tone="glass" radius="20px" class="float float-a">
-      <img :src="optimizarCloudinary(proyectos[1].logo, 128)" :alt="proyectos[1].producto" />
-      <span>{{ proyectos[1].producto }}</span>
+      <img :src="optimizarCloudinary(exfolpiel.logo, 128)" :alt="exfolpiel.producto" />
+      <span>{{ exfolpiel.producto }}</span>
     </AppSurface>
     <AppSurface tone="glass" radius="20px" class="float float-b">
-      <img :src="optimizarCloudinary(proyectos[6].logo, 128)" :alt="proyectos[6].producto" />
-      <span>{{ proyectos[6].producto }}</span>
+      <img :src="optimizarCloudinary(selene.logo, 128)" :alt="selene.producto" />
+      <span>{{ selene.producto }}</span>
     </AppSurface>
     <AppSurface tone="glass" radius="999px" class="chip">
       <span class="dot" />

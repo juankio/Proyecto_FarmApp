@@ -9,7 +9,7 @@ import { sendFail } from './utils/apiResponse';
 const app = express();
 
 app.disable('x-powered-by');
-app.use(cors({ origin: env.CORS_ORIGIN }));
+app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }));
 app.use(express.json());
 
 app.use('/api', apiRouter);

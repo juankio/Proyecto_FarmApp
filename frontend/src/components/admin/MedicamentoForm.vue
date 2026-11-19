@@ -4,6 +4,7 @@ import AppInput from '../ui/AppInput.vue';
 import AppButton from '../ui/AppButton.vue';
 import { ApiError, apiPost, apiPut } from '../../composables/useApi';
 import type { Medicamento } from '../../types/catalogo';
+import { required, url as isValidUrl } from '../../utils/validators';
 
 const props = defineProps<{ medicamento: Medicamento | null }>();
 const emit = defineEmits<{ saved: []; close: [] }>();
@@ -27,8 +28,18 @@ function limpiar(valor: string): string {
 async function guardar(): Promise<void> {
   error.value = '';
 
-  if (!limpiar(form.value.nombre) || !limpiar(form.value.laboratorio) || !limpiar(form.value.presentacion)) {
+  if (
+    !required(form.value.nombre) ||
+    !required(form.value.laboratorio) ||
+    !required(form.value.presentacion)
+  ) {
     error.value = 'Nombre, laboratorio y presentación son obligatorios.';
+    return;
+  }
+
+  const imagen = limpiar(form.value.imagenUrl);
+  if (imagen && !isValidUrl(imagen)) {
+    error.value = 'La imagen debe ser una URL válida.';
     return;
   }
 
@@ -40,7 +51,6 @@ async function guardar(): Promise<void> {
     descripcion: limpiar(form.value.descripcion),
   };
 
-  const imagen = limpiar(form.value.imagenUrl);
   if (imagen) payload.imagenUrl = imagen;
 
   guardando.value = true;

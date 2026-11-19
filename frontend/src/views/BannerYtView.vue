@@ -44,7 +44,7 @@ const enlaces = [
   place-items: center;
   min-height: 520px;
   padding: clamp(36px, 6vw, 80px);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-lg);
   overflow: hidden;
   text-align: center;
   background:
@@ -52,7 +52,7 @@ const enlaces = [
     linear-gradient(150deg, rgba(6, 36, 60, 0.92), rgba(10, 90, 140, 0.82)),
     linear-gradient(120deg, #0a84ff, #5ac8fa);
   border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: var(--inset), var(--depth-lg);
+  box-shadow: var(--inset), var(--shadow-md);
 }
 
 .banner::before {

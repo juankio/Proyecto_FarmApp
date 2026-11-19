@@ -1,46 +1,21 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import PageHero from '../components/layout/PageHero.vue';
 import AppCard from '../components/ui/AppCard.vue';
 import AppInput from '../components/ui/AppInput.vue';
 import AppButton from '../components/ui/AppButton.vue';
-import { ApiError, apiPost } from '../composables/useApi';
+import { useEncuestaForm } from '../composables/useEncuestaForm';
 
-const nombre = ref('');
-const email = ref('');
-const calificacion = ref('');
-const comentario = ref('');
-const recomendaria = ref(false);
-const mensaje = ref('');
-const tipo = ref<'info' | 'ok' | 'error'>('info');
-const enviando = ref(false);
-
-async function enviar(): Promise<void> {
-  enviando.value = true;
-  mensaje.value = 'Registrando tu opinión...';
-  tipo.value = 'info';
-  try {
-    await apiPost('/encuestas', {
-      nombre: nombre.value || undefined,
-      email: email.value || undefined,
-      calificacion: Number(calificacion.value),
-      comentario: comentario.value,
-      recomendaria: recomendaria.value,
-    });
-    mensaje.value = '¡Gracias por participar en la encuesta! Tu opinión nos ayuda a mejorar.';
-    tipo.value = 'ok';
-    nombre.value = '';
-    email.value = '';
-    calificacion.value = '';
-    comentario.value = '';
-    recomendaria.value = false;
-  } catch (error) {
-    mensaje.value = error instanceof ApiError ? error.message : 'Ocurrió un error inesperado';
-    tipo.value = 'error';
-  } finally {
-    enviando.value = false;
-  }
-}
+const {
+  nombre,
+  email,
+  calificacion,
+  comentario,
+  recomendaria,
+  mensaje,
+  tipo,
+  enviando,
+  enviar,
+} = useEncuestaForm();
 </script>
 
 <template>
@@ -110,3 +85,4 @@ async function enviar(): Promise<void> {
     </AppCard>
   </section>
 </template>
+

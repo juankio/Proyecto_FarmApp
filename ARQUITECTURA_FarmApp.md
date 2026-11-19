@@ -1,9 +1,9 @@
 # Arquitectura Frontend FarmApp — Mapa y Plan de Refactor
 
 **Nami (Arquitecta)** · Alcance: `frontend/src` (Vue 3 + Vite + TS, SPA)  
-**Restricción:** no se modificó código; solo lectura/análisis + este documento.  
-**Verificación:** `bun run typecheck` ✅ · `bun run build` ✅ (2.29 s).  
-**Rama actual:** `dev` · Git dirty: cambios sin commitear en `frontend/src`.
+**Estado post-refactor:** implementado (stores, composables, a11y, tests, auth cookie).  
+**Verificación:** `bun run typecheck` ✅ · `bun run build` ✅ (1.48 s) · `bun run test` ✅ (6 archivos, 47 tests).  
+**Rama actual:** `dev` · Git: cambios preparados para commit final.
 
 ---
 
@@ -178,8 +178,9 @@ Todos los endpoints devuelven este envoltorio. `useApi.request` parsea sin valid
 |---|---|---|---|---|
 | GET | `/health` | no | — | `{ status, uptime }` |
 | POST | `/auth/register` | no | `{ nombres, apellidos, email, contrasena }` | usuario creado |
-| POST | `/auth/login` | no | `{ email, contrasena }` | `{ token, usuario }` |
-| GET | `/auth/me` | Bearer | — | `Usuario` |
+| POST | `/auth/login` | no | `{ email, contrasena }` | `{ token, usuario }` + Set-Cookie httpOnly |
+| POST | `/auth/logout` | no | — | limpia cookie |
+| GET | `/auth/me` | Bearer o cookie | — | `Usuario` |
 | GET | `/medicamentos` | no | `q?, page, limit` | `Paginado<Medicamento>` |
 | GET | `/medicamentos/:id` | no | — | `Medicamento` |
 | POST | `/medicamentos` | admin | `CreateMedicamentoInput` | `Medicamento` |
@@ -450,3 +451,76 @@ Paralelizable tras T3.8: T5 (datos), T6 (UX), T7 (admin) no comparten archivos s
 ## 10. Veredicto
 
 Frontend **funcional y tipado estricto, build verde**, pero con deuda de reutilización, seguridad (eval), accesibilidad y ausencia de tests. El refactor propuesto es **incremental por fases con build/typecheck como gate**, sin placeholders, usando rutas reales del repo. Ningún cambio de código se realizó en esta entrega.
+---
+
+## 11. Estado de Fase 1 (Jinbe) — Alias + Carpetas
+
+**Completado.** Código legacy intacto (no se movió ningún archivo).
+
+- Alias `@` → `src/` configurado en `frontend/vite.config.ts` (`resolve.alias`) y `frontend/tsconfig.json` (`baseUrl` + `paths`).
+- Árbol `frontend/src/features/{home,medicamentos,contactos,encuestas,proyectos,admin,auth,calculadora}` creado con subcarpetas `components, composables, views, data, utils, types` y barrel `index.ts`.
+- Árbol `frontend/src/shared/{ui,composables,stores,utils,types,styles}` creado con barrel `index.ts`.
+- Convenciones documentadas en `frontend/src/README-ARCH.md`.
+- Verificación: `bun run typecheck` ✅ · `bun run build` ✅ (alias `@/...` resuelve y compila).
+- Próximo: Fase 2 (migración de capas compartidas) según §7, con build/typecheck como gate.
+
+---
+
+## 12. Estado post-refactor (implementado)
+
+### 12.1 Estructura y alias
+- Alias `@` → `src/` configurado en `frontend/vite.config.ts` y `frontend/tsconfig.json`.
+- Andamiaje feature-driven en `frontend/src/features/*` y `frontend/src/shared/*` (barrels preparados; el código productivo permanece en rutas legacy).
+- Alias también en `frontend/vitest.config.ts`.
+
+### 12.2 Stores Pinia (`frontend/src/stores/`)
+- `auth` — login/register/fetchMe/logout con validación de `Usuario`; sin `sessionStorage` (cookie httpOnly).
+- `medicamentos` — listado/paginación/búsqueda con contador de peticiones; CRUD (create/update/eliminar); `delete` alias.
+- `contactos`, `encuestas` — listado paginado + submit con contador de peticiones.
+- `proyectos` — acceso por slug (`getBySlug`/`porSlug`), sin índices frágiles.
+- `ui` — toasts, modales y estado de navegación.
+
+### 12.3 Composables (`frontend/src/composables/`)
+- `useApi` — fetch centralizado, base URL por `VITE_API_BASE`, `credentials: 'include'`, timeout/AbortController (10 s), `ApiError`.
+- `usePaginatedQuery` — items/total/page/búsqueda/carga con debounce, contador de peticiones y delay mínimo.
+- `useDebounce`, `useFocusTrap` — reutilizables.
+- `useCalculator` — parser aritmético seguro (sin `new Function`/eval).
+- `useContactoForm`, `useEncuestaForm` — estado + validación + envío.
+- `useAuthBootstrap` — restaura sesión con `/auth/me` y maneja `farmapp:unauthorized`.
+- `useReveal` — reveal on scroll (singleton).
+- `useAmbientParallax`, `useNavigationProgress`, `useScrollAmbient`.
+
+### 12.4 Utilidades (`frontend/src/utils/`)
+- `format` — `formatFecha` (respeta offset backend) e `iniciales`.
+- `imagen` — `optimizarCloudinary` idempotente.
+- `validators` — `isEmail`, `required`, `minLength`, `url` + alias.
+
+### 12.5 Seguridad y accesibilidad
+- Calculadora sin eval dinámico.
+- `ServiceCard` sin `v-html`.
+- `HeroVisual` accede a proyectos por slug.
+- `BlogView` usa `post.categoria` (sin índices por posición).
+- Focus-visible en `global.css`, `AppInput`, `AppButton`, `CalculadoraView`.
+- Targets mínimos 44 px en botones/pager/social/close/burger.
+- `AppHeaderMobile` aria-label dinámico.
+- `LoginView`/`RegistroView` limpian timers; sin dead code `recordar`.
+- `main.ts` con `app.config.errorHandler` global.
+- `vite.config.ts` proxy por env.
+
+### 12.6 Tests
+- Vitest: 6 archivos, 47 tests (`auth`, `format`, `imagen`, `validators`, `usePaginatedQuery`, `useCalculator`).
+- Playwright e2e: `frontend/e2e/smoke.spec.ts` (rutas públicas + login admin).
+- Scripts: `test`, `test:watch`, `test:e2e`.
+
+### 12.7 Autenticación (backend)
+- Cookie `token` httpOnly, `Secure` en producción, `SameSite=Lax`, `path=/`, maxAge 2 h.
+- Middleware acepta cookie (varios nombres) o `Authorization: Bearer`.
+- `POST /auth/logout` limpia cookie (también `GET /logout`).
+- Frontend usa `credentials: 'include'`; store `auth` no persiste token en `sessionStorage`.
+
+### 12.8 Pendientes opcionales (P3)
+- Reducir ambient layer y simplificar `PageHero`.
+- Unificar radios/sombras y paleta.
+- Extraer `dosis`/`consulta` y `estrellas` a utilidades compartidas.
+- Migrar código legacy a `features/*`/`shared/*` (barrels listos).
+- Consolidar CTAs oscuros y scoped `useReveal`.

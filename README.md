@@ -57,8 +57,7 @@ Las fichas disponibles son `codigox`, `exfolpiel`, `fenix`, `gummy-vit`, `nails-
 
 ## Panel de administración
 
-Entra en `/admin` con la cuenta administradora. El guard del router exige sesión y rol `admin`; un usuario normal es devuelto a la portada con un aviso. La sesión se guarda en `sessionStorage` (`farmapp_token` y `farmapp_user`) y se restaura al recargar.
-
+Entra en `/admin` con la cuenta administradora. El guard del router exige sesión y rol `admin`; un usuario normal es devuelto a la portada con un aviso. La autenticación se basa en una cookie `httpOnly` (`token`) emitida por el backend (`Secure` solo en producción, `SameSite=Lax`), con compatibilidad Bearer para el frontend actual; no se almacena token en `sessionStorage`. El estado de usuario vive en el store Pinia `auth` y se restaura con `GET /api/auth/me` al montar la app (composable `useAuthBootstrap`).
 El panel tiene cuatro pestañas:
 
 - **Resumen** — totales de medicamentos, encuestas y contactos, promedio de calificación y porcentaje de recomendación.
@@ -83,6 +82,13 @@ El sistema visual está en `frontend/src/styles/`:
 
 Componentes reutilizables en `frontend/src/components/`: `AppButton`, `AppCard`, `AppInput`, `AppModal`, `AppAccordion`, `ServiceCard`, `ImageTile`, `SectionHeader`, `PageHero`, `AppHeader` y `AppFooter`. Las animaciones de entrada usan `IntersectionObserver` mediante `composables/useReveal.ts`.
 
+Estado frontend post-refactor:
+- Alias de importación `@` → `src/` configurado en `vite.config.ts` y `tsconfig.json`.
+- Stores Pinia en `frontend/src/stores/`: `auth`, `medicamentos`, `contactos`, `encuestas`, `proyectos`, `ui` (toasts/modales/navegación).
+- Composables en `frontend/src/composables/`: `useApi` (fetch centralizado, timeout/AbortController, cookie incluida), `usePaginatedQuery`, `useDebounce`, `useFocusTrap`, `useCalculator` (parser aritmético seguro, sin `eval`), `useContactoForm`, `useEncuestaForm`, `useAuthBootstrap`, `useReveal`.
+- Utilidades en `frontend/src/utils/`: `format`, `imagen` (Cloudinary idempotente), `validators`.
+- Tests: Vitest + Vue Test Utils (6 archivos, 47 tests) y Playwright e2e (`frontend/e2e/smoke.spec.ts`).
+- Andamiaje feature-driven en `frontend/src/features/*` y `frontend/src/shared/*` (barrels preparados; el código productivo aún vive en rutas legacy).
 Todo el contenido real (empresas, productos, logos, galerías, FAQ, blog y textos) está centralizado en `frontend/src/data/`.
 
 ## Comandos
@@ -106,6 +112,9 @@ Todo el contenido real (empresas, productos, logos, galerías, FAQ, blog y texto
 | `bun run build` | Typecheck y build de producción en `dist/` |
 | `bun run typecheck` | `vue-tsc --noEmit` |
 | `bun run preview` | Sirve el build de producción |
+| `bun run test` | Pruebas unitarias (Vitest) |
+| `bun run test:watch` | Pruebas en modo watch |
+| `bun run test:e2e` | Pruebas end-to-end (Playwright) |
 
 ## API
 
@@ -116,7 +125,8 @@ Todas las respuestas usan `{ success, data, message, error }`. `error` es un có
 | GET | `/api/health` | público |
 | POST | `/api/auth/register` | público |
 | POST | `/api/auth/login` | público |
-| GET | `/api/auth/me` | token |
+| POST | `/api/auth/logout` | público (limpia cookie) |
+| GET | `/api/auth/me` | token o cookie |
 | GET | `/api/medicamentos` | público |
 | GET | `/api/medicamentos/:id` | público |
 | POST | `/api/medicamentos` | admin |
@@ -127,16 +137,21 @@ Todas las respuestas usan `{ success, data, message, error }`. `error` es un có
 | POST | `/api/contactos` | público |
 | GET | `/api/contactos` | admin |
 
-El token de sesión se guarda en `sessionStorage` y se envía como `Authorization: Bearer`.
+Autenticación: el backend emite un JWT en una cookie `httpOnly`, `Secure` (solo en producción), `SameSite=Lax`. La respuesta JSON mantiene el token en el cuerpo por compatibilidad con el frontend actual, que lo envía como `Authorization: Bearer`. El middleware acepta cookie o header. `POST /api/auth/logout` limpia la cookie.
 
 ## Estructura
 
 - `backend/src/` — servidor Express, capas de rutas, controladores, servicios, repositorios y esquemas Zod.
 - `backend/src/db/migrations/` — esquema SQLite versionado.
 - `data/farmapp.db` — base de datos local, ignorada por Git.
-- `frontend/src/` — frontend Vue 3: vistas, componentes, datos, estilos, stores y router.
+- `frontend/src/` — frontend Vue 3: vistas, componentes, datos, estilos, stores, composables, utilidades, tests y router.
+  - `frontend/src/stores/` — stores Pinia (auth, medicamentos, contactos, encuestas, proyectos, ui).
+  - `frontend/src/composables/` — lógica reactiva y fetch centralizado (`useApi`, `usePaginatedQuery`, etc.).
+  - `frontend/src/utils/` — helpers puros (`format`, `imagen`, `validators`).
+  - `frontend/src/test/` — setup de Vitest.
+  - `frontend/e2e/` — pruebas Playwright.
+  - `frontend/src/features/*` y `frontend/src/shared/*` — andamiaje feature-driven (barrels preparados).
 - `src/` — sitio HTML original (CódigoX 2024), conservado como referencia.
-
 ## Ramas
 
 `main` es producción, `dev` es desarrollo y `test` es QA. Nunca se hace push directo a `main`.

@@ -3,13 +3,7 @@ import PageHero from '../components/layout/PageHero.vue';
 import SectionHeader from '../components/ui/SectionHeader.vue';
 import AppCard from '../components/ui/AppCard.vue';
 import { lenguajes } from '../data/lenguajes';
-
-const iniciales: Record<string, string> = {
-  'C++': 'C++',
-  Python: 'Py',
-  'C#': 'C#',
-  Java: 'Jv',
-};
+import { iniciales } from '../utils/format';
 </script>
 
 <template>
@@ -66,7 +60,7 @@ const iniciales: Record<string, string> = {
     <div class="grid grid-4">
       <AppCard v-for="l in lenguajes.altoNivel" :key="l.nombre" hover class="lang">
         <span class="lang-icon" :style="{ background: l.color }">
-          {{ iniciales[l.nombre] }}
+          {{ iniciales(l.nombre, '') }}
         </span>
         <h3>{{ l.nombre }}</h3>
         <p>{{ l.texto }}</p>

@@ -48,8 +48,8 @@ function consulta(m: Medicamento) {
 </template>
 
 <style scoped>
-.med-card { display:flex; flex-direction:column; padding:22px; border-radius:var(--radius); background:var(--glass-strong); border:1px solid var(--line); box-shadow:var(--inset),var(--depth-sm); -webkit-backdrop-filter:blur(22px) saturate(180%); backdrop-filter:blur(22px) saturate(180%); transition:transform 0.3s var(--ease),box-shadow 0.3s var(--ease); }
-.med-card:hover { transform:translateY(-4px); box-shadow:var(--inset),var(--depth); }
+.med-card { display:flex; flex-direction:column; padding:22px; border-radius:var(--radius-md); background:var(--glass-strong); border:1px solid var(--line); box-shadow:var(--inset),var(--shadow-sm); -webkit-backdrop-filter:blur(22px) saturate(180%); backdrop-filter:blur(22px) saturate(180%); transition:transform 0.3s var(--ease),box-shadow 0.3s var(--ease); }
+.med-card:hover { transform:translateY(-4px); box-shadow:var(--inset),var(--shadow-md); }
 .med-top { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px; }
 .med-icon { display:grid; place-items:center; width:46px; height:46px; border-radius:14px; background:linear-gradient(145deg,rgba(10,132,255,0.16),rgba(126,224,192,0.24)); border:1px solid var(--line); color:var(--aqua); }
 .med-icon svg { width:24px; height:24px; }

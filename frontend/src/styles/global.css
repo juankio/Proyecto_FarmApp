@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import './tokens.css';
-
+@import './motion.css';
 *,
 *::before,
 *::after {
@@ -216,12 +216,12 @@ button {
 /* ---------- Vidrio ---------- */
 .glass {
   position: relative;
-  border-radius: var(--radius);
+  border-radius: var(--radius-md);
   background: var(--glass);
   -webkit-backdrop-filter: blur(var(--blur-lg)) saturate(180%);
   backdrop-filter: blur(var(--blur-lg)) saturate(180%);
   border: 1px solid var(--line);
-  box-shadow: var(--inset), var(--depth);
+  box-shadow: var(--inset), var(--shadow-md);
   overflow: hidden;
   isolation: isolate;
 }
@@ -281,9 +281,9 @@ button {
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  border-radius: var(--radius);
+  border-radius: var(--radius-md);
   border: 1px solid var(--line);
-  box-shadow: var(--inset), var(--depth);
+  box-shadow: var(--inset), var(--shadow-md);
   -webkit-backdrop-filter: blur(var(--blur-lg)) saturate(180%);
   backdrop-filter: blur(var(--blur-lg)) saturate(180%);
 }
@@ -396,9 +396,9 @@ button {
   transform: translateY(26px) scale(0.985);
   filter: blur(6px);
   transition:
-    opacity 0.85s var(--ease),
-    transform 0.85s var(--ease),
-    filter 0.85s var(--ease);
+    opacity var(--motion-slow) var(--ease-out),
+    transform var(--motion-slow) var(--ease-out),
+    filter var(--motion-slow) var(--ease-out);
   will-change: opacity, transform, filter;
 }
 
@@ -484,7 +484,6 @@ button {
   color: var(--ink);
   font-size: 0.96rem;
   resize: vertical;
-  outline: none;
   transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
 }
 
@@ -496,6 +495,11 @@ button {
   border-color: var(--blue);
   background: rgba(255, 255, 255, 0.08);
   box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.18);
+}
+
+.app-textarea:focus-visible {
+  outline: 2px solid var(--aqua);
+  outline-offset: 2px;
 }
 
 .check {
@@ -637,6 +641,7 @@ details.accordion .answer {
 
 .pager button {
   min-width: 44px;
+  min-height: 44px;
   height: 44px;
   padding: 0 12px;
   border-radius: 12px;

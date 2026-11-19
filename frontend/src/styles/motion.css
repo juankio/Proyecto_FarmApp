@@ -1,0 +1,77 @@
+/* ==========================================================================
+   Motion tokens — Brook (Soul Musician)
+   Duraciones, easings y resortes reutilizables para micro-interacciones.
+   Fuente única de verdad para el movimiento de la UI. Mantener sincronizado
+   con los valores documentados aquí; no hardcodear duraciones en componentes.
+   ========================================================================== */
+
+:root {
+  /* ----- Duraciones ----- */
+  /* Micro-interacciones rápidas: hover, focus, toggles, feedback inmediato */
+  --motion-fast: 180ms;
+  /* Transiciones estándar de componentes y estados */
+  --motion-base: 320ms;
+  /* Entradas/reveals de sección (equivale a 0.85s del .reveal original) */
+  --motion-slow: 850ms;
+
+  /* ----- Easing ----- */
+  /* Salida suave: default para entradas y desplazamientos */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Ida y vuelta: para animaciones cíclicas y transiciones simétricas */
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  /* Compatibilidad con código existente que usa --ease */
+  --ease: var(--ease-out);
+
+  /* ----- Resortes (spring presets) ----- */
+  /* Aproximaciones con cubic-bezier; para resortes físicos reales usar motion/react */
+  /* Rebote sutil: micro-interacciones discretas */
+  --spring-soft: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  /* Rebote medio: botones, modales, acordeones (default histórico) */
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Rebote marcado: elementos lúdicos y celebraciones */
+  --spring-bouncy: cubic-bezier(0.34, 1.8, 0.64, 1);
+}
+
+/* ----- Reduced motion: desactivar movimiento ----- */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: 0ms;
+    --motion-base: 0ms;
+    --motion-slow: 0ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ----- Utilidades reutilizables de transición ----- */
+/* Uso: <div class="fade-in"> o <div class="slide-up"> */
+.fade-in {
+  opacity: 0;
+  animation: motion-fade-in var(--motion-base) var(--ease-out) forwards;
+}
+
+.slide-up {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: motion-slide-up var(--motion-base) var(--ease-out) forwards;
+}
+
+@keyframes motion-fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes motion-slide-up {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

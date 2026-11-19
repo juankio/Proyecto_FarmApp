@@ -32,7 +32,7 @@ defineProps<{ anterior: Proyecto; siguiente: Proyecto }>();
   flex-direction: column;
   gap: 4px;
   padding: 22px 24px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-md);
   background: var(--glass-strong);
   transition: transform 0.25s var(--ease);
 }
