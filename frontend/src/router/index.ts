@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
+import HomeView from '../views/HomeView.vue';
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -9,7 +10,7 @@ export const router = createRouter({
     return { top: 0 };
   },
   routes: [
-    { path: '/', name: 'home', component: () => import('../views/HomeView.vue'), meta: { title: 'Inicio' } },
+    { path: '/', name: 'home', component: HomeView, meta: { title: 'Inicio' } },
     {
       path: '/servicios',
       name: 'servicios',
