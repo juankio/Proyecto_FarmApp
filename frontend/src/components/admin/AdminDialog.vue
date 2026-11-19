@@ -55,6 +55,10 @@ useFocusTrap(isOpen, modalRef, () => emit('close'));
   overflow-y: auto;
 }
 
+[data-theme="light"] .backdrop {
+  background: rgba(15, 23, 42, 0.35);
+}
+
 .dialog {
   width: 100%;
   margin: auto;

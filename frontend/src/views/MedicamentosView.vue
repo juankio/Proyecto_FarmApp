@@ -135,7 +135,7 @@ function cerrarDetalle(): void {
 .catalog-clear { padding:6px 10px; min-height:44px; display:inline-flex; align-items:center; border:1px solid var(--line); border-radius:9px; background:rgba(90,200,250,0.12); color:var(--aqua); font-family:var(--font); font-size:0.78rem; font-weight:600; cursor:pointer; }
 .catalog-clear:hover { background:rgba(10,132,255,0.18); }
 .catalog-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr)); gap:16px; }
-.med-card { display:flex; flex-direction:column; padding:22px; border-radius:var(--radius-md); min-height:250px; }
+.med-card { display:flex; flex-direction:column; padding:22px; border-radius:var(--radius-md); min-height:250px; background:var(--glass-strong); border:1px solid var(--line); box-shadow:var(--inset),var(--shadow-sm); -webkit-backdrop-filter:blur(22px) saturate(180%); backdrop-filter:blur(22px) saturate(180%); }
 .skeleton { gap:9px; }
 .skeleton-top { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:5px; }
 .skeleton-actions { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:auto; padding-top:18px; }

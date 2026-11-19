@@ -24,23 +24,27 @@ withDefaults(
   position: relative;
   flex: none;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.055);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  background: var(--skeleton-bg, rgba(255, 255, 255, 0.08));
+  border: 1px solid var(--skeleton-border, rgba(255, 255, 255, 0.06));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .app-skeleton::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    100deg,
-    transparent 18%,
-    rgba(255, 255, 255, 0.22) 46%,
-    rgba(255, 255, 255, 0.1) 58%,
-    transparent 82%
+  background: var(
+    --skeleton-shimmer,
+    linear-gradient(
+      100deg,
+      transparent 18%,
+      rgba(255, 255, 255, 0.22) 46%,
+      rgba(255, 255, 255, 0.1) 58%,
+      transparent 82%
+    )
   );
   transform: translate3d(-110%, 0, 0);
-  animation: skeleton-shimmer 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation: skeleton-shimmer 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 @keyframes skeleton-shimmer {

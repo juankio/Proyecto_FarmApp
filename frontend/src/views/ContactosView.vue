@@ -102,6 +102,9 @@ const {
   font-weight: 600;
   color: var(--aqua);
 }
+[data-theme="light"] .canal-link {
+  color: #0062cc;
+}
 @media (max-width: 860px) {
   .contact-grid {
     grid-template-columns: 1fr;

@@ -115,7 +115,7 @@ import { iniciales } from '../utils/format';
   width: 46px;
   height: 46px;
   border-radius: 13px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 10px 22px -12px rgba(0, 0, 0, 0.7);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), var(--shadow-sm);
 }
 
 .lang-icon {

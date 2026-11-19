@@ -78,17 +78,43 @@ watch(
   min-height: 44px;
   padding: 0;
   border-radius: 12px;
-  border: 1px solid var(--line);
-  background: var(--bg-2);
+  border: 1px solid var(--glass-control-border);
+  background: var(--glass-control-bg);
+  box-shadow: var(--glass-control-shadow);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   color: var(--ink);
   cursor: pointer;
-  transition: background 0.22s, transform 0.24s var(--spring), border-color 0.22s;
+  transition:
+    background 0.22s,
+    transform 0.24s var(--spring),
+    border-color 0.22s,
+    box-shadow 0.22s,
+    color 0.22s;
 }
 
 .theme-toggle-mobile:hover {
-  background: var(--bg-3);
-  border-color: var(--line);
+  background: var(--glass-control-bg-hover);
+  border-color: var(--glass-control-border-hover);
+  box-shadow: var(--glass-control-shadow-hover);
+  color: var(--blue-bright);
   transform: translateY(-1px);
+}
+
+[data-theme="light"] .theme-toggle-mobile,
+[data-theme="light"] .burger {
+  background: rgba(255, 255, 255, 0.65);
+  border-color: rgba(15, 23, 42, 0.08);
+  box-shadow: inset 0 1px 0 #ffffff, 0 2px 6px -2px rgba(15, 23, 42, 0.04);
+  color: var(--ink);
+}
+
+[data-theme="light"] .theme-toggle-mobile:hover,
+[data-theme="light"] .burger:hover {
+  background: rgba(10, 132, 255, 0.12);
+  border-color: rgba(10, 132, 255, 0.3);
+  box-shadow: inset 0 1px 0 #ffffff, 0 4px 14px -3px rgba(10, 132, 255, 0.2);
+  color: #0062cc;
 }
 
 .burger {
@@ -100,9 +126,24 @@ watch(
   min-height: 44px;
   padding: 0;
   border-radius: 12px;
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-control-border);
+  background: var(--glass-control-bg);
+  box-shadow: var(--glass-control-shadow);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   cursor: pointer;
+  transition:
+    background 0.22s,
+    transform 0.24s var(--spring),
+    border-color 0.22s,
+    box-shadow 0.22s;
+}
+
+.burger:hover {
+  background: var(--glass-control-bg-hover);
+  border-color: var(--glass-control-border-hover);
+  box-shadow: var(--glass-control-shadow-hover);
+  transform: translateY(-1px);
 }
 
 .burger span,
@@ -152,6 +193,12 @@ watch(
   border-radius: 20px;
 }
 
+[data-theme="light"] .mobile {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border: 1px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 14px 34px -10px rgba(10, 132, 255, 0.12), inset 0 1px 0 #ffffff !important;
+}
+
 .mobile a {
   padding: 12px 14px;
   border-radius: 12px;
@@ -163,8 +210,13 @@ watch(
 
 .mobile a:hover,
 .mobile a.router-link-active {
-  background: rgba(10, 132, 255, 0.16);
-  color: #bcdcff;
+  background: var(--nav-active-bg);
+  color: var(--nav-active-color);
+}
+
+[data-theme="light"] .mobile a.router-link-active {
+  background: rgba(10, 132, 255, 0.14);
+  color: #0062cc !important;
 }
 
 .mobile-logout {

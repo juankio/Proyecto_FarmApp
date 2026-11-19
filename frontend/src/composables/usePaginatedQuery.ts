@@ -15,7 +15,7 @@ export interface UsePaginatedQueryOptions<T> {
 export function usePaginatedQuery<T>(options: UsePaginatedQueryOptions<T>) {
   const limit = options.limit ?? 12;
   const delay = options.delay ?? 380;
-  const minLoadingMs = options.minLoadingMs ?? 300;
+  const minLoadingMs = options.minLoadingMs ?? 400;
   const fetcher = options.fetcher ?? ((path: string) => apiGet<PaginatedResponse<T>>(path));
   const items = ref<T[]>([]);
   const total = ref(0);

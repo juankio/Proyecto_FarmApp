@@ -74,6 +74,16 @@ withDefaults(
   background: radial-gradient(circle, rgba(90, 200, 250, 0.55), transparent 68%);
 }
 
+[data-theme="light"] .glow {
+  background: radial-gradient(
+    circle,
+    rgba(10, 132, 255, 0.32) 0%,
+    rgba(0, 102, 255, 0.18) 45%,
+    transparent 70%
+  );
+  opacity: 0.85;
+}
+
 .copy {
   display: flex;
   flex-direction: column;

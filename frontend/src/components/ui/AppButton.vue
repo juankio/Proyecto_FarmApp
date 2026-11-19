@@ -151,6 +151,47 @@ withDefaults(
   background: rgba(255, 255, 255, 0.26);
 }
 
+[data-theme="light"] .primary {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 8px 20px -6px rgba(10, 132, 255, 0.45);
+}
+
+[data-theme="light"] .primary:hover:not(:disabled) {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    0 12px 28px -8px rgba(10, 132, 255, 0.6);
+}
+
+[data-theme="light"] .secondary {
+  background: rgba(255, 255, 255, 0.75);
+  border-color: rgba(15, 23, 42, 0.1);
+  box-shadow: inset 0 1px 0 #ffffff, 0 2px 6px -2px rgba(15, 23, 42, 0.04);
+  color: var(--ink);
+}
+
+[data-theme="light"] .secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(10, 132, 255, 0.3);
+  box-shadow: inset 0 1px 0 #ffffff, 0 6px 16px -4px rgba(10, 132, 255, 0.15);
+}
+
+[data-theme="light"] .ghost {
+  color: #0062cc;
+  border-color: rgba(10, 132, 255, 0.3);
+}
+
+[data-theme="light"] .ghost:hover:not(:disabled) {
+  background: rgba(10, 132, 255, 0.08);
+  border-color: rgba(10, 132, 255, 0.5);
+}
+
+[data-theme="light"] .light {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(15, 23, 42, 0.1);
+  box-shadow: inset 0 1px 0 #ffffff, 0 2px 6px -2px rgba(15, 23, 42, 0.04);
+}
+
 .sm {
   min-height: 44px;
   padding: 0 16px;

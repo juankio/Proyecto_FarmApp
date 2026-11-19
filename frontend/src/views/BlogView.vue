@@ -85,13 +85,12 @@ import { optimizarCloudinary } from '../utils/imagen';
   border-radius: var(--radius-lg);
 }
 
-.cenacap h2,
-.cenacap p {
-  color: #fff;
+.cenacap h2 {
+  color: var(--ink);
 }
 
 .cenacap p {
-  color: rgba(234, 246, 251, 0.78);
+  color: var(--ink-soft);
   margin-top: 8px;
   max-width: 62ch;
 }

@@ -90,13 +90,12 @@ import { accesos } from '../data/site';
   max-width: 62ch;
 }
 
-.cta h2,
-.cta p {
-  color: #fff;
+.cta h2 {
+  color: var(--ink);
 }
 
 .cta p {
-  color: rgba(234, 246, 251, 0.76);
+  color: var(--ink-soft);
 }
 
 .cta-actions {

@@ -6,8 +6,8 @@ import { optimizarCloudinary } from '../../utils/imagen';
 
 const props = defineProps<{ proyecto: Proyecto }>();
 
-function imgOpt(url: string): string {
-  return optimizarCloudinary(url, 800);
+function imgOpt(url: string, ancho = 400): string {
+  return optimizarCloudinary(url, ancho);
 }
 
 const ampliada = ref<string | null>(null);
@@ -36,7 +36,7 @@ watch(
         :class="{ wide: i % 5 === 0 }"
         @click="ampliada = img"
       >
-        <img :src="imgOpt(img)" :alt="`${props.proyecto.producto} ${i + 1}`" width="800" height="800" loading="lazy" decoding="async" />
+        <img :src="imgOpt(img, 400)" :alt="`${props.proyecto.producto} ${i + 1}`" width="400" height="400" loading="lazy" decoding="async" />
       </button>
     </div>
   </section>
@@ -45,7 +45,7 @@ watch(
     <Transition name="modal">
       <div v-if="ampliada" class="lightbox" @click.self="ampliada = null">
         <button type="button" class="close" aria-label="Cerrar" @click="ampliada = null">✕</button>
-        <img :src="imgOpt(ampliada)" :alt="props.proyecto.producto" />
+        <img :src="imgOpt(ampliada, 1200)" :alt="props.proyecto.producto" />
       </div>
     </Transition>
   </Teleport>
@@ -67,6 +67,19 @@ watch(
   cursor: zoom-in;
   box-shadow: var(--inset), 0 14px 30px -20px rgba(0, 0, 0, 0.7);
   transition: transform 0.3s var(--ease);
+}
+
+[data-theme="light"] .shot {
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: var(--inset), var(--shadow-sm);
+}
+
+[data-theme="light"] .lightbox {
+  background: rgba(15, 23, 42, 0.45);
+}
+
+[data-theme="light"] .lightbox img {
+  box-shadow: 0 24px 60px -20px rgba(15, 23, 42, 0.25);
 }
 
 .shot:hover {

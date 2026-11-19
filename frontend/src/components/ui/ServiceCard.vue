@@ -60,6 +60,13 @@ defineProps<{ title: string; description: string; icon: string }>();
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
+[data-theme="light"] .icon-wrap {
+  background: linear-gradient(145deg, rgba(10, 132, 255, 0.12), rgba(90, 200, 250, 0.1));
+  border-color: rgba(10, 132, 255, 0.2);
+  color: #0284c7;
+  box-shadow: inset 0 1px 0 #ffffff;
+}
+
 .lg-icon {
   width: 24px;
   height: 24px;

@@ -53,6 +53,10 @@ useFocusTrap(isOpen, modalRef, () => emit('close'));
   backdrop-filter: blur(14px) saturate(140%);
 }
 
+[data-theme="light"] .backdrop {
+  background: rgba(15, 23, 42, 0.35);
+}
+
 .modal {
   width: min(100%, 480px);
   padding: 34px;

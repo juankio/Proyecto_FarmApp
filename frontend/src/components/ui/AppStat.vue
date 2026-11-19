@@ -64,4 +64,8 @@ withDefaults(
   color: var(--rose);
   text-shadow: 0 0 24px rgba(255, 122, 184, 0.45);
 }
+
+[data-theme="light"] .app-stat__value {
+  text-shadow: none;
+}
 </style>

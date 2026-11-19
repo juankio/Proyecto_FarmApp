@@ -18,7 +18,10 @@ const props = withDefaults(
   { ratio: 'wide', fit: 'cover' },
 );
 
-const srcOptimizada = computed(() => optimizarCloudinary(props.src, 1000));
+const srcOptimizada = computed(() => {
+  const ancho = props.ratio === 'wide' ? 560 : 420;
+  return optimizarCloudinary(props.src, ancho);
+});
 </script>
 
 <template>
@@ -63,6 +66,13 @@ const srcOptimizada = computed(() => optimizarCloudinary(props.src, 1000));
     linear-gradient(150deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
   border: 1px solid var(--line);
   overflow: hidden;
+}
+
+[data-theme="light"] .thumb {
+  background-color: #ffffff;
+  background:
+    radial-gradient(120% 120% at 20% 0%, rgba(10, 132, 255, 0.06), transparent 60%),
+    linear-gradient(150deg, rgba(255, 255, 255, 0.95), rgba(245, 250, 255, 0.85));
 }
 
 .thumb img {

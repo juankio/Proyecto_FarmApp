@@ -4,8 +4,7 @@ import PageHero from '../components/layout/PageHero.vue';
 import SectionHeader from '../components/ui/SectionHeader.vue';
 import AppCard from '../components/ui/AppCard.vue';
 import AppButton from '../components/ui/AppButton.vue';
-import { LOGO_URL } from '../data/logo';
-import { optimizarCloudinary } from '../utils/imagen';
+import AppLogo from '../components/ui/AppLogo.vue';
 import { texto, valores } from '../data/informacion';
 </script>
 
@@ -25,7 +24,7 @@ import { texto, valores } from '../data/informacion';
     <template #media>
       <div class="origin">
         <div class="ring" />
-        <img :src="optimizarCloudinary(LOGO_URL, 400)" alt="Logo de FarmApp" width="400" height="400" loading="lazy" decoding="async" />
+        <AppLogo :size="180" class="origin-logo" />
         <span class="pill blue">CódigoX · 2024</span>
       </div>
     </template>
@@ -80,10 +79,26 @@ import { texto, valores } from '../data/informacion';
   background: radial-gradient(circle at 40% 35%, rgba(255, 255, 255, 0.3), rgba(90, 200, 250, 0.24) 60%, transparent 74%);
 }
 
+.origin :deep(.app-logo),
 .origin img {
   position: relative;
   width: 54%;
-  filter: drop-shadow(0 22px 34px rgba(8, 47, 77, 0.32));
+  height: auto;
+  filter: drop-shadow(0 22px 34px rgba(10, 132, 255, 0.45));
+}
+
+[data-theme="light"] .origin :deep(.app-logo),
+[data-theme="light"] .origin img {
+  filter: drop-shadow(0 18px 32px rgba(0, 102, 255, 0.35));
+}
+
+[data-theme="light"] .origin .ring {
+  background: radial-gradient(
+    circle at 40% 35%,
+    rgba(10, 132, 255, 0.25),
+    rgba(0, 102, 255, 0.14) 60%,
+    transparent 74%
+  );
 }
 
 .origin .pill {
@@ -106,13 +121,12 @@ import { texto, valores } from '../data/informacion';
   border-radius: var(--radius-lg);
 }
 
-.cta h2,
-.cta p {
-  color: #fff;
+.cta h2 {
+  color: var(--ink);
 }
 
 .cta p {
-  color: rgba(234, 246, 251, 0.78);
+  color: var(--ink-soft);
   margin-top: 8px;
 }
 

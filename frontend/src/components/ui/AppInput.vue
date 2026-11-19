@@ -45,6 +45,18 @@ defineEmits<{ 'update:modelValue': [value: string] }>();
   transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
 }
 
+[data-theme="light"] .app-input {
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(15, 23, 42, 0.14);
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+[data-theme="light"] .app-input:focus {
+  background: #ffffff;
+  border-color: var(--blue-bright);
+  box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.12);
+}
+
 .app-input::placeholder {
   color: var(--muted-2);
 }

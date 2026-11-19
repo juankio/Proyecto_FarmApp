@@ -73,13 +73,12 @@ import { cenacap } from '../data/cenacap';
   border-radius: var(--radius-lg);
 }
 
-.cta h2,
-.cta p {
-  color: #fff;
+.cta h2 {
+  color: var(--ink);
 }
 
 .cta p {
-  color: rgba(234, 246, 251, 0.78);
+  color: var(--ink-soft);
   margin-top: 8px;
 }
 

@@ -51,6 +51,10 @@ defineProps<{ anterior: Proyecto; siguiente: Proyecto }>();
   color: var(--aqua);
 }
 
+[data-theme="light"] .nav-card span {
+  color: #0062cc;
+}
+
 .nav-card strong {
   font-size: 1.1rem;
   letter-spacing: -0.02em;

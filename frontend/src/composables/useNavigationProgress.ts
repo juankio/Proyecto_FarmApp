@@ -24,7 +24,7 @@ export function useNavigationProgress(routerArg?: Router) {
     });
 
     quitarSeguimiento = router.afterEach(() => {
-      const restante = Math.max(0, 420 - (performance.now() - inicioNavegacion));
+      const restante = Math.max(0, 160 - (performance.now() - inicioNavegacion));
       window.clearTimeout(temporizadorBarra);
       temporizadorBarra = window.setTimeout(() => {
         navegando.value = false;

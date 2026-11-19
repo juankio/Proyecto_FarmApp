@@ -30,6 +30,14 @@ defineProps<{
   overflow: hidden;
 }
 
+[data-theme="light"] .display {
+  background:
+    radial-gradient(120% 140% at 80% 0%, rgba(10, 132, 255, 0.1), transparent 60%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.95), rgba(242, 247, 255, 0.85));
+  border: 1px solid rgba(10, 132, 255, 0.18);
+  box-shadow: inset 0 1px 0 #ffffff, 0 10px 24px -10px rgba(10, 132, 255, 0.12);
+}
+
 .expr {
   font-size: clamp(1.6rem, 4vw, 2.3rem);
   font-weight: 700;
@@ -38,6 +46,10 @@ defineProps<{
   word-break: break-all;
   text-align: right;
   line-height: 1.15;
+}
+
+[data-theme="light"] .expr {
+  color: var(--ink);
 }
 
 .err {

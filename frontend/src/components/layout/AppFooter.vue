@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
 import { site } from '../../data/site';
-import { LOGO_URL } from '../../data/logo';
-import { optimizarCloudinary } from '../../utils/imagen';
-
-const logoSrc = optimizarCloudinary(LOGO_URL, 64);
+import AppLogo from '../ui/AppLogo.vue';
 
 const columnas = [
   {
@@ -33,7 +30,7 @@ const columnas = [
     <div class="shell inner">
       <div class="brand-col">
         <RouterLink to="/" class="brand">
-          <img :src="logoSrc" alt="FarmApp" width="32" height="32" loading="lazy" decoding="async" />
+          <AppLogo :size="32" />
           <span>FarmApp</span>
         </RouterLink>
         <p>{{ site.descripcion }}</p>
@@ -99,6 +96,26 @@ const columnas = [
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 -30px 70px -40px rgba(0, 0, 0, 0.8);
 }
 
+[data-theme="light"] .footer {
+  background:
+    radial-gradient(80% 60% at 50% 0%, rgba(10, 132, 255, 0.08), transparent 62%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(244, 248, 255, 0.8));
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: inset 0 1px 0 #ffffff, 0 -10px 24px -14px rgba(10, 132, 255, 0.08);
+}
+
+[data-theme="light"] .social a {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(15, 23, 42, 0.09);
+  box-shadow: inset 0 1px 0 #ffffff, 0 2px 6px -2px rgba(15, 23, 42, 0.04);
+}
+
+[data-theme="light"] .social a:hover {
+  background: rgba(10, 132, 255, 0.1);
+  border-color: rgba(10, 132, 255, 0.3);
+  box-shadow: inset 0 1px 0 #ffffff, 0 4px 12px -3px rgba(10, 132, 255, 0.2);
+}
+
 .inner {
   display: grid;
   grid-template-columns: 1.5fr repeat(3, 1fr);
@@ -116,10 +133,16 @@ const columnas = [
   margin-bottom: 12px;
 }
 
+.brand :deep(.app-logo),
 .brand img {
   width: 34px;
   height: 34px;
   filter: drop-shadow(0 6px 16px rgba(10, 132, 255, 0.5));
+}
+
+[data-theme="light"] .brand :deep(.app-logo),
+[data-theme="light"] .brand img {
+  filter: drop-shadow(0 4px 12px rgba(0, 102, 255, 0.3));
 }
 
 .brand-col p {

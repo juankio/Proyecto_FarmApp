@@ -61,4 +61,6 @@ function consulta(m: Medicamento) {
 .med-link { padding:0; border:0; background:transparent; color:var(--blue-deep); font-family:var(--font); font-size:0.82rem; font-weight:600; cursor:pointer; }
 .med-link span { display:inline-block; transition:transform 0.2s var(--ease); }
 .med-link:hover span { transform:translateX(3px); }
+[data-theme="light"] .med-lab { background: rgba(15, 23, 42, 0.05); border-color: rgba(15, 23, 42, 0.08); }
+[data-theme="light"] .med-icon { background: linear-gradient(145deg, rgba(10, 132, 255, 0.12), rgba(5, 150, 105, 0.14)); border-color: rgba(10, 132, 255, 0.15); color: #0284c7; }
 </style>

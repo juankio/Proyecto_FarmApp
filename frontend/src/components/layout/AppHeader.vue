@@ -1,18 +1,15 @@
 <script setup lang="ts">
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { navegacion } from '../../data/site';
-import { LOGO_URL } from '../../data/logo';
+import AppLogo from '../ui/AppLogo.vue';
 import { useAuthStore } from '../../stores/auth';
 import { useUiStore } from '../../stores/ui';
-import { optimizarCloudinary } from '../../utils/imagen';
 import AppHeaderMobile from './AppHeaderMobile.vue';
 
 const auth = useAuthStore();
 const ui = useUiStore();
 const route = useRoute();
 const router = useRouter();
-
-const logoSrc = optimizarCloudinary(LOGO_URL, 128);
 
 async function salir(): Promise<void> {
   await auth.logout();
@@ -24,7 +21,7 @@ async function salir(): Promise<void> {
   <header class="header">
     <div class="bar glass glass--bright">
       <RouterLink to="/" class="brand" aria-label="FarmApp, ir al inicio">
-        <img :src="logoSrc" alt="Logo de FarmApp" width="32" height="32" />
+        <AppLogo :size="32" />
         <span>FarmApp</span>
       </RouterLink>
 
@@ -79,6 +76,15 @@ async function salir(): Promise<void> {
   border-radius: 22px;
 }
 
+[data-theme="light"] .bar {
+  background: rgba(255, 255, 255, 0.82) !important;
+  border: 1px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 8px 24px -6px rgba(10, 132, 255, 0.08),
+    0 2px 6px -2px rgba(15, 23, 42, 0.04) !important;
+}
+
 .brand {
   display: flex;
   align-items: center;
@@ -90,11 +96,16 @@ async function salir(): Promise<void> {
   flex-shrink: 0;
 }
 
+.brand :deep(.app-logo),
 .brand img {
   width: 32px;
   height: 32px;
-  object-fit: contain;
   filter: drop-shadow(0 6px 16px rgba(10, 132, 255, 0.5));
+}
+
+[data-theme="light"] .brand :deep(.app-logo),
+[data-theme="light"] .brand img {
+  filter: drop-shadow(0 4px 12px rgba(0, 102, 255, 0.35));
 }
 
 .desktop {
@@ -114,15 +125,21 @@ async function salir(): Promise<void> {
 }
 
 .desktop a:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--nav-hover-bg);
   color: var(--ink);
 }
 
 .desktop a.router-link-active {
-  background: linear-gradient(150deg, rgba(61, 155, 255, 0.28), rgba(10, 132, 255, 0.18));
-  color: #bcdcff;
+  background: var(--nav-active-bg);
+  color: var(--nav-active-color);
   font-weight: 600;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: inset 0 1px 0 var(--nav-active-border);
+}
+
+[data-theme="light"] .desktop a.router-link-active {
+  background: rgba(10, 132, 255, 0.14);
+  color: #0062cc !important;
+  box-shadow: inset 0 1px 0 rgba(10, 132, 255, 0.25);
 }
 
 .actions {
@@ -141,17 +158,55 @@ async function salir(): Promise<void> {
   min-height: 44px;
   padding: 0;
   border-radius: 12px;
-  border: 1px solid var(--line);
-  background: var(--bg-2);
+  border: 1px solid var(--glass-control-border);
+  background: var(--glass-control-bg);
+  box-shadow: var(--glass-control-shadow);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   color: var(--ink);
   cursor: pointer;
-  transition: background 0.22s, transform 0.24s var(--spring), border-color 0.22s;
+  transition:
+    background 0.22s,
+    transform 0.24s var(--spring),
+    border-color 0.22s,
+    box-shadow 0.22s,
+    color 0.22s;
 }
 
 .theme-toggle:hover {
-  background: var(--bg-3);
-  border-color: var(--line);
+  background: var(--glass-control-bg-hover);
+  border-color: var(--glass-control-border-hover);
+  box-shadow: var(--glass-control-shadow-hover);
+  color: var(--blue-bright);
   transform: translateY(-1px);
+}
+
+[data-theme="light"] .theme-toggle,
+[data-theme="light"] .panel {
+  background: rgba(255, 255, 255, 0.65);
+  border-color: rgba(15, 23, 42, 0.08);
+  box-shadow: inset 0 1px 0 #ffffff, 0 2px 6px -2px rgba(15, 23, 42, 0.04);
+  color: var(--ink);
+}
+
+[data-theme="light"] .theme-toggle:hover,
+[data-theme="light"] .panel:hover {
+  background: rgba(10, 132, 255, 0.12);
+  border-color: rgba(10, 132, 255, 0.3);
+  box-shadow: inset 0 1px 0 #ffffff, 0 4px 14px -3px rgba(10, 132, 255, 0.2);
+  color: #0062cc;
+}
+
+[data-theme="light"] .login {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 8px 20px -6px rgba(10, 132, 255, 0.45);
+}
+
+[data-theme="light"] .login:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    0 12px 26px -8px rgba(10, 132, 255, 0.6);
 }
 
 .user-name {
@@ -168,17 +223,27 @@ async function salir(): Promise<void> {
 .panel {
   padding: 10px 15px;
   border-radius: 12px;
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-control-border);
+  background: var(--glass-control-bg);
+  box-shadow: var(--glass-control-shadow);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   color: var(--ink-soft);
   font-size: 0.84rem;
   font-weight: 600;
-  transition: background 0.22s, transform 0.24s var(--spring), border-color 0.22s;
+  transition:
+    background 0.22s,
+    transform 0.24s var(--spring),
+    border-color 0.22s,
+    box-shadow 0.22s,
+    color 0.22s;
 }
 
 .panel:hover {
-  background: rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 255, 255, 0.28);
+  background: var(--glass-control-bg-hover);
+  border-color: var(--glass-control-border-hover);
+  box-shadow: var(--glass-control-shadow-hover);
+  color: var(--ink);
   transform: translateY(-1px);
 }
 

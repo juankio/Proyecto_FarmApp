@@ -68,4 +68,27 @@ function esOperador(tecla: string): boolean {
   border-color: rgba(255, 255, 255, 0.3);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 12px 26px -12px rgba(10, 132, 255, 0.8);
 }
+
+[data-theme="light"] .key {
+  background: rgba(255, 255, 255, 0.72);
+  border-color: rgba(15, 23, 42, 0.09);
+  box-shadow: inset 0 1px 0 #ffffff, 0 2px 6px -2px rgba(15, 23, 42, 0.04);
+  color: var(--ink);
+}
+
+[data-theme="light"] .key:hover {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(10, 132, 255, 0.3);
+  box-shadow: inset 0 1px 0 #ffffff, 0 8px 18px -6px rgba(10, 132, 255, 0.15);
+}
+
+[data-theme="light"] .key.op {
+  background: rgba(10, 132, 255, 0.1);
+  border-color: rgba(10, 132, 255, 0.25);
+  color: #0062cc;
+}
+
+[data-theme="light"] .key.eq {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 8px 20px -6px rgba(10, 132, 255, 0.5);
+}
 </style>
