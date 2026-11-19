@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "https://dietpi.tailf19567.ts.net:8443/api/:path*" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
