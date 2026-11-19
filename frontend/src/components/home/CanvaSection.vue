@@ -29,11 +29,9 @@ import { site } from '../../data/site';
   gap: 28px;
   padding: clamp(28px, 4vw, 50px);
   border-radius: var(--radius-lg);
-  background:
-    radial-gradient(120% 160% at 90% 0%, rgba(90, 200, 250, 0.4), transparent 60%),
-    linear-gradient(150deg, rgba(8, 47, 77, 0.92), rgba(10, 90, 140, 0.86));
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), var(--shadow-md);
+  background: var(--glass);
+  border: 1px solid var(--line);
+  box-shadow: var(--inset), var(--shadow-md);
 }
 
 .canva-copy {
@@ -44,19 +42,18 @@ import { site } from '../../data/site';
 }
 
 .canva .eyebrow {
-  background: rgba(255, 255, 255, 0.14);
-  border-color: rgba(255, 255, 255, 0.22);
-  color: #dff4ff;
+  background: var(--line-soft);
+  border-color: var(--line);
+  color: var(--aqua);
   width: fit-content;
 }
 
-.canva h2,
-.canva p {
-  color: #fff;
+.canva h2 {
+  color: var(--ink);
 }
 
 .canva p {
-  color: rgba(234, 246, 251, 0.78);
+  color: var(--muted);
 }
 
 @media (max-width: 900px) {

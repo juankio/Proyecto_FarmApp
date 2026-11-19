@@ -18,7 +18,7 @@ const props = withDefaults(
   { ratio: 'wide', fit: 'cover' },
 );
 
-const srcOptimizada = computed(() => optimizarCloudinary(props.src, 600));
+const srcOptimizada = computed(() => optimizarCloudinary(props.src, 1000));
 </script>
 
 <template>
@@ -104,7 +104,7 @@ const srcOptimizada = computed(() => optimizarCloudinary(props.src, 600));
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(90, 200, 250, 0.3);
-  color: #a9e2ff;
+  color: var(--aqua);
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.05em;

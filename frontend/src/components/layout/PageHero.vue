@@ -99,6 +99,13 @@ h1 {
   color: transparent;
 }
 
+[data-theme="light"] .page-hero h1 {
+  color: var(--ink);
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+}
+
 .page-hero.centered h1,
 .page-hero:not(.has-media) h1 {
   max-width: 22ch;

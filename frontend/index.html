@@ -28,23 +28,6 @@
   </head>
   <body>
     <div id="app"></div>
-    <script>
-      (function () {
-        function revealAll() {
-          document.querySelectorAll('.reveal:not(.is-visible)').forEach(function (el) {
-            el.classList.add('is-visible');
-          });
-        }
-        function startObserver() {
-          if (!document.body) return;
-          var obs = new MutationObserver(revealAll);
-          obs.observe(document.body, { childList: true, subtree: true });
-          revealAll();
-        }
-        if (document.body) startObserver();
-        else document.addEventListener('DOMContentLoaded', startObserver);
-      })();
-    </script>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

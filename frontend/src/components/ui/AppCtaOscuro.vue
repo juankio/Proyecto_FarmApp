@@ -71,11 +71,11 @@ defineProps<{
 
 .cta h2,
 .cta p {
-  color: #fff;
+  color: var(--ink);
 }
 
 .cta p {
-  color: rgba(226, 238, 252, 0.78);
+  color: var(--muted);
 }
 
 .cta-actions {

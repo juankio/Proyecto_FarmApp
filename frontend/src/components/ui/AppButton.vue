@@ -141,7 +141,7 @@ withDefaults(
 
 .light {
   background: rgba(255, 255, 255, 0.16);
-  color: #fff;
+  color: var(--ink);
   border-color: rgba(255, 255, 255, 0.34);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
