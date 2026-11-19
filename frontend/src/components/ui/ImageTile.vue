@@ -29,7 +29,7 @@ const srcOptimizada = computed(() => optimizarCloudinary(props.src, 600));
     class="surface surface--glass tile"
   >
     <div class="thumb" :class="[ratio, fit]">
-      <img :src="srcOptimizada" :alt="alt ?? title" loading="lazy" decoding="async" />
+      <img :src="srcOptimizada" :alt="alt ?? title" width="600" height="600" loading="lazy" decoding="async" />
       <span v-if="badge" class="badge">{{ badge }}</span>
     </div>
     <div class="body">

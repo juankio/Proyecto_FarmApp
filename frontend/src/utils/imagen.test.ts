@@ -20,7 +20,7 @@ describe('optimizarCloudinary', () => {
 
   it('inserta transformaciones', () => {
     const out = optimizarCloudinary(BASE, 320);
-    expect(out).toContain('/image/upload/w_320,q_auto,f_auto/');
+    expect(out).toContain('/image/upload/w_320,q_auto:good,f_auto/');
     expect(out).toContain('sample.jpg');
   });
 

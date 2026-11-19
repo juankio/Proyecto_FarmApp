@@ -52,7 +52,7 @@ defineProps<{ proyecto: Proyecto }>();
     <SectionHeader eyebrow="Para cada tipo de cabello" title="Elige tu variante" lede="Selene se adapta al cabello crespo, liso y ondulado." />
     <div class="grid grid-3">
       <AppCard v-for="v in proyecto.variantes" :key="v.nombre" class="variant">
-        <img :src="optimizarCloudinary(v.imagen, 600)" :alt="v.nombre" loading="lazy" decoding="async" />
+        <img :src="optimizarCloudinary(v.imagen, 600)" :alt="v.nombre" width="600" height="400" loading="lazy" decoding="async" />
         <h3>{{ v.nombre }}</h3>
         <p>{{ v.texto }}</p>
       </AppCard>

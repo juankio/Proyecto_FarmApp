@@ -34,7 +34,7 @@ const siguiente = computed(() =>
       <template #media>
         <div class="logo-stage">
           <div class="logo-glow" />
-          <img :src="optimizarCloudinary(proyecto.logo, 400)" :alt="proyecto.producto" />
+          <img :src="optimizarCloudinary(proyecto.logo, 400)" :alt="proyecto.producto" width="400" height="400" loading="lazy" decoding="async" />
           <span class="pill blue">{{ proyecto.empresa }}</span>
         </div>
       </template>

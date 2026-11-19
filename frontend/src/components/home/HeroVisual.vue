@@ -12,13 +12,13 @@ const selene = store.getBySlug('selene')!;
 <template>
   <div class="visual">
     <div class="halo" />
-    <img class="hero-logo" :src="optimizarCloudinary(LOGO_URL, 400)" alt="Logo de FarmApp" />
+    <img class="hero-logo" :src="optimizarCloudinary(LOGO_URL, 256)" alt="Logo de FarmApp" width="512" height="512" loading="eager" fetchpriority="high" decoding="async" />
     <AppSurface tone="glass" radius="20px" class="float float-a">
-      <img :src="optimizarCloudinary(exfolpiel.logo, 128)" :alt="exfolpiel.producto" />
+      <img :src="optimizarCloudinary(exfolpiel.logo, 256)" :alt="exfolpiel.producto" width="256" height="256" loading="lazy" decoding="async" />
       <span>{{ exfolpiel.producto }}</span>
     </AppSurface>
     <AppSurface tone="glass" radius="20px" class="float float-b">
-      <img :src="optimizarCloudinary(selene.logo, 128)" :alt="selene.producto" />
+      <img :src="optimizarCloudinary(selene.logo, 256)" :alt="selene.producto" width="256" height="256" loading="lazy" decoding="async" />
       <span>{{ selene.producto }}</span>
     </AppSurface>
     <AppSurface tone="glass" radius="999px" class="chip">
@@ -47,13 +47,16 @@ const selene = store.getBySlug('selene')!;
     rgba(90, 200, 250, 0.22) 48%,
     transparent 72%
   );
-  filter: blur(18px);
+  filter: blur(10px);
 }
 
 .hero-logo {
   position: relative;
   width: 44%;
   max-width: 200px;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
   filter: drop-shadow(0 26px 44px rgba(10, 132, 255, 0.5));
   animation: float 7s ease-in-out infinite;
 }
@@ -137,6 +140,10 @@ const selene = store.getBySlug('selene')!;
 }
 
 @media (max-width: 560px) {
+  .hero-logo,
+  .float {
+    animation: none;
+  }
   .float-a {
     left: -4%;
   }

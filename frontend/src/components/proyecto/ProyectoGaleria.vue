@@ -36,7 +36,7 @@ watch(
         :class="{ wide: i % 5 === 0 }"
         @click="ampliada = img"
       >
-        <img :src="imgOpt(img)" :alt="`${props.proyecto.producto} ${i + 1}`" loading="lazy" decoding="async" />
+        <img :src="imgOpt(img)" :alt="`${props.proyecto.producto} ${i + 1}`" width="800" height="800" loading="lazy" decoding="async" />
       </button>
     </div>
   </section>

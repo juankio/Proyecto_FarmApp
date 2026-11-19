@@ -8,8 +8,10 @@ import { useNavigationProgress } from './composables/useNavigationProgress';
 import { useAmbientParallax } from './composables/useAmbientParallax';
 import { useScrollAmbient } from './composables/useScrollAmbient';
 import { useAuthBootstrap } from './composables/useAuthBootstrap';
+import { useUiStore } from './stores/ui';
 
 const route = useRoute();
+const ui = useUiStore();
 const { start, revealAll } = useReveal();
 const { navegando, instalar } = useNavigationProgress();
 
@@ -20,6 +22,7 @@ useAuthBootstrap();
 const desinstalarNavegacion = instalar();
 
 onMounted(() => {
+  ui.initTheme();
   start();
 });
 

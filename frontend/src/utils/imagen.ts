@@ -16,8 +16,11 @@ export function optimizarCloudinary(url: string, ancho?: number): string {
 
   const esGif = /\.gif(\?|$)/i.test(url);
   const partes: string[] = [];
-  if (ancho) partes.push(`w_${ancho}`);
-  partes.push('q_auto');
+  if (ancho) {
+    partes.push(`w_${ancho}`);
+    partes.push('dpr_auto');
+  }
+  partes.push('q_auto:good');
   if (!esGif) partes.push('f_auto');
 
   const transform = partes.join(',');

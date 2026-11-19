@@ -27,7 +27,7 @@ import { optimizarCloudinary } from '../utils/imagen';
     <div class="grid grid-3">
       <AppCard v-for="(post, i) in posts" :key="post.titulo" hover class="post">
         <div class="thumb">
-          <img :src="optimizarCloudinary(post.imagen, 600)" :alt="post.titulo" loading="lazy" decoding="async" />
+          <img :src="optimizarCloudinary(post.imagen, 600)" :alt="post.titulo" width="600" height="400" loading="lazy" decoding="async" />
         </div>
         <span class="pill blue">{{ post.categoria }}</span>
         <h3>{{ post.titulo }}</h3>

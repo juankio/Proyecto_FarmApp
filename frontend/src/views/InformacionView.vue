@@ -25,7 +25,7 @@ import { texto, valores } from '../data/informacion';
     <template #media>
       <div class="origin">
         <div class="ring" />
-        <img :src="optimizarCloudinary(LOGO_URL, 400)" alt="Logo de FarmApp" />
+        <img :src="optimizarCloudinary(LOGO_URL, 400)" alt="Logo de FarmApp" width="400" height="400" loading="lazy" decoding="async" />
         <span class="pill blue">CódigoX · 2024</span>
       </div>
     </template>

@@ -3,8 +3,10 @@ import { ref, watch } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { navegacion } from '../../data/site';
 import { useAuthStore } from '../../stores/auth';
+import { useUiStore } from '../../stores/ui';
 
 const auth = useAuthStore();
+const ui = useUiStore();
 const route = useRoute();
 const router = useRouter();
 const abierto = ref(false);
@@ -24,6 +26,21 @@ watch(
 </script>
 
 <template>
+  <button
+    type="button"
+    class="theme-toggle-mobile"
+    :aria-label="ui.isDark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'"
+    @click="ui.toggleTheme"
+  >
+    <svg v-if="ui.isDark" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+    </svg>
+    <svg v-else viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+    </svg>
+  </button>
+
   <button
     class="burger"
     type="button"
@@ -52,6 +69,28 @@ watch(
 </template>
 
 <style scoped>
+.theme-toggle-mobile {
+  display: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--bg-2);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.22s, transform 0.24s var(--spring), border-color 0.22s;
+}
+
+.theme-toggle-mobile:hover {
+  background: var(--bg-3);
+  border-color: var(--line);
+  transform: translateY(-1px);
+}
+
 .burger {
   display: none;
   place-items: center;
@@ -177,6 +216,9 @@ watch(
 }
 
 @media (max-width: 980px) {
+  .theme-toggle-mobile {
+    display: grid;
+  }
   .burger {
     display: grid;
   }

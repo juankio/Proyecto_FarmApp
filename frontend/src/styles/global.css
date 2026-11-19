@@ -689,3 +689,13 @@ details.accordion .answer {
     transition: none;
   }
 }
+
+/* ---------- Performance móvil: desactivar backdrop-filter costoso ---------- */
+@media (max-width: 767px) {
+  *,
+  *::before,
+  *::after {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}

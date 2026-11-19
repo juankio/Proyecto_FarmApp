@@ -30,7 +30,7 @@ const columnas = [
     <div class="shell inner">
       <div class="brand-col">
         <RouterLink to="/" class="brand">
-          <img :src="LOGO_URL" alt="FarmApp" />
+          <img :src="LOGO_URL" alt="FarmApp" width="32" height="32" loading="lazy" decoding="async" />
           <span>FarmApp</span>
         </RouterLink>
         <p>{{ site.descripcion }}</p>
