@@ -53,7 +53,7 @@ const selene = store.getBySlug('selene')!;
 .hero-logo {
   position: relative;
   width: 44%;
-  max-width: 200px;
+  max-width: 320px;
   height: auto;
   aspect-ratio: 1 / 1;
   object-fit: contain;

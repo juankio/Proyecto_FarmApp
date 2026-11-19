@@ -4,12 +4,15 @@ import { navegacion } from '../../data/site';
 import { LOGO_URL } from '../../data/logo';
 import { useAuthStore } from '../../stores/auth';
 import { useUiStore } from '../../stores/ui';
+import { optimizarCloudinary } from '../../utils/imagen';
 import AppHeaderMobile from './AppHeaderMobile.vue';
 
 const auth = useAuthStore();
 const ui = useUiStore();
 const route = useRoute();
 const router = useRouter();
+
+const logoSrc = optimizarCloudinary(LOGO_URL, 128);
 
 async function salir(): Promise<void> {
   await auth.logout();
@@ -21,7 +24,7 @@ async function salir(): Promise<void> {
   <header class="header">
     <div class="bar glass glass--bright">
       <RouterLink to="/" class="brand" aria-label="FarmApp, ir al inicio">
-        <img :src="LOGO_URL" alt="Logo de FarmApp" />
+        <img :src="logoSrc" alt="Logo de FarmApp" width="32" height="32" />
         <span>FarmApp</span>
       </RouterLink>
 

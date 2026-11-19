@@ -2,6 +2,9 @@
 import { RouterLink } from 'vue-router';
 import { site } from '../../data/site';
 import { LOGO_URL } from '../../data/logo';
+import { optimizarCloudinary } from '../../utils/imagen';
+
+const logoSrc = optimizarCloudinary(LOGO_URL, 64);
 
 const columnas = [
   {
@@ -30,7 +33,7 @@ const columnas = [
     <div class="shell inner">
       <div class="brand-col">
         <RouterLink to="/" class="brand">
-          <img :src="LOGO_URL" alt="FarmApp" width="32" height="32" loading="lazy" decoding="async" />
+          <img :src="logoSrc" alt="FarmApp" width="32" height="32" loading="lazy" decoding="async" />
           <span>FarmApp</span>
         </RouterLink>
         <p>{{ site.descripcion }}</p>

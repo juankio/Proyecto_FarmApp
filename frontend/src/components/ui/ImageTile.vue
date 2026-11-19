@@ -57,15 +57,18 @@ const srcOptimizada = computed(() => optimizarCloudinary(props.src, 1000));
 .thumb {
   position: relative;
   width: 100%;
+  background-color: var(--bg-1);
   background:
-    radial-gradient(120% 120% at 20% 0%, rgba(90, 200, 250, 0.16), transparent 60%),
-    linear-gradient(150deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+    radial-gradient(120% 120% at 20% 0%, rgba(90, 200, 250, 0.10), transparent 60%),
+    linear-gradient(150deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--line);
   overflow: hidden;
 }
 
 .thumb img {
   width: 100%;
   height: 100%;
+  object-fit: contain;
   transition: transform 0.6s var(--ease);
 }
 
