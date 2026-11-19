@@ -1,18 +1,51 @@
 # FarmApp
 
-Aplicativo farmacéutico con frontend en **Vue 3 + Vite + TypeScript + Pinia** y backend en **Node + Express + SQLite**. El frontend vive en `frontend/` y consume la API de `backend/` mediante proxy en desarrollo.
+Aplicativo farmacéutico. El **frontend** (Vue 3 + Vite + TypeScript + Pinia) vive en este repositorio (`frontend/`). El **backend** (Node + Express + SQLite) vive en un repositorio separado: **FarmApp-Backend**. El frontend consume la API del backend mediante proxy en desarrollo y `VITE_API_BASE` en producción.
+
+## Arquitectura y repositorios
+
+- **Frontend (este repo):** `frontend/` — Vue 3.5 + Vite 8 + TypeScript + Pinia + vue-router (SPA). Alias `@` → `src/`.
+- **Backend (repo separado `FarmApp-Backend`):** Express 5 + SQLite (bun) + Zod. Autenticación JWT (cookie `httpOnly` o `Authorization: Bearer`), CORS controlado por `CORS_ORIGIN`.
+- Comunicación: en desarrollo Vite hace proxy `/api → http://localhost:3000` (target configurable con `VITE_API_PROXY_TARGET`); en producción el frontend usa `VITE_API_BASE` apuntando al backend desplegado.
+- Base de datos local: `data/farmapp.db` (ignorada por Git), ruta configurable en el backend con `DB_PATH`.
+
+Clona ambos repositorios como directorios hermanos (nombres sugeridos `Proyecto_FarmApp` y `FarmApp-Backend`).
 
 ## Requisitos
 
 - [Bun](https://bun.sh) 1.1 o superior. No se usa npm.
 
+## Variables de entorno
+
+### Frontend (`frontend/.env.example`)
+
+```env
+# URL base del backend (producción). En dev se usa el proxy de Vite (/api).
+VITE_API_BASE=
+# Target del proxy de Vite en desarrollo.
+VITE_API_PROXY_TARGET=http://localhost:3000
+```
+
+### Backend (`FarmApp-Backend/.env.example`)
+
+```env
+PORT=3000
+JWT_SECRET=
+CORS_ORIGIN=http://localhost:3000
+DB_PATH=../data/farmapp.db
+ADMIN_SEED_EMAIL=admin@farmapp.local
+ADMIN_SEED_PASSWORD=
+```
+
+`JWT_SECRET` debe tener al menos 16 caracteres y `ADMIN_SEED_PASSWORD` al menos 8 (una mayúscula y un número). En desarrollo, `CORS_ORIGIN` debe coincidir con el origen del frontend (`http://localhost:5173`) si no se usa el proxy.
+
 ## Arranque rápido
 
-Dos terminales:
+Dos repositorios, dos terminales:
 
 ```bash
-# 1) API + base de datos
-cd backend
+# 1) Backend (repo separado FarmApp-Backend)
+cd ../FarmApp-Backend
 cp .env.example .env
 # edita JWT_SECRET y ADMIN_SEED_PASSWORD en .env
 bun install
@@ -22,13 +55,14 @@ bun run dev            # http://localhost:3000
 ```
 
 ```bash
-# 2) Frontend
+# 2) Frontend (este repo)
 cd frontend
+cp .env.example .env
 bun install
 bun run dev            # http://localhost:5173
 ```
 
-Vite hace proxy de `/api` hacia `http://localhost:3000`, así que no hay que configurar CORS.
+Vite hace proxy de `/api` hacia `http://localhost:3000` (target configurable con `VITE_API_PROXY_TARGET`), así que no hay que configurar CORS en desarrollo. En producción se define `VITE_API_BASE` apuntando al backend.
 
 Credenciales del administrador sembrado: `admin@farmapp.local` / `Admin1234`. La regla de contraseña es mínimo 8 caracteres, una mayúscula y un número.
 
@@ -93,17 +127,6 @@ Todo el contenido real (empresas, productos, logos, galerías, FAQ, blog y texto
 
 ## Comandos
 
-### Backend
-
-| Comando | Qué hace |
-| --- | --- |
-| `bun run dev` | Servidor con recarga automática |
-| `bun run build` | Compila el servidor a `dist/` |
-| `bun run migrate` | Aplica migraciones pendientes |
-| `bun run seed` | Carga el administrador y el catálogo inicial |
-| `bun run test` | Pruebas de la API |
-| `bun run typecheck` | Comprobación de tipos |
-
 ### Frontend
 
 | Comando | Qué hace |
@@ -116,9 +139,13 @@ Todo el contenido real (empresas, productos, logos, galerías, FAQ, blog y texto
 | `bun run test:watch` | Pruebas en modo watch |
 | `bun run test:e2e` | Pruebas end-to-end (Playwright) |
 
+### Backend (repo FarmApp-Backend)
+
+Los comandos del backend se ejecutan dentro del repositorio `FarmApp-Backend`: `bun run dev`, `bun run build`, `bun run migrate`, `bun run seed`, `bun run test`, `bun run typecheck`. Consulta su README para detalles.
+
 ## API
 
-Todas las respuestas usan `{ success, data, message, error }`. `error` es un código maquinable y vale `null` cuando todo sale bien.
+El backend (repo `FarmApp-Backend`) expone la API bajo `/api`. Todas las respuestas usan `{ success, data, message, error }`. `error` es un código maquinable y vale `null` cuando todo sale bien.
 
 | Método | Ruta | Acceso |
 | --- | --- | --- |
@@ -141,16 +168,15 @@ Autenticación: el backend emite un JWT en una cookie `httpOnly`, `Secure` (solo
 
 ## Estructura
 
-- `backend/src/` — servidor Express, capas de rutas, controladores, servicios, repositorios y esquemas Zod.
-- `backend/src/db/migrations/` — esquema SQLite versionado.
-- `data/farmapp.db` — base de datos local, ignorada por Git.
-- `frontend/src/` — frontend Vue 3: vistas, componentes, datos, estilos, stores, composables, utilidades, tests y router.
+- `frontend/` — frontend Vue 3: vistas, componentes, datos, estilos, stores, composables, utilidades, tests y router.
   - `frontend/src/stores/` — stores Pinia (auth, medicamentos, contactos, encuestas, proyectos, ui).
   - `frontend/src/composables/` — lógica reactiva y fetch centralizado (`useApi`, `usePaginatedQuery`, etc.).
   - `frontend/src/utils/` — helpers puros (`format`, `imagen`, `validators`).
   - `frontend/src/test/` — setup de Vitest.
   - `frontend/e2e/` — pruebas Playwright.
   - `frontend/src/features/*` y `frontend/src/shared/*` — andamiaje feature-driven (barrels preparados).
+- Backend (Express + SQLite + Zod) vive en el repo separado `FarmApp-Backend` (`src/`, `src/db/migrations/`).
+- `data/farmapp.db` — base de datos local del backend, ignorada por Git (ruta configurable con `DB_PATH`).
 - `src/` — sitio HTML original (CódigoX 2024), conservado como referencia.
 ## Ramas
 

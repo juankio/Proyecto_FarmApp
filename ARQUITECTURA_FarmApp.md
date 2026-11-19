@@ -3,7 +3,8 @@
 **Nami (Arquitecta)** · Alcance: `frontend/src` (Vue 3 + Vite + TS, SPA)  
 **Estado post-refactor:** implementado (stores, composables, a11y, tests, auth cookie).  
 **Verificación:** `bun run typecheck` ✅ · `bun run build` ✅ (1.48 s) · `bun run test` ✅ (6 archivos, 47 tests).  
-**Rama actual:** `dev` · Git: cambios preparados para commit final.
+**Rama actual:** `dev` · Git: cambios preparados para commit final.  
+**Backend:** repo separado `FarmApp-Backend` (Express 5 + SQLite + Zod). Este documento cubre el frontend; servidor, migraciones y seed viven en ese repo.
 
 ---
 
@@ -17,7 +18,7 @@
 | Estado | Pinia 4.1.0 (1 store: `auth`) |
 | Tipado | TypeScript ~5.9.3, `strict: true` |
 | Estilos | CSS custom (`tokens.css`, `global.css`, `admin.css`, `proyecto.view.css`) — **sin Tailwind/shadcn/anime** |
-| Backend | Express + SQLite (bun), proxy `/api → http://localhost:3000` |
+| Backend | Repo separado `FarmApp-Backend`: Express 5 + SQLite (bun) + Zod. CORS por `CORS_ORIGIN`. Proxy dev `/api → http://localhost:3000` |
 | Package manager | bun (`bun.lock`) |
 
 Límite interno del proyecto (CLAUDE.md): componentes ≤150-200 líneas. 18 archivos lo superan (ver §5 y auditoría).
@@ -161,8 +162,7 @@ Usuario (stores/auth.ts) { id, nombres, apellidos, email, rol: 'usuario'|'admin'
 
 ### 3.2 Tipos backend (fuente de verdad)
 
-- `backend/src/repositories/medicamentos.repository.ts` exporta `Medicamento` (mismo shape, `imagen_url`).
-- `backend/src/types/api.ts` define `ApiResponse<T>`, `Rol`, `ValidationIssue`.
+- El backend vive en el repo separado `FarmApp-Backend`. Sus tipos fuente están en `FarmApp-Backend/src/repositories/medicamentos.repository.ts` (`Medicamento`, mismo shape, `imagen_url`) y `FarmApp-Backend/src/types/api.ts` (`ApiResponse<T>`, `Rol`, `ValidationIssue`).
 - Backend usa `imagenUrl` (camelCase) en schemas; persiste como `imagen_url` (snake_case). El frontend lee `imagen_url`.
 
 ### 3.3 Contrato de respuesta API
@@ -173,6 +173,8 @@ ApiResponse<T> = { success: boolean; data: T | null; message: string; error: str
 Todos los endpoints devuelven este envoltorio. `useApi.request` parsea sin validar esquema (cast `as ApiResponse<T>`).
 
 ### 3.4 Endpoints backend (base `/api`)
+
+> Backend en repo separado `FarmApp-Backend`. Base URL: en dev `/api` (proxy Vite → `http://localhost:3000`, target `VITE_API_PROXY_TARGET`); en prod `VITE_API_BASE`. CORS: `CORS_ORIGIN` (default `http://localhost:3000`; para llamadas directas desde el dev server usar `http://localhost:5173`).
 
 | Método | Ruta | Auth | Body/Query | Respuesta `data` |
 |---|---|---|---|---|

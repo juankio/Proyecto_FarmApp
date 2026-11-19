@@ -67,7 +67,22 @@ La migración completa de código legacy a `features/*` y `shared/*` queda pendi
 - Middleware acepta cookie o `Authorization: Bearer`.
 - Frontend usa `credentials: 'include'`; no persiste token en `sessionStorage`.
 
-## 7. Verificación
+## 7. Backend separado
+
+El backend ya no vive en este repo: está en el repositorio hermano **FarmApp-Backend** (Express 5 + SQLite + Zod). Este frontend lo consume así:
+
+- En desarrollo: Vite hace proxy `/api → http://localhost:3000` (target configurable con `VITE_API_PROXY_TARGET` en `frontend/.env`).
+- En producción: definir `VITE_API_BASE` con la URL pública del backend (ej. `https://api.example.com`). Si queda vacío, se usa `/api` (mismo origen).
+- CORS: el backend valida `CORS_ORIGIN`. Con proxy en dev no aplica; para llamadas directas usar el origen del frontend (`http://localhost:5173`).
+
+Variables (`frontend/.env.example`):
+
+```
+VITE_API_BASE=
+VITE_API_PROXY_TARGET=http://localhost:3000
+```
+
+## 8. Verificación
 
 - `bun run typecheck` (vue-tsc --noEmit)
 - `bun run build` (vue-tsc --noEmit && vite build)
