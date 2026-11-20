@@ -7,7 +7,6 @@ const rutas = [
   '/medicamentos',
   '/blog',
   '/informacion',
-  '/info-cenacap',
   '/lenguajes',
   '/calculadora',
   '/encuesta',

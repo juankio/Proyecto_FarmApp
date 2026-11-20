@@ -6,7 +6,6 @@ import ImageTile from '../components/ui/ImageTile.vue';
 import AppCard from '../components/ui/AppCard.vue';
 import AppButton from '../components/ui/AppButton.vue';
 import { proyectos } from '../data/proyectos';
-import { cenacap } from '../data/cenacap';
 
 const empresas = proyectos.map((p) => ({
   ...p,
@@ -21,8 +20,8 @@ const empresas = proyectos.map((p) => ({
     lede="Aprenda y conozca más sobre nosotros, con nuestras ideas donde tendremos variedades de productos con gran accesibilidad de compra."
   >
     <template #actions>
-      <AppButton size="lg" @click="$router.push('/info-cenacap')">
-        Conocer Cenacap
+      <AppButton size="lg" @click="$router.push('/medicamentos')">
+        Ver medicamentos
       </AppButton>
       <AppButton size="lg" variant="secondary" @click="$router.push('/servicios')">
         Ver servicios
@@ -79,45 +78,11 @@ const empresas = proyectos.map((p) => ({
       />
     </div>
   </section>
-
-  <section class="section reveal">
-    <div class="cenacap glass">
-      <div>
-        <span class="eyebrow">Invitados</span>
-        <h2>{{ cenacap.titulo }}</h2>
-        <p>{{ cenacap.descripcion }}</p>
-      </div>
-      <RouterLink to="/info-cenacap">
-        <AppButton variant="secondary">Ver información de Cenacap</AppButton>
-      </RouterLink>
-    </div>
-  </section>
 </template>
 
 <style scoped>
 .intro {
   text-align: center;
   font-size: 1rem;
-}
-
-.cenacap {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 26px;
-  padding: clamp(26px, 4vw, 44px);
-  border-radius: var(--radius-lg);
-  background: var(--glass-strong);
-}
-
-.cenacap h2 {
-  margin: 8px 0 6px;
-}
-
-@media (max-width: 760px) {
-  .cenacap {
-    flex-direction: column;
-    align-items: flex-start;
-  }
 }
 </style>

@@ -35,22 +35,6 @@ import { optimizarCloudinary } from '../utils/imagen';
       </AppCard>
     </div>
   </section>
-
-  <section class="section reveal">
-    <AppCard tone="dark" class="cenacap">
-      <div>
-        <span class="mini">Feria empresarial</span>
-        <h2>Hemos agregado un apartado para Cenacap</h2>
-        <p>
-          El Instituto CENACAP fomenta el emprendimiento, conectando ideas con oportunidades.
-          Conoce sus pilares de innovación, educación técnica y networking.
-        </p>
-      </div>
-      <RouterLink to="/info-cenacap">
-        <AppButton variant="light">Ver información</AppButton>
-      </RouterLink>
-    </AppCard>
-  </section>
 </template>
 
 <style scoped>
@@ -74,41 +58,5 @@ import { optimizarCloudinary } from '../utils/imagen';
 
 .post h3 {
   font-size: 1.1rem;
-}
-
-.cenacap {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 30px;
-  padding: clamp(28px, 4vw, 48px);
-  border-radius: var(--radius-lg);
-}
-
-.cenacap h2 {
-  color: var(--ink);
-}
-
-.cenacap p {
-  color: var(--ink-soft);
-  margin-top: 8px;
-  max-width: 62ch;
-}
-
-.mini {
-  display: inline-block;
-  font-size: 0.74rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #9fdcf7;
-  margin-bottom: 10px;
-}
-
-@media (max-width: 760px) {
-  .cenacap {
-    flex-direction: column;
-    align-items: flex-start;
-  }
 }
 </style>

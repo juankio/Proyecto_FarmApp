@@ -49,9 +49,7 @@ export const router = createRouter({
     },
     {
       path: '/info-cenacap',
-      name: 'info-cenacap',
-      component: () => import('../views/InfoCenacapView.vue'),
-      meta: { title: 'Cenacap' },
+      redirect: '/feria',
     },
     {
       path: '/lenguajes',

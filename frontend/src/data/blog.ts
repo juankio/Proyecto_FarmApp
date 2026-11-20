@@ -8,13 +8,6 @@ export const posts: Post[] = [
     categoria: 'Actualidad',
   },
   {
-    titulo: 'Cenacap',
-    extracto:
-      'Hemos agregado un apartado para CENACAP. Más información en la sección de Feria Empresarial.',
-    imagen: 'https://res.cloudinary.com/dc4vyurnu/image/upload/v1731731665/Pildoras_sts8mi.gif',
-    categoria: 'Novedades',
-  },
-  {
     titulo: 'Últimos avances',
     extracto:
       'También hemos trabajado arduamente para mejorar este proyecto, con mucha paciencia, felicidad y armonía.',
