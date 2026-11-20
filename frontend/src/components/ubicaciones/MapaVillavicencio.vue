@@ -92,40 +92,66 @@ function cargarLeafletScript(): Promise<any> {
   });
 }
 
-function obtenerTileUrl(): string {
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  return isDark
-    ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
-    : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png';
-}
+type TipoCapa = 'osm' | 'esri' | 'satelite';
+const tipoCapa = ref<TipoCapa>('osm');
 
-let tileErrorCount = 0;
+const CAPAS_MAPA: Record<
+  TipoCapa,
+  { label: string; url: string; subdomains?: string[]; maxZoom: number; attribution: string }
+> = {
+  osm: {
+    label: '🗺️ Calles (OpenStreetMap)',
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    subdomains: ['a', 'b', 'c'],
+    maxZoom: 19,
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors',
+  },
+  esri: {
+    label: '🏢 Calles Esri',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+    maxZoom: 18,
+    attribution: 'Tiles &copy; <a href="https://www.esri.com" target="_blank">Esri</a>',
+  },
+  satelite: {
+    label: '🛰️ Satélite Real',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    maxZoom: 18,
+    attribution:
+      'Tiles &copy; <a href="https://www.esri.com" target="_blank">Esri</a> &mdash; Earthstar Geographics',
+  },
+};
+
+function cambiarCapa(tipo: TipoCapa) {
+  tipoCapa.value = tipo;
+  if (!mapInstance || !(window as any).L) return;
+  actualizarCapaBase((window as any).L);
+}
 
 function actualizarCapaBase(L: any) {
   if (!mapInstance) return;
   if (tileLayer) {
     mapInstance.removeLayer(tileLayer);
+    tileLayer = null;
   }
 
-  const urlBase = obtenerTileUrl();
-  tileLayer = L.tileLayer(urlBase, {
-    maxZoom: 19,
-    subdomains: 'abcd',
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>',
+  const cfg = CAPAS_MAPA[tipoCapa.value] || CAPAS_MAPA.osm;
+  tileLayer = L.tileLayer(cfg.url, {
+    maxZoom: cfg.maxZoom,
+    subdomains: cfg.subdomains || ['a', 'b', 'c'],
+    attribution: cfg.attribution,
   });
 
-  // Si Carto falla en la red del usuario, alternar a OpenStreetMap oficial automáticamente
+  // Si por alguna razón la capa seleccionada falla, respaldar con OpenStreetMap
   tileLayer.on('tileerror', () => {
-    tileErrorCount++;
-    if (tileErrorCount === 4 && urlBase.includes('cartocdn')) {
-      console.warn('[FarmApp] Alternando a OpenStreetMap oficial por bloqueo o lentitud de Carto');
+    if (tipoCapa.value !== 'osm') {
+      console.warn('[FarmApp] Alternando a OpenStreetMap estándar');
+      tipoCapa.value = 'osm';
       mapInstance.removeLayer(tileLayer);
       tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
-        subdomains: 'abc',
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
+        subdomains: ['a', 'b', 'c'],
+        attribution: '&copy; OpenStreetMap',
       }).addTo(mapInstance);
     }
   });
@@ -388,6 +414,20 @@ onBeforeUnmount(() => {
         <h3>Mapa Oficial de Droguerías en Villavicencio</h3>
       </div>
       <div class="map-controls-row">
+        <!-- Selector de capas libres (Cero API Key) -->
+        <div class="layer-selector" role="group" aria-label="Tipo de mapa">
+          <button
+            v-for="(cfg, key) in CAPAS_MAPA"
+            :key="key"
+            type="button"
+            class="layer-pill"
+            :class="{ active: tipoCapa === key }"
+            @click="cambiarCapa(key as TipoCapa)"
+          >
+            {{ cfg.label }}
+          </button>
+        </div>
+
         <button type="button" class="reset-bounds-btn" @click="centrarTodaLaCiudad">
           Ver toda la ciudad
         </button>
@@ -482,6 +522,40 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   gap: 14px;
+  flex-wrap: wrap;
+}
+
+.layer-selector {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--glass-control-bg);
+  padding: 3px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+}
+
+.layer-pill {
+  padding: 4px 10px;
+  border-radius: 7px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.layer-pill:hover {
+  color: var(--ink);
+}
+
+.layer-pill.active {
+  background: rgba(10, 132, 255, 0.22);
+  color: var(--ink);
+  font-weight: 700;
+  border: 1px solid var(--blue-bright);
 }
 
 .reset-bounds-btn {
