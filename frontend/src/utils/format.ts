@@ -21,3 +21,7 @@ export function iniciales(nombres: string, apellidos: string): string {
   const b = apellidos.trim().charAt(0);
   return `${a}${b}`.toUpperCase() || 'FA';
 }
+
+export function formatPrecioCop(valor: number): string {
+  return `$ ${Math.round(valor).toLocaleString('es-CO')}`;
+}

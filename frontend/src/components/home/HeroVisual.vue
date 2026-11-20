@@ -2,12 +2,10 @@
 import { computed } from 'vue';
 import AppSurface from '../ui/AppSurface.vue';
 import AppLogo from '../ui/AppLogo.vue';
-import { useProyectosStore } from '../../stores/proyectos';
-import { optimizarCloudinary } from '../../utils/imagen';
+import { drogueriasVillavicencio } from '../../data/droguerias';
 
-const store = useProyectosStore();
-// Todas las empresas aliadas participantes de la feria (excluyendo FarmApp que es el núcleo central)
-const empresas = computed(() => store.items.filter((p) => p.slug !== 'codigox'));
+// 6 droguerías de Villavicencio orbitando en la constelación visual
+const destacadas = computed(() => drogueriasVillavicencio.slice(0, 6));
 </script>
 
 <template>
@@ -21,36 +19,31 @@ const empresas = computed(() => store.items.filter((p) => p.slug !== 'codigox'))
       <AppLogo :size="160" class="hero-logo" />
     </div>
 
-    <!-- Las 6 empresas participantes de la feria orbitando con acceso interactivo -->
+    <!-- Droguerías de Villavicencio orbitando con acceso interactivo -->
     <RouterLink
-      v-for="(empresa, idx) in empresas"
-      :key="empresa.slug"
-      :to="`/proyectos/${empresa.slug}`"
+      v-for="(drog, idx) in destacadas"
+      :key="drog.id"
+      to="/ubicaciones"
       class="float-badge"
       :class="`pos-${idx}`"
-      :title="`Ver proyecto ${empresa.producto} (${empresa.empresa})`"
-      :aria-label="`Ver proyecto ${empresa.producto}`"
+      :title="`Ver ${drog.nombre}`"
+      :aria-label="`Ver ${drog.nombre}`"
     >
       <div class="badge-icon">
-        <img
-          :src="optimizarCloudinary(empresa.logo, 96)"
-          :alt="empresa.producto"
-          width="32"
-          height="32"
-          loading="lazy"
-          decoding="async"
-        />
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M12 2v20M2 12h20" />
+        </svg>
       </div>
       <div class="badge-content">
-        <span class="badge-title">{{ empresa.producto }}</span>
-        <span class="badge-subtitle">{{ empresa.empresa }}</span>
+        <span class="badge-title">{{ drog.cadena }}</span>
+        <span class="badge-subtitle">{{ drog.barrio }} • {{ drog.es24h ? '24H' : 'Domicilio' }}</span>
       </div>
     </RouterLink>
 
-    <!-- Indicador inferior de feria empresarial -->
+    <!-- Indicador inferior de cobertura local -->
     <AppSurface tone="glass" radius="999px" class="chip">
       <span class="dot" />
-      <span>6 empresas en la feria</span>
+      <span>Droguerías en Villavicencio • Cobertura Local</span>
     </AppSurface>
   </div>
 </template>

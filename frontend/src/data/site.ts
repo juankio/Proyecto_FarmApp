@@ -3,26 +3,25 @@ export const LOGO_URL =
 
 export const site = {
   nombre: 'FarmApp',
-  lema: 'Información farmacéutica al alcance de todos',
+  lema: 'Encuentra medicamentos al mejor precio y más cerca de ti en Villavicencio',
   descripcion:
-    'Facilitamos el acceso a la información sobre medicamentos para mejorar tu bienestar y experiencia en salud.',
+    'Compara precios de medicamentos entre droguerías de Villavicencio, consulta disponibilidad y localiza la farmacia más cercana a tu barrio.',
   canva: 'https://farmapp.my.canva.site/presentacion-farmapp',
   redes: {
     facebook: 'https://www.facebook.com/farmapp01',
     instagram: 'https://www.instagram.com/farmapp01',
     whatsapp: 'https://wa.link/a4pomp',
   },
-  copyright: 'Proyecto realizado por CódigoX © 2024',
+  copyright: 'FarmApp Villavicencio © 2026',
 };
 
 export type NavItem = { label: string; to: string };
 
 export const navegacion: NavItem[] = [
   { label: 'Inicio', to: '/' },
-  { label: 'Servicios', to: '/servicios' },
-  { label: 'Feria', to: '/feria' },
   { label: 'Medicamentos', to: '/medicamentos' },
-  { label: 'Blog', to: '/blog' },
+  { label: 'Droguerías', to: '/ubicaciones' },
+  { label: 'Servicios', to: '/servicios' },
   { label: 'Nosotros', to: '/informacion' },
   { label: 'Contacto', to: '/contactos' },
 ];
@@ -49,28 +48,28 @@ export const canalesContacto: CanalContacto[] = [
 
 export const accesos: Acceso[] = [
   {
-    nombre: 'Medicamentos',
+    nombre: 'Comparar Medicamentos',
     imagen:
       'https://res.cloudinary.com/dc4vyurnu/image/upload/v1731731665/magnesium_t4bs8u.gif',
     to: '/medicamentos',
-    descripcion: 'Explora nuestro catálogo y resuelve tus dudas.',
+    descripcion: 'Compara precios, presentaciones y requisitos de receta médica.',
   },
   {
-    nombre: 'Ubicaciones',
+    nombre: 'Droguerías en Villavicencio',
     imagen: 'https://res.cloudinary.com/dc4vyurnu/image/upload/v1731731664/map_n8kyht.gif',
-    href: 'https://www.google.com/maps/search/droguerias/@4.1117911,-73.6418469,14z',
-    descripcion: 'Encuentra las droguerías más cercanas en el mapa.',
+    to: '/ubicaciones',
+    descripcion: 'Encuentra las droguerías más cercanas y abiertas 24h en tu barrio.',
   },
   {
-    nombre: 'Farmacias',
+    nombre: 'Afiliación y Servicios',
     imagen: 'https://res.cloudinary.com/dc4vyurnu/image/upload/v1731731666/pharmacy_dzl5gc.gif',
-    href: 'https://www.tiendeo.com.co/Tiendas/villavicencio/farmacias-droguerias-opticas',
-    descripcion: 'Compara farmacias y droguerías de tu ciudad.',
+    to: '/servicios',
+    descripcion: 'Planes de suscripción y visibilidad para droguerías locales.',
   },
   {
-    nombre: 'Órdenes médicas',
+    nombre: 'Atención y Consultas',
     imagen: 'https://res.cloudinary.com/dc4vyurnu/image/upload/v1731731667/ordenes_bzoct8.gif',
     to: '/contactos',
-    descripcion: 'Resuelve tus dudas sobre órdenes y fórmulas médicas.',
+    descripcion: 'Orientación farmacéutica y canales directos de WhatsApp.',
   },
 ];

@@ -14,25 +14,23 @@ onMounted(() => {
 const stats = computed<
   { valor: string; label: string; tone: 'blue' | 'mint' | 'aqua' | 'lavender' }[]
 >(() => [
-  { valor: String(medicamentos.total), label: 'Medicamentos', tone: 'blue' },
-  { valor: '7', label: 'Empresas aliadas', tone: 'mint' },
-  { valor: '7', label: 'Productos', tone: 'aqua' },
-  { valor: '100%', label: 'Gratis', tone: 'lavender' },
+  { valor: `${medicamentos.total || '12'}+`, label: 'Medicamentos analizados', tone: 'blue' },
+  { valor: '10+', label: 'Droguerías en Villavicencio', tone: 'mint' },
+  { valor: '24H', label: 'Farmacias de turno', tone: 'aqua' },
+  { valor: '100%', label: 'Gratis para la comunidad', tone: 'lavender' },
 ]);
 </script>
 
 <template>
   <AppSurface tone="glass" radius="var(--radius-lg)" class="welcome">
     <div class="welcome-copy">
-      <span class="eyebrow">Lea, aprenda y conozca más</span>
-      <h2>Bienvenidos a nuestro aplicativo farmacéutico</h2>
+      <span class="eyebrow">Salud y ahorro inteligente</span>
+      <h2>Compara precios y ubica farmacias en Villavicencio</h2>
       <p>
-        En FarmApp, facilitamos el acceso a la información sobre medicamentos para mejorar tu
-        bienestar y experiencia en salud. Nuestra plataforma ofrece una base de datos completa con
-        información básica sobre medicamentos, ayudándote a tomar decisiones informadas en tu
-        cuidado personal.
+        En FarmApp facilitamos el acceso a medicamentos comparando precios entre droguerías locales de Villavicencio.
+        Consulta disponibilidad inmediata, verifica requisitos de fórmula médica y contacta a la farmacia más cercana a tu barrio.
       </p>
-      <RouterLink to="/informacion" class="inline-link">Conoce nuestro origen →</RouterLink>
+      <RouterLink to="/ubicaciones" class="inline-link">Ver droguerías en el mapa →</RouterLink>
     </div>
     <div class="stats">
       <AppStat

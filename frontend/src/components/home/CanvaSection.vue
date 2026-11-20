@@ -1,22 +1,22 @@
 <script setup lang="ts">
+import { RouterLink } from 'vue-router';
 import AppButton from '../ui/AppButton.vue';
-import { site } from '../../data/site';
 </script>
 
 <template>
   <section class="section reveal">
     <div class="canva">
       <div class="canva-copy">
-        <span class="eyebrow">Presentación</span>
-        <h2>Descubre nuestra presentación en Canva</h2>
+        <span class="eyebrow">Red de Farmacias</span>
+        <h2>¿Administras una droguería en Villavicencio?</h2>
         <p>
-          Explora más sobre FarmApp a través de nuestra presentación interactiva en Canva. ¡Haz clic
-          en el botón y conócenos mejor!
+          Únete al directorio de FarmApp. Permite que los habitantes de tu barrio encuentren tus medicamentos,
+          comparen tus precios competitivos y te hagan pedidos directamente a tu línea de WhatsApp.
         </p>
       </div>
-      <a :href="site.canva" target="_blank" rel="noopener">
-        <AppButton size="lg">Ver presentación</AppButton>
-      </a>
+      <RouterLink to="/contactos">
+        <AppButton size="lg">Afiliar mi droguería</AppButton>
+      </RouterLink>
     </div>
   </section>
 </template>

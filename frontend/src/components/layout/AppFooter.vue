@@ -10,7 +10,7 @@ const columnas = [
       { label: 'Nosotros', to: '/informacion' },
       { label: 'Nuestros servicios', to: '/servicios' },
       { label: 'Nuestro blog', to: '/blog' },
-      { label: 'Feria empresarial', to: '/feria' },
+      { label: 'Droguerías en Villavicencio', to: '/ubicaciones' },
     ],
   },
   {

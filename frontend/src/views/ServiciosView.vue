@@ -13,13 +13,13 @@ import { accesos } from '../data/site';
 <template>
   <PageHero
     eyebrow="Servicios"
-    title="Servicios para tu salud y beneficio"
-    lede="FarmApp ofrece una variedad de servicios diseñados para mejorar el acceso a la información médica, desde el vademécum hasta la ubicación de droguerías."
+    title="Servicios para tu salud y ahorro en Villavicencio"
+    lede="FarmApp compara precios de medicamentos entre droguerías locales, te muestra farmacias de turno 24 horas y conecta a las droguerías de barrio con la comunidad."
   >
     <template #actions>
-      <AppButton size="lg" @click="$router.push('/feria')">Ver la feria</AppButton>
-      <AppButton size="lg" variant="secondary" @click="$router.push('/contactos')">
-        Hablar con nosotros
+      <AppButton size="lg" @click="$router.push('/ubicaciones')">Ver droguerías</AppButton>
+      <AppButton size="lg" variant="secondary" @click="$router.push('/medicamentos')">
+        Comparar medicamentos
       </AppButton>
     </template>
   </PageHero>
@@ -59,15 +59,15 @@ import { accesos } from '../data/site';
   <section class="section reveal">
     <AppCard tone="dark" class="cta">
       <div class="cta-copy">
-        <h2>¿Tienes una droguería o una marca de cuidado personal?</h2>
+        <h2>¿Tienes una droguería o farmacia en Villavicencio?</h2>
         <p>
-          Publica tus productos en la feria empresarial de FarmApp y llega a más personas. También
-          puedes escribirnos para resolver dudas sobre medicamentos y órdenes médicas.
+          Únete a la red FarmApp: destaca tu farmacia en tu barrio, muestra tus precios competitivos
+          y recibe pedidos directos a tu WhatsApp oficial de domicilios.
         </p>
       </div>
       <div class="cta-actions">
-        <RouterLink to="/contactos"><AppButton variant="light">Escríbenos</AppButton></RouterLink>
-        <RouterLink to="/feria"><AppButton variant="light">Ver empresas</AppButton></RouterLink>
+        <RouterLink to="/contactos"><AppButton variant="light">Afiliar mi droguería</AppButton></RouterLink>
+        <RouterLink to="/ubicaciones"><AppButton variant="light">Ver droguerías</AppButton></RouterLink>
       </div>
     </AppCard>
   </section>

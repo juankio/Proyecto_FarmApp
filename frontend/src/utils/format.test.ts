@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatFecha, iniciales } from './format';
+import { formatFecha, formatPrecioCop, iniciales } from './format';
 
 describe('formatFecha', () => {
   it('devuelve el mismo valor si está vacío', () => {
@@ -41,5 +41,18 @@ describe('iniciales', () => {
 
   it('maneja un solo valor', () => {
     expect(iniciales('solo', '')).toBe('S');
+  });
+});
+
+describe('formatPrecioCop', () => {
+  it('formatea números a pesos colombianos', () => {
+    const res = formatPrecioCop(3200);
+    expect(res).toContain('3.200');
+    expect(res).toContain('$');
+  });
+
+  it('redondea decimales', () => {
+    const res = formatPrecioCop(4500.8);
+    expect(res).toContain('4.501');
   });
 });

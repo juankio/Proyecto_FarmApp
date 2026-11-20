@@ -19,21 +19,23 @@ export const router = createRouter({
     },
     {
       path: '/feria',
-      name: 'feria',
-      component: () => import('../views/FeriaView.vue'),
-      meta: { title: 'Feria empresarial' },
+      redirect: '/ubicaciones',
+    },
+    {
+      path: '/proyectos/:slug',
+      redirect: '/ubicaciones',
+    },
+    {
+      path: '/ubicaciones',
+      name: 'ubicaciones',
+      component: () => import('../views/UbicacionesView.vue'),
+      meta: { title: 'Droguerías en Villavicencio' },
     },
     {
       path: '/medicamentos',
       name: 'medicamentos',
       component: () => import('../views/MedicamentosView.vue'),
       meta: { title: 'Medicamentos' },
-    },
-    {
-      path: '/proyectos/:slug',
-      name: 'proyecto',
-      component: () => import('../views/ProyectoView.vue'),
-      meta: { title: 'Proyecto' },
     },
     {
       path: '/blog',

@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 const rutas = [
   '/',
   '/servicios',
-  '/feria',
+  '/ubicaciones',
   '/medicamentos',
   '/blog',
   '/informacion',

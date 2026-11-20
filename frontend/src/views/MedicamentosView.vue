@@ -57,9 +57,9 @@ function cerrarDetalle(): void {
 
 <template>
   <PageHero
-    eyebrow="Catálogo"
-    title="Medicamentos"
-    lede="Consulta el catálogo de FarmApp: presentaciones, concentraciones y para qué sirve cada medicamento. Si tienes dudas, escríbenos y te orientamos."
+    eyebrow="Precios y Disponibilidad en Villavicencio"
+    title="Catálogo de Medicamentos"
+    lede="Compara precios entre droguerías de Villavicencio, consulta si requieren prescripción médica y encuentra la opción más económica y cercana a tu barrio."
     compact
     centered
   />
