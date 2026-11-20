@@ -465,12 +465,13 @@
 .admin-two {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 16px;
+  gap: 20px;
+  margin-top: clamp(20px, 3vw, 28px);
 }
 
 .admin-two h2 {
-  font-size: 1.02rem;
-  margin-bottom: 14px;
+  font-size: 1.05rem;
+  margin-bottom: 16px;
 }
 
 .admin-two .admin-item + .admin-item {
