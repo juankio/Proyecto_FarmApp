@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from 'vue';
 import PageHero from '../components/layout/PageHero.vue';
 import AppButton from '../components/ui/AppButton.vue';
 import AppInput from '../components/ui/AppInput.vue';
+import MapaVillavicencio from '../components/ubicaciones/MapaVillavicencio.vue';
 import {
   BARRIOS_VILLAVICENCIO,
   Drogueria,
@@ -14,6 +15,7 @@ const barrioSeleccionado = ref<string>('Todos los barrios');
 const solo24h = ref(false);
 const soloDomicilio = ref(false);
 const soloAfiliadas = ref(false);
+const mostrarMapa = ref(true);
 
 // Geolocalización del usuario
 const userLat = ref<number | null>(null);
@@ -180,7 +182,21 @@ onMounted(() => {
             <circle cx="12" cy="12" r="3" />
             <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
           </svg>
-          <span>{{ userLat !== null ? 'Cerca de ti (GPS Activo)' : 'Droguerías más cercanas' }}</span>
+          <span>{{ userLat !== null ? 'GPS Activo' : 'Cerca de mí' }}</span>
+        </button>
+
+        <button
+          type="button"
+          class="map-toggle-btn"
+          :class="{ active: mostrarMapa }"
+          @click="mostrarMapa = !mostrarMapa"
+        >
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" />
+            <line x1="8" y1="2" x2="8" y2="18" />
+            <line x1="16" y1="6" x2="16" y2="22" />
+          </svg>
+          <span>{{ mostrarMapa ? 'Ocultar mapa' : 'Ver mapa' }}</span>
         </button>
       </div>
 
@@ -223,6 +239,16 @@ onMounted(() => {
         </span>
       </div>
     </div>
+
+    <!-- Mapa Interactivo de Villavicencio -->
+    <MapaVillavicencio
+      v-if="mostrarMapa"
+      :droguerias="drogueriasProcesadas"
+      :user-lat="userLat"
+      :user-lng="userLng"
+      :barrio-seleccionado="barrioSeleccionado"
+      @select-barrio="(b) => (barrioSeleccionado = b)"
+    />
 
     <!-- Lista / Cuadrícula de Droguerías -->
     <div v-if="drogueriasProcesadas.length > 0" class="droguerias-grid">
@@ -388,6 +414,34 @@ onMounted(() => {
 
 .gps-btn.active {
   background: rgba(10, 132, 255, 0.2);
+  border-color: var(--blue);
+  color: var(--blue-bright);
+}
+
+.map-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 16px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+  background: var(--glass-control-bg);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.map-toggle-btn:hover {
+  background: var(--nav-hover-bg);
+  border-color: var(--blue-bright);
+}
+
+.map-toggle-btn.active {
+  background: rgba(10, 132, 255, 0.16);
   border-color: var(--blue);
   color: var(--blue-bright);
 }
