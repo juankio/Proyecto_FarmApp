@@ -130,6 +130,17 @@ function generarLinkMaps(d: Drogueria): string {
   return `https://www.google.com/maps/dir/?api=1&destination=${d.lat},${d.lng}`;
 }
 
+function onSelectDrogueria(id: number): void {
+  const el = document.getElementById(`drog-${id}`);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.classList.add('drog-card--highlight');
+    setTimeout(() => {
+      el.classList.remove('drog-card--highlight');
+    }, 2400);
+  }
+}
+
 onMounted(() => {
   // Intentar geolocalizar suavemente al abrir si el usuario lo permite
   if (navigator.permissions && navigator.geolocation) {
@@ -248,12 +259,14 @@ onMounted(() => {
       :user-lng="userLng"
       :barrio-seleccionado="barrioSeleccionado"
       @select-barrio="(b) => (barrioSeleccionado = b)"
+      @select-drogueria="onSelectDrogueria"
     />
 
     <!-- Lista / Cuadrícula de Droguerías -->
     <div v-if="drogueriasProcesadas.length > 0" class="droguerias-grid">
       <article
         v-for="d in drogueriasProcesadas"
+        :id="`drog-${d.id}`"
         :key="d.id"
         class="drog-card"
         :class="{ 'drog-card--featured': d.afiliada }"
@@ -535,6 +548,12 @@ onMounted(() => {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
   border-color: rgba(90, 200, 250, 0.3);
+}
+
+.drog-card--highlight {
+  border-color: var(--blue-bright) !important;
+  box-shadow: 0 0 24px rgba(10, 132, 255, 0.45), var(--inset) !important;
+  transform: translateY(-4px) !important;
 }
 
 .drog-card--featured {

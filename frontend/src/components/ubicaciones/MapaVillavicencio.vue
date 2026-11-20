@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import type { Drogueria } from '../../data/droguerias';
+import { VILLAVICENCIO_BOUNDS } from '../../data/droguerias';
 
 const props = defineProps<{
   droguerias: (Drogueria & { distanciaKm?: number })[];
@@ -17,14 +18,29 @@ const emit = defineEmits<{
 const mapContainer = ref<HTMLDivElement | null>(null);
 const cargando = ref(true);
 const errorCarga = ref(false);
+const sectorActivo = ref<string>('todos');
 
 // Referencias a instancias de Leaflet
 let mapInstance: any = null;
 let markersLayer: any = null;
+let tileLayer: any = null;
 let userMarker: any = null;
 let userAccuracyCircle: any = null;
+let resizeObserver: ResizeObserver | null = null;
+let themeObserver: MutationObserver | null = null;
 
-// Cargar Leaflet dinámicamente
+// Sectores de Villavicencio para navegación rápida
+const SECTORES = [
+  { id: 'todos', label: '🏙️ Toda la Ciudad' },
+  { id: 'barzal', label: '🏥 El Barzal (Salud)', lat: 4.143, lng: -73.6345, zoom: 16 },
+  { id: 'centro', label: '🏛️ Centro Histórico', lat: 4.1505, lng: -73.6365, zoom: 16 },
+  { id: 'siete-agosto', label: '🛍️ 7 de Agosto / Viva', lat: 4.136, lng: -73.637, zoom: 15 },
+  { id: 'esperanza', label: '🏘️ La Esperanza', lat: 4.133, lng: -73.6265, zoom: 15 },
+  { id: 'porfia', label: '📍 Porfía / Sur', lat: 4.073, lng: -73.663, zoom: 14 },
+  { id: 'oriente', label: '🗺️ Kirpas / San Benito', lat: 4.128, lng: -73.6, zoom: 14 },
+] as const;
+
+// Cargar Leaflet dinámicamente si no está en ventana
 function cargarLeafletScript(): Promise<any> {
   return new Promise((resolve, reject) => {
     if ((window as any).L) {
@@ -54,32 +70,73 @@ function cargarLeafletScript(): Promise<any> {
     script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
     script.async = true;
     script.onload = () => resolve((window as any).L);
-    script.onerror = () => reject(new Error('No se pudo cargar Leaflet'));
+    script.onerror = () => reject(new Error('No se pudo conectar con el servicio de mapas'));
     document.head.appendChild(script);
   });
+}
+
+function obtenerTileUrl(): string {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  return isDark
+    ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+    : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
+}
+
+function actualizarCapaBase(L: any) {
+  if (!mapInstance) return;
+  if (tileLayer) {
+    mapInstance.removeLayer(tileLayer);
+  }
+  tileLayer = L.tileLayer(obtenerTileUrl(), {
+    maxZoom: 19,
+    subdomains: 'abcd',
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>',
+  }).addTo(mapInstance);
 }
 
 function inicializarMapa(L: any) {
   if (!mapContainer.value) return;
 
-  // Centro general de Villavicencio
+  // Centro en Villavicencio con límites oficiales
   mapInstance = L.map(mapContainer.value, {
-    center: [4.125, -73.630],
+    center: [4.135, -73.63],
     zoom: 13,
     minZoom: 11,
     maxZoom: 18,
-    scrollWheelZoom: false,
+    scrollWheelZoom: true,
   });
 
-  // Capa base de OpenStreetMap oficial
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
-  }).addTo(mapInstance);
-
+  actualizarCapaBase(L);
   markersLayer = L.featureGroup().addTo(mapInstance);
+
+  // Escuchar cambios de modo oscuro/claro para cambiar las teselas al instante
+  themeObserver = new MutationObserver(() => {
+    actualizarCapaBase(L);
+  });
+  themeObserver.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-theme'],
+  });
+
+  // Ajuste reactivo al tamaño del contenedor
+  resizeObserver = new ResizeObserver(() => {
+    if (mapInstance) {
+      mapInstance.invalidateSize();
+    }
+  });
+  resizeObserver.observe(mapContainer.value);
+
   renderizarMarcadores(L);
   cargando.value = false;
+
+  // Ajuste inicial para abarcar toda la ciudad de Villavicencio
+  setTimeout(() => {
+    if (mapInstance) {
+      mapInstance.invalidateSize();
+      centrarTodaLaCiudad();
+    }
+  }, 200);
 }
 
 function renderizarMarcadores(L: any) {
@@ -100,15 +157,19 @@ function renderizarMarcadores(L: any) {
           <span class="pin-symbol">${tagTexto}</span>
         </div>
       `,
-      iconSize: [32, 32],
-      iconAnchor: [16, 32],
-      popupAnchor: [0, -32],
+      iconSize: [30, 30],
+      iconAnchor: [15, 30],
+      popupAnchor: [0, -30],
     });
 
     const marker = L.marker([d.lat, d.lng], { icon: customIcon });
 
     const linkWhatsApp = `https://wa.me/${d.whatsapp}?text=${encodeURIComponent('Hola ' + d.nombre + ', los vi en FarmApp Villavicencio.')}`;
     const linkMaps = `https://www.google.com/maps/dir/?api=1&destination=${d.lat},${d.lng}`;
+    const distanciaHtml =
+      d.distanciaKm !== undefined
+        ? `<span class="popup-distancia">📍 A ${d.distanciaKm < 1 ? Math.round(d.distanciaKm * 1000) + ' m' : d.distanciaKm.toFixed(1) + ' km'}</span>`
+        : '';
 
     const popupHtml = `
       <div class="leaflet-popup-card">
@@ -118,7 +179,8 @@ function renderizarMarcadores(L: any) {
         </div>
         <h4 class="popup-title">${d.nombre}</h4>
         <p class="popup-dir">${d.direccion}</p>
-        <p class="popup-meta"><strong>Teléfono:</strong> ${d.telefono}</p>
+        ${distanciaHtml}
+        <p class="popup-meta"><strong>Teléfono:</strong> <a href="tel:${d.telefono}">${d.telefono}</a></p>
         <div class="popup-btn-row">
           <a href="${linkWhatsApp}" target="_blank" rel="noopener" class="popup-btn popup-btn--wa">
             Pedir por WhatsApp
@@ -138,11 +200,6 @@ function renderizarMarcadores(L: any) {
 
     markersLayer.addLayer(marker);
   });
-
-  // Ajustar el encuadre para abarcar todas las droguerías en toda la ciudad
-  if (markersLayer.getLayers().length > 0) {
-    mapInstance.fitBounds(markersLayer.getBounds().pad(0.12));
-  }
 }
 
 function actualizarUbicacionUsuario(L: any) {
@@ -161,7 +218,7 @@ function actualizarUbicacionUsuario(L: any) {
     const userPos: [number, number] = [props.userLat, props.userLng];
 
     userAccuracyCircle = L.circle(userPos, {
-      radius: 300,
+      radius: 350,
       color: '#0a84ff',
       fillColor: '#0a84ff',
       fillOpacity: 0.16,
@@ -188,8 +245,29 @@ function actualizarUbicacionUsuario(L: any) {
 }
 
 function centrarTodaLaCiudad() {
-  if (mapInstance && markersLayer && markersLayer.getLayers().length > 0) {
-    mapInstance.fitBounds(markersLayer.getBounds().pad(0.12));
+  sectorActivo.value = 'todos';
+  if (mapInstance) {
+    mapInstance.fitBounds(VILLAVICENCIO_BOUNDS, {
+      padding: [24, 24],
+      maxZoom: 14,
+      animate: true,
+      duration: 0.8,
+    });
+  }
+}
+
+function irASector(sector: (typeof SECTORES)[number]) {
+  sectorActivo.value = sector.id;
+  if (!mapInstance) return;
+
+  if (sector.id === 'todos') {
+    centrarTodaLaCiudad();
+    emit('select-barrio', 'Todos los barrios');
+    return;
+  }
+
+  if (sector.lat && sector.lng) {
+    mapInstance.flyTo([sector.lat, sector.lng], sector.zoom, { duration: 1 });
   }
 }
 
@@ -222,10 +300,13 @@ watch(
     }
 
     const drogueriasBarrio = props.droguerias.filter((d) => d.barrio === nuevoBarrio);
-    if (drogueriasBarrio.length > 0) {
-      const avgLat = drogueriasBarrio.reduce((sum, d) => sum + d.lat, 0) / drogueriasBarrio.length;
-      const avgLng = drogueriasBarrio.reduce((sum, d) => sum + d.lng, 0) / drogueriasBarrio.length;
-      mapInstance.flyTo([avgLat, avgLng], 15, { duration: 1 });
+    if (drogueriasBarrio.length === 1) {
+      const d = drogueriasBarrio[0];
+      mapInstance.flyTo([d.lat, d.lng], 16, { duration: 1 });
+    } else if (drogueriasBarrio.length > 1) {
+      const L = (window as any).L;
+      const bounds = L.latLngBounds(drogueriasBarrio.map((d) => [d.lat, d.lng]));
+      mapInstance.fitBounds(bounds.pad(0.18), { maxZoom: 16, duration: 1 });
     }
   },
 );
@@ -246,6 +327,14 @@ onMounted(async () => {
 });
 
 onBeforeUnmount(() => {
+  if (resizeObserver) {
+    resizeObserver.disconnect();
+    resizeObserver = null;
+  }
+  if (themeObserver) {
+    themeObserver.disconnect();
+    themeObserver = null;
+  }
   if (mapInstance) {
     mapInstance.remove();
     mapInstance = null;
@@ -257,7 +346,7 @@ onBeforeUnmount(() => {
   <div class="map-card-wrapper">
     <div class="map-header">
       <div class="map-title-row">
-        <span class="map-badge">Cobertura Completa</span>
+        <span class="map-badge">Red Metropolitana</span>
         <h3>Mapa Oficial de Droguerías en Villavicencio</h3>
       </div>
       <div class="map-controls-row">
@@ -270,6 +359,20 @@ onBeforeUnmount(() => {
           <span class="legend-item"><span class="dot dot-normal" /> Diurna</span>
         </div>
       </div>
+    </div>
+
+    <!-- Barra de acceso rápido a sectores clave de la ciudad -->
+    <div class="sectors-bar">
+      <button
+        v-for="s in SECTORES"
+        :key="s.id"
+        type="button"
+        class="sector-pill"
+        :class="{ active: sectorActivo === s.id }"
+        @click="irASector(s)"
+      >
+        {{ s.label }}
+      </button>
     </div>
 
     <!-- Contenedor del Mapa Real -->
@@ -312,7 +415,7 @@ onBeforeUnmount(() => {
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
-  padding: 4px 6px 14px;
+  padding: 4px 6px 12px;
 }
 
 .map-title-row {
@@ -380,14 +483,59 @@ onBeforeUnmount(() => {
   border-radius: 50%;
 }
 
-.dot-24h { background: #30d158; }
-.dot-afiliada { background: #ffd60a; }
-.dot-normal { background: #0a84ff; }
+.dot-24h {
+  background: #10b981;
+}
+
+.dot-afiliada {
+  background: #f59e0b;
+}
+
+.dot-normal {
+  background: #0284c7;
+}
+
+/* Barra de sectores */
+.sectors-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 0 4px 12px;
+  margin-bottom: 8px;
+  scrollbar-width: thin;
+}
+
+.sector-pill {
+  flex-shrink: 0;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: var(--glass-control-bg);
+  color: var(--muted);
+  border: 1px solid var(--line);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sector-pill:hover {
+  color: var(--ink);
+  border-color: var(--blue-bright);
+  background: var(--nav-hover-bg);
+}
+
+.sector-pill.active {
+  background: rgba(10, 132, 255, 0.2);
+  color: var(--ink);
+  border-color: var(--blue-bright);
+  font-weight: 700;
+}
 
 .map-stage {
   position: relative;
   width: 100%;
-  height: 480px;
+  height: 520px;
   border-radius: 16px;
   overflow: hidden;
   border: 1px solid var(--line-soft);
@@ -397,11 +545,6 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 100%;
   background: #0b1220;
-}
-
-/* Modo oscuro elegante para las teselas de OpenStreetMap */
-[data-theme="dark"] :deep(.leaflet-tile) {
-  filter: brightness(0.65) invert(1) contrast(2.6) hue-rotate(205deg) saturate(0.3) brightness(0.72);
 }
 
 /* Spinner y overlays */
@@ -430,7 +573,9 @@ onBeforeUnmount(() => {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .external-maps-link {
@@ -439,7 +584,7 @@ onBeforeUnmount(() => {
   text-decoration: underline;
 }
 
-/* Estilos de los Marcadores Personalizados de Leaflet */
+/* Marcadores Personalizados de Leaflet */
 :deep(.farmapp-leaflet-marker) {
   background: transparent;
   border: none;
@@ -449,8 +594,8 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: 50% 50% 50% 0;
   transform: rotate(-45deg);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45);
@@ -460,27 +605,28 @@ onBeforeUnmount(() => {
 }
 
 :deep(.custom-pin:hover) {
-  transform: rotate(-45deg) scale(1.2);
+  transform: rotate(-45deg) scale(1.22);
+  z-index: 9999 !important;
 }
 
 :deep(.pin-symbol) {
   transform: rotate(45deg);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 900;
   color: #ffffff;
   user-select: none;
 }
 
 :deep(.pin-24h) {
-  background: linear-gradient(135deg, #30d158, #248a3d);
+  background: linear-gradient(135deg, #10b981, #059669);
 }
 
 :deep(.pin-afiliada) {
-  background: linear-gradient(135deg, #ff9f0a, #d47e00);
+  background: linear-gradient(135deg, #f59e0b, #d97706);
 }
 
 :deep(.pin-regular) {
-  background: linear-gradient(135deg, #0a84ff, #0056b3);
+  background: linear-gradient(135deg, #0284c7, #0369a1);
 }
 
 /* Marcador GPS del Usuario */
@@ -508,8 +654,14 @@ onBeforeUnmount(() => {
 }
 
 @keyframes pulse-ring {
-  0% { transform: scale(0.6); opacity: 1; }
-  100% { transform: scale(2.2); opacity: 0; }
+  0% {
+    transform: scale(0.6);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
 }
 
 /* Popup de Leaflet */
@@ -522,7 +674,7 @@ onBeforeUnmount(() => {
   padding: 6px !important;
 }
 
-[data-theme="light"] :deep(.leaflet-popup-content-wrapper) {
+[data-theme='light'] :deep(.leaflet-popup-content-wrapper) {
   background: #ffffff !important;
   color: #0b1220 !important;
   border-color: rgba(15, 23, 42, 0.12) !important;
@@ -533,7 +685,7 @@ onBeforeUnmount(() => {
   background: var(--bg-1, #0c1426) !important;
 }
 
-[data-theme="light"] :deep(.leaflet-popup-tip) {
+[data-theme='light'] :deep(.leaflet-popup-tip) {
   background: #ffffff !important;
 }
 
@@ -560,13 +712,13 @@ onBeforeUnmount(() => {
 }
 
 :deep(.tag-green) {
-  background: rgba(48, 209, 88, 0.2);
-  color: #30d158;
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
 }
 
 :deep(.tag-blue) {
-  background: rgba(10, 132, 255, 0.2);
-  color: #0a84ff;
+  background: rgba(2, 132, 199, 0.2);
+  color: #0284c7;
 }
 
 :deep(.popup-barrio) {
@@ -583,7 +735,7 @@ onBeforeUnmount(() => {
   margin: 2px 0 0;
 }
 
-[data-theme="light"] :deep(.popup-title) {
+[data-theme='light'] :deep(.popup-title) {
   color: #0b1220;
 }
 
@@ -593,14 +745,25 @@ onBeforeUnmount(() => {
   margin: 0;
 }
 
-[data-theme="light"] :deep(.popup-dir) {
+[data-theme='light'] :deep(.popup-dir) {
   color: #334155;
+}
+
+:deep(.popup-distancia) {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--aqua, #5ac8fa);
 }
 
 :deep(.popup-meta) {
   font-size: 0.76rem;
   color: var(--muted, #94a3b8);
   margin: 0;
+}
+
+:deep(.popup-meta a) {
+  color: var(--ink);
+  text-decoration: underline;
 }
 
 :deep(.popup-btn-row) {
@@ -627,13 +790,17 @@ onBeforeUnmount(() => {
   color: #ffffff;
 }
 
+:deep(.popup-btn--wa:hover) {
+  background: #1ebc59;
+}
+
 :deep(.popup-btn--maps) {
   background: var(--line-soft, rgba(255, 255, 255, 0.1));
   color: var(--ink, #ffffff);
   border: 1px solid var(--line, rgba(255, 255, 255, 0.15));
 }
 
-[data-theme="light"] :deep(.popup-btn--maps) {
+[data-theme='light'] :deep(.popup-btn--maps) {
   background: #f1f5f9;
   color: #0b1220;
   border-color: rgba(15, 23, 42, 0.12);
@@ -641,7 +808,7 @@ onBeforeUnmount(() => {
 
 @media (max-width: 620px) {
   .map-stage {
-    height: 380px;
+    height: 420px;
   }
 }
 </style>
