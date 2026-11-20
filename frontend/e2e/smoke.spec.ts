@@ -8,7 +8,6 @@ const rutas = [
   '/blog',
   '/informacion',
   '/lenguajes',
-  '/calculadora',
   '/encuesta',
   '/contactos',
   '/registro',

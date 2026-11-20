@@ -77,9 +77,7 @@ Credenciales del administrador sembrado: `admin@farmapp.local` / `Admin1234`. La
 | `/proyectos/:slug` | Ficha de cada producto: precios, objetivo, ingredientes, misión, visión y galería |
 | `/blog` | Últimos avances y novedades |
 | `/informacion` | Origen del proyecto y valores |
-| `/info-cenacap` | Información de la feria empresarial Cenacap |
 | `/lenguajes` | Lenguajes de programación de bajo y alto nivel |
-| `/calculadora` | Calculadora funcional con teclado e historial |
 | `/banner-yt` | Banner de servicios |
 | `/encuesta` | Encuesta de satisfacción conectada al API |
 | `/contactos` | Formulario de contacto y canales directos |

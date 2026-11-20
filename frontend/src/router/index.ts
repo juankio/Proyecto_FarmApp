@@ -59,9 +59,7 @@ export const router = createRouter({
     },
     {
       path: '/calculadora',
-      name: 'calculadora',
-      component: () => import('../views/CalculadoraView.vue'),
-      meta: { title: 'Calculadora' },
+      redirect: '/',
     },
     {
       path: '/banner-yt',

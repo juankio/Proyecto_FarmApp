@@ -19,7 +19,6 @@ const columnas = [
       { label: 'Preguntas frecuentes', to: '/#preguntas' },
       { label: 'Participa en la encuesta', to: '/encuesta' },
       { label: 'Contacto', to: '/contactos' },
-      { label: 'Calculadora', to: '/calculadora' },
     ],
   },
 ];
