@@ -40,7 +40,7 @@ const SECTORES = [
   { id: 'oriente', label: '🗺️ Kirpas / San Benito', lat: 4.128, lng: -73.6, zoom: 14 },
 ] as const;
 
-// Cargar Leaflet dinámicamente si no está en ventana
+// Cargar Leaflet (local primero, fallback a cdnjs)
 function cargarLeafletScript(): Promise<any> {
   return new Promise((resolve, reject) => {
     if ((window as any).L) {
@@ -51,15 +51,20 @@ function cargarLeafletScript(): Promise<any> {
       const link = document.createElement('link');
       link.id = 'leaflet-css';
       link.rel = 'stylesheet';
-      link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+      link.href = '/vendor/leaflet/leaflet.css';
       document.head.appendChild(link);
     }
 
     if (document.getElementById('leaflet-js')) {
+      let attempts = 0;
       const interval = setInterval(() => {
+        attempts++;
         if ((window as any).L) {
           clearInterval(interval);
           resolve((window as any).L);
+        } else if (attempts > 60) {
+          clearInterval(interval);
+          reject(new Error('Tiempo de espera agotado al cargar mapa'));
         }
       }, 50);
       return;
@@ -67,10 +72,22 @@ function cargarLeafletScript(): Promise<any> {
 
     const script = document.createElement('script');
     script.id = 'leaflet-js';
-    script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+    script.src = '/vendor/leaflet/leaflet.js';
     script.async = true;
-    script.onload = () => resolve((window as any).L);
-    script.onerror = () => reject(new Error('No se pudo conectar con el servicio de mapas'));
+    script.onload = () => {
+      if ((window as any).L) {
+        resolve((window as any).L);
+      } else {
+        reject(new Error('Leaflet no se inicializó correctamente'));
+      }
+    };
+    script.onerror = () => {
+      const fallback = document.createElement('script');
+      fallback.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js';
+      fallback.onload = () => resolve((window as any).L);
+      fallback.onerror = () => reject(new Error('No se pudo conectar con el servicio de mapas'));
+      document.head.appendChild(fallback);
+    };
     document.head.appendChild(script);
   });
 }
@@ -78,21 +95,42 @@ function cargarLeafletScript(): Promise<any> {
 function obtenerTileUrl(): string {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
   return isDark
-    ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-    : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
+    ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
+    : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png';
 }
+
+let tileErrorCount = 0;
 
 function actualizarCapaBase(L: any) {
   if (!mapInstance) return;
   if (tileLayer) {
     mapInstance.removeLayer(tileLayer);
   }
-  tileLayer = L.tileLayer(obtenerTileUrl(), {
+
+  const urlBase = obtenerTileUrl();
+  tileLayer = L.tileLayer(urlBase, {
     maxZoom: 19,
     subdomains: 'abcd',
     attribution:
       '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>',
-  }).addTo(mapInstance);
+  });
+
+  // Si Carto falla en la red del usuario, alternar a OpenStreetMap oficial automáticamente
+  tileLayer.on('tileerror', () => {
+    tileErrorCount++;
+    if (tileErrorCount === 4 && urlBase.includes('cartocdn')) {
+      console.warn('[FarmApp] Alternando a OpenStreetMap oficial por bloqueo o lentitud de Carto');
+      mapInstance.removeLayer(tileLayer);
+      tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        subdomains: 'abc',
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
+      }).addTo(mapInstance);
+    }
+  });
+
+  tileLayer.addTo(mapInstance);
 }
 
 function inicializarMapa(L: any) {
