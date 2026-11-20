@@ -15,7 +15,7 @@ const stats = computed<
   { valor: string; label: string; tone: 'blue' | 'mint' | 'aqua' | 'lavender' }[]
 >(() => [
   { valor: `${medicamentos.total || '12'}+`, label: 'Medicamentos analizados', tone: 'blue' },
-  { valor: '10+', label: 'Droguerías en Villavicencio', tone: 'mint' },
+  { valor: '30+', label: 'Droguerías en Villavicencio', tone: 'mint' },
   { valor: '24H', label: 'Farmacias de turno', tone: 'aqua' },
   { valor: '100%', label: 'Gratis para la comunidad', tone: 'lavender' },
 ]);
