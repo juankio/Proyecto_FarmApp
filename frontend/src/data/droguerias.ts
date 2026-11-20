@@ -55,6 +55,183 @@ export const BARRIOS_VILLAVICENCIO = [
   "Vanguardia"
 ] as const;
 
+export type CadenaInfo = {
+  nombre: string;
+  slug: string;
+  color: string;
+  colorDark: string;
+  colorLight: string;
+  bgGradient: string;
+  textColor: string;
+  sigla: string;
+  icono: string;
+  tipo: 'cadena' | 'independiente';
+  descripcion: string;
+};
+
+export const CADENAS_CONFIG: Record<string, CadenaInfo> = {
+  'La Rebaja': {
+    nombre: 'Drogas La Rebaja',
+    slug: 'rebaja',
+    color: '#dc2626',
+    colorDark: '#991b1b',
+    colorLight: 'rgba(239, 68, 68, 0.15)',
+    bgGradient: 'linear-gradient(135deg, #ef4444, #b91c1c)',
+    textColor: '#ffffff',
+    sigla: 'LR',
+    icono: '<span class="pin-txt-lr">LR</span>',
+    tipo: 'cadena',
+    descripcion: 'Red cooperativa Copservir, mayor presencia en Villavicencio',
+  },
+  'Cruz Verde': {
+    nombre: 'Cruz Verde',
+    slug: 'cruzverde',
+    color: '#059669',
+    colorDark: '#065f46',
+    colorLight: 'rgba(16, 185, 129, 0.15)',
+    bgGradient: 'linear-gradient(135deg, #10b981, #047857)',
+    textColor: '#ffffff',
+    sigla: '+',
+    icono: '<svg viewBox="0 0 24 24" width="16" height="16" fill="#ffffff"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6V3z"/></svg>',
+    tipo: 'cadena',
+    descripcion: 'Cadena nacional con sedes en clínicas y centros comerciales',
+  },
+  Copifam: {
+    nombre: 'Droguerías Copifam',
+    slug: 'copifam',
+    color: '#2563eb',
+    colorDark: '#1e3a8a',
+    colorLight: 'rgba(37, 99, 235, 0.15)',
+    bgGradient: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+    textColor: '#ffffff',
+    sigla: 'CF',
+    icono: '<span class="pin-txt-brand">CF</span>',
+    tipo: 'cadena',
+    descripcion: 'Cadena con amplia presencia en barrios y plazas comerciales',
+  },
+  Farmacenter: {
+    nombre: 'Farmacenter',
+    slug: 'farmacenter',
+    color: '#0284c7',
+    colorDark: '#0369a1',
+    colorLight: 'rgba(2, 132, 199, 0.15)',
+    bgGradient: 'linear-gradient(135deg, #0284c7, #075985)',
+    textColor: '#ffffff',
+    sigla: 'FC',
+    icono: '<span class="pin-txt-brand">FC</span>',
+    tipo: 'cadena',
+    descripcion: 'Red de farmacias comunitarias asociadas',
+  },
+  'La Economía': {
+    nombre: 'Droguerías La Economía',
+    slug: 'economia',
+    color: '#ea580c',
+    colorDark: '#9a3412',
+    colorLight: 'rgba(234, 88, 12, 0.15)',
+    bgGradient: 'linear-gradient(135deg, #f97316, #c2410c)',
+    textColor: '#ffffff',
+    sigla: '%',
+    icono: '<span class="pin-txt-brand">%</span>',
+    tipo: 'cadena',
+    descripcion: 'Especialistas en genéricos y marcas con descuento',
+  },
+  Cafam: {
+    nombre: 'Droguerías Cafam',
+    slug: 'cafam',
+    color: '#dc2626',
+    colorDark: '#7f1d1d',
+    colorLight: 'rgba(225, 29, 72, 0.15)',
+    bgGradient: 'linear-gradient(135deg, #e11d48, #9f1239)',
+    textColor: '#ffffff',
+    sigla: 'CAF',
+    icono: '<span class="pin-txt-brand">CAF</span>',
+    tipo: 'cadena',
+    descripcion: 'Cadena de caja de compensación con cobertura médica y EPS',
+  },
+  Pasteur: {
+    nombre: 'Droguerías Pasteur',
+    slug: 'pasteur',
+    color: '#334155',
+    colorDark: '#0f172a',
+    colorLight: 'rgba(51, 65, 85, 0.15)',
+    bgGradient: 'linear-gradient(135deg, #334155, #0f172a)',
+    textColor: '#ffffff',
+    sigla: 'P',
+    icono: '<span class="pin-txt-brand">P</span>',
+    tipo: 'cadena',
+    descripcion: 'Cadena farmacéutica tradicional con sede en CC Viva',
+  },
+  Colsubsidio: {
+    nombre: 'Droguerías Colsubsidio',
+    slug: 'colsubsidio',
+    color: '#0284c7',
+    colorDark: '#0c4a6e',
+    colorLight: 'rgba(2, 132, 199, 0.15)',
+    bgGradient: 'linear-gradient(135deg, #0284c7, #b91c1c)',
+    textColor: '#ffffff',
+    sigla: 'COL',
+    icono: '<span class="pin-txt-brand">COL</span>',
+    tipo: 'cadena',
+    descripcion: 'Dispensación ambulatoria y farmacia comercial',
+  },
+  Audifarma: {
+    nombre: 'Audifarma',
+    slug: 'audifarma',
+    color: '#0f766e',
+    colorDark: '#134e4a',
+    colorLight: 'rgba(15, 118, 110, 0.15)',
+    bgGradient: 'linear-gradient(135deg, #14b8a6, #0f766e)',
+    textColor: '#ffffff',
+    sigla: 'AUD',
+    icono: '<span class="pin-txt-brand">AUD</span>',
+    tipo: 'cadena',
+    descripcion: 'Dispensación especializada institucional',
+  },
+  'Droguería Alemana': {
+    nombre: 'Droguería Alemana',
+    slug: 'alemana',
+    color: '#d97706',
+    colorDark: '#78350f',
+    colorLight: 'rgba(217, 119, 6, 0.15)',
+    bgGradient: 'linear-gradient(135deg, #334155, #b45309)',
+    textColor: '#ffffff',
+    sigla: 'ALE',
+    icono: '<span class="pin-txt-brand">ALE</span>',
+    tipo: 'cadena',
+    descripcion: 'Fórmulas magistrales y productos dermatológicos',
+  },
+  Independiente: {
+    nombre: 'Droguerías de Barrio (Independientes)',
+    slug: 'independiente',
+    color: '#7c3aed',
+    colorDark: '#5b21b6',
+    colorLight: 'rgba(124, 58, 237, 0.15)',
+    bgGradient: 'linear-gradient(135deg, #8b5cf6, #6d28d9)',
+    textColor: '#ffffff',
+    sigla: 'BOT',
+    icono: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11h16a1 1 0 0 1 1 1.1c-.8 5.4-5 8.9-9 8.9s-8.2-3.5-9-8.9A1 1 0 0 1 4 11z"/><path d="M15 4l-4 6"/><path d="M13 3l3 2"/></svg>',
+    tipo: 'independiente',
+    descripcion: 'Farmacias y boticarios tradicionales de los barrios de Villavicencio',
+  },
+};
+
+export const LISTA_CADENAS_FILTRO = [
+  'Todas las marcas',
+  'Drogas La Rebaja',
+  'Droguerías de Barrio (Independientes)',
+  'Cruz Verde',
+  'Copifam',
+  'Farmacenter',
+  'La Economía',
+  'Cafam',
+  'Pasteur',
+  'Otras Cadenas',
+] as const;
+
+export function obtenerCadenaInfo(cadena: string): CadenaInfo {
+  return CADENAS_CONFIG[cadena] || CADENAS_CONFIG['Independiente'];
+}
+
 export const drogueriasVillavicencio: Drogueria[] = [
   {
     "id": 1,

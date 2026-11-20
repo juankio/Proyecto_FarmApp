@@ -8,10 +8,13 @@ import {
   BARRIOS_VILLAVICENCIO,
   Drogueria,
   drogueriasVillavicencio,
+  LISTA_CADENAS_FILTRO,
+  obtenerCadenaInfo,
 } from '../data/droguerias';
 
 const busqueda = ref('');
 const barrioSeleccionado = ref<string>('Todos los barrios');
+const cadenaSeleccionada = ref<string>('Todas las marcas');
 const solo24h = ref(false);
 const soloDomicilio = ref(false);
 const soloAfiliadas = ref(false);
@@ -98,6 +101,29 @@ const drogueriasProcesadas = computed<DrogueriaConDistancia[]>(() => {
     lista = lista.filter((d) => d.barrio === barrioSeleccionado.value);
   }
 
+  // Filtro por marca o cadena
+  if (cadenaSeleccionada.value !== 'Todas las marcas') {
+    if (cadenaSeleccionada.value === 'Drogas La Rebaja') {
+      lista = lista.filter((d) => d.cadena === 'La Rebaja');
+    } else if (cadenaSeleccionada.value === 'Droguerías de Barrio (Independientes)') {
+      lista = lista.filter((d) => d.cadena === 'Independiente');
+    } else if (cadenaSeleccionada.value === 'Otras Cadenas') {
+      const conocidas = [
+        'La Rebaja',
+        'Independiente',
+        'Cruz Verde',
+        'Copifam',
+        'Farmacenter',
+        'La Economía',
+        'Cafam',
+        'Pasteur',
+      ];
+      lista = lista.filter((d) => !conocidas.includes(d.cadena));
+    } else {
+      lista = lista.filter((d) => d.cadena === cadenaSeleccionada.value);
+    }
+  }
+
   // Filtros rápidos
   if (solo24h.value) {
     lista = lista.filter((d) => d.es24h);
@@ -179,6 +205,15 @@ onMounted(() => {
           <select id="barrio-select" v-model="barrioSeleccionado" class="custom-select">
             <option v-for="barrio in BARRIOS_VILLAVICENCIO" :key="barrio" :value="barrio">
               {{ barrio }}
+            </option>
+          </select>
+        </div>
+
+        <div class="brand-wrap">
+          <label for="cadena-select" class="sr-only">Seleccionar marca</label>
+          <select id="cadena-select" v-model="cadenaSeleccionada" class="custom-select">
+            <option v-for="cadena in LISTA_CADENAS_FILTRO" :key="cadena" :value="cadena">
+              {{ cadena }}
             </option>
           </select>
         </div>
@@ -273,6 +308,16 @@ onMounted(() => {
       >
         <div class="drog-header">
           <div class="drog-badge-cluster">
+            <span
+              class="badge-brand"
+              :style="{
+                background: obtenerCadenaInfo(d.cadena).colorLight,
+                color: obtenerCadenaInfo(d.cadena).color,
+                borderColor: obtenerCadenaInfo(d.cadena).color + '44',
+              }"
+            >
+              {{ obtenerCadenaInfo(d.cadena).tipo === 'independiente' ? '🏺 Boticario de Barrio' : d.cadena }}
+            </span>
             <span class="badge-barrio">{{ d.barrio }}</span>
             <span v-if="d.es24h" class="badge-tag tag-24h">24H</span>
             <span v-if="d.afiliada" class="badge-tag tag-afiliada">Verificada</span>
@@ -338,7 +383,7 @@ onMounted(() => {
     <div v-else class="empty-state">
       <h3>No encontramos droguerías con esos filtros</h3>
       <p>Prueba buscando en otro barrio o quitando los filtros rápidos.</p>
-      <AppButton variant="secondary" @click="barrioSeleccionado = 'Todos los barrios'; busqueda = ''; solo24h = false; soloDomicilio = false; soloAfiliadas = false;">
+      <AppButton variant="secondary" @click="barrioSeleccionado = 'Todos los barrios'; cadenaSeleccionada = 'Todas las marcas'; busqueda = ''; solo24h = false; soloDomicilio = false; soloAfiliadas = false;">
         Restablecer filtros
       </AppButton>
     </div>
@@ -377,9 +422,14 @@ onMounted(() => {
 
 .filter-top {
   display: grid;
-  grid-template-columns: 2fr 1fr auto;
+  grid-template-columns: 1.8fr 1.2fr 1.2fr auto auto;
   gap: 12px;
   align-items: center;
+}
+
+.brand-wrap,
+.neighborhood-wrap {
+  width: 100%;
 }
 
 .custom-select {
@@ -575,6 +625,17 @@ onMounted(() => {
   flex-wrap: wrap;
 }
 
+.badge-brand {
+  font-size: 0.74rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .badge-barrio {
   font-size: 0.76rem;
   font-weight: 700;
@@ -767,9 +828,21 @@ onMounted(() => {
   line-height: 1.5;
 }
 
-@media (max-width: 820px) {
+@media (max-width: 1080px) {
+  .filter-top {
+    grid-template-columns: 1fr 1fr;
+  }
+  .search-wrap {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 640px) {
   .filter-top {
     grid-template-columns: 1fr;
+  }
+  .search-wrap {
+    grid-column: auto;
   }
   .results-count {
     margin-left: 0;

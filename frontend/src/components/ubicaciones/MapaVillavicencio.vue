@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import type { Drogueria } from '../../data/droguerias';
-import { VILLAVICENCIO_BOUNDS } from '../../data/droguerias';
+import { VILLAVICENCIO_BOUNDS, obtenerCadenaInfo } from '../../data/droguerias';
 
 const props = defineProps<{
   droguerias: (Drogueria & { distanciaKm?: number })[];
@@ -211,14 +211,17 @@ function renderizarMarcadores(L: any) {
   if (!props.droguerias.length) return;
 
   props.droguerias.forEach((d) => {
-    const clasePin = d.es24h ? 'pin-24h' : d.afiliada ? 'pin-afiliada' : 'pin-regular';
-    const tagTexto = d.es24h ? '24H' : d.afiliada ? '★' : '+';
+    const brand = obtenerCadenaInfo(d.cadena);
+    const clasePin = `pin-${brand.slug}`;
+    const badge24hHtml = d.es24h ? '<span class="pin-badge-24h">24H</span>' : '';
+    const afiliadaClass = d.afiliada ? 'pin-afiliada-glow' : '';
 
     const customIcon = L.divIcon({
       className: 'farmapp-leaflet-marker',
       html: `
-        <div class="custom-pin ${clasePin}">
-          <span class="pin-symbol">${tagTexto}</span>
+        <div class="custom-pin ${clasePin} ${afiliadaClass}" title="${d.nombre} (${brand.nombre})">
+          <span class="pin-symbol">${brand.icono}</span>
+          ${badge24hHtml}
         </div>
       `,
       iconSize: [30, 30],
@@ -235,15 +238,26 @@ function renderizarMarcadores(L: any) {
         ? `<span class="popup-distancia">📍 A ${d.distanciaKm < 1 ? Math.round(d.distanciaKm * 1000) + ' m' : d.distanciaKm.toFixed(1) + ' km'}</span>`
         : '';
 
+    const badgeTipoHtml =
+      brand.tipo === 'independiente'
+        ? `<span class="popup-brand-badge brand-independiente">🏺 Boticario de Barrio</span>`
+        : `<span class="popup-brand-badge" style="background:${brand.colorLight}; color:${brand.color}; border-color:${brand.color}44;">🏷️ ${brand.nombre}</span>`;
+
     const popupHtml = `
       <div class="leaflet-popup-card">
         <div class="popup-pill-row">
-          <span class="popup-tag ${d.es24h ? 'tag-green' : 'tag-blue'}">${d.es24h ? 'Abierto 24 Horas' : 'Horario Diurno'}</span>
+          ${badgeTipoHtml}
           <span class="popup-barrio">${d.barrio}</span>
+        </div>
+        <div class="popup-status-row">
+          <span class="popup-tag ${d.es24h ? 'tag-green' : 'tag-blue'}">${d.es24h ? 'Abierto 24 Horas' : 'Horario Diurno'}</span>
+          ${d.afiliada ? '<span class="popup-tag tag-gold">★ Verificada</span>' : ''}
+          ${d.domicilio ? '<span class="popup-tag tag-cyan">🛵 Domicilio</span>' : ''}
         </div>
         <h4 class="popup-title">${d.nombre}</h4>
         <p class="popup-dir">${d.direccion}</p>
         ${distanciaHtml}
+        <p class="popup-meta"><strong>Horario:</strong> ${d.horario}</p>
         <p class="popup-meta"><strong>Teléfono:</strong> <a href="tel:${d.telefono}">${d.telefono}</a></p>
         <div class="popup-btn-row">
           <a href="${linkWhatsApp}" target="_blank" rel="noopener" class="popup-btn popup-btn--wa">
@@ -432,9 +446,11 @@ onBeforeUnmount(() => {
           Ver toda la ciudad
         </button>
         <div class="map-legend">
-          <span class="legend-item"><span class="dot dot-24h" /> 24 Horas</span>
-          <span class="legend-item"><span class="dot dot-afiliada" /> Verificada</span>
-          <span class="legend-item"><span class="dot dot-normal" /> Diurna</span>
+          <span class="legend-item"><span class="dot dot-rebaja" /> La Rebaja</span>
+          <span class="legend-item"><span class="dot dot-cruzverde" /> Cruz Verde</span>
+          <span class="legend-item"><span class="dot dot-cadenas" /> Otras Cadenas</span>
+          <span class="legend-item"><span class="dot dot-independiente" /> De Barrio (Boticario)</span>
+          <span class="legend-item"><span class="badge-pill-24h">24H</span> De Turno</span>
         </div>
       </div>
     </div>
@@ -593,18 +609,33 @@ onBeforeUnmount(() => {
   width: 9px;
   height: 9px;
   border-radius: 50%;
+  flex-shrink: 0;
 }
 
-.dot-24h {
-  background: #10b981;
+.dot-rebaja {
+  background: #dc2626;
 }
 
-.dot-afiliada {
-  background: #f59e0b;
+.dot-cruzverde {
+  background: #059669;
 }
 
-.dot-normal {
+.dot-cadenas {
   background: #0284c7;
+}
+
+.dot-independiente {
+  background: #7c3aed;
+}
+
+.badge-pill-24h {
+  display: inline-block;
+  background: #10b981;
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 1px 4px;
+  border-radius: 4px;
 }
 
 /* Barra de sectores */
@@ -723,22 +754,90 @@ onBeforeUnmount(() => {
 
 :deep(.pin-symbol) {
   transform: rotate(45deg);
-  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 10.5px;
   font-weight: 900;
   color: #ffffff;
   user-select: none;
+  line-height: 1;
 }
 
-:deep(.pin-24h) {
-  background: linear-gradient(135deg, #10b981, #059669);
+:deep(.pin-symbol svg) {
+  display: block;
 }
 
-:deep(.pin-afiliada) {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
+:deep(.pin-txt-lr) {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
 }
 
-:deep(.pin-regular) {
+:deep(.pin-txt-brand) {
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+}
+
+:deep(.pin-badge-24h) {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #10b981;
+  color: #ffffff;
+  font-size: 7.5px;
+  font-weight: 900;
+  padding: 1px 3.5px;
+  border-radius: 6px;
+  border: 1.5px solid #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  transform: rotate(45deg);
+  pointer-events: none;
+  letter-spacing: -0.5px;
+}
+
+/* Colores de pines por marca */
+:deep(.pin-rebaja) {
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+}
+:deep(.pin-cruzverde) {
+  background: linear-gradient(135deg, #10b981, #047857);
+}
+:deep(.pin-copifam) {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+:deep(.pin-farmacenter) {
   background: linear-gradient(135deg, #0284c7, #0369a1);
+}
+:deep(.pin-economia) {
+  background: linear-gradient(135deg, #f97316, #c2410c);
+}
+:deep(.pin-cafam) {
+  background: linear-gradient(135deg, #e11d48, #9f1239);
+}
+:deep(.pin-pasteur) {
+  background: linear-gradient(135deg, #475569, #0f172a);
+}
+:deep(.pin-colsubsidio) {
+  background: linear-gradient(135deg, #0284c7, #b91c1c);
+}
+:deep(.pin-audifarma) {
+  background: linear-gradient(135deg, #14b8a6, #0f766e);
+}
+:deep(.pin-alemana) {
+  background: linear-gradient(135deg, #d97706, #92400e);
+}
+:deep(.pin-independiente) {
+  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.5);
+}
+
+:deep(.pin-afiliada-glow) {
+  border-color: #fbbf24 !important;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.7), 0 4px 8px rgba(0, 0, 0, 0.5) !important;
 }
 
 /* Marcador GPS del Usuario */
@@ -815,6 +914,32 @@ onBeforeUnmount(() => {
   gap: 8px;
 }
 
+:deep(.popup-brand-badge) {
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+}
+
+:deep(.brand-independiente) {
+  background: rgba(124, 58, 237, 0.16);
+  color: #a78bfa;
+  border-color: rgba(124, 58, 237, 0.35);
+}
+
+[data-theme='light'] :deep(.brand-independiente) {
+  color: #6d28d9;
+}
+
+:deep(.popup-status-row) {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin: 2px 0;
+}
+
 :deep(.popup-tag) {
   font-size: 0.68rem;
   font-weight: 800;
@@ -831,6 +956,16 @@ onBeforeUnmount(() => {
 :deep(.tag-blue) {
   background: rgba(2, 132, 199, 0.2);
   color: #0284c7;
+}
+
+:deep(.tag-gold) {
+  background: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
+}
+
+:deep(.tag-cyan) {
+  background: rgba(6, 182, 212, 0.2);
+  color: #06b6d4;
 }
 
 :deep(.popup-barrio) {
