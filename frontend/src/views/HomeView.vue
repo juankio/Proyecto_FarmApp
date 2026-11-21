@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
-import MapHeroHub from '../components/home/MapHeroHub.vue';
+import HeroSection from '../components/home/HeroSection.vue';
 
-const ComparadorPreciosVisual = defineAsyncComponent(
-  () => import('../components/home/ComparadorPreciosVisual.vue'),
+const RadarMapaSection = defineAsyncComponent(
+  () => import('../components/home/RadarMapaSection.vue'),
 );
-const ComoFuncionaSection = defineAsyncComponent(
-  () => import('../components/home/ComoFuncionaSection.vue'),
+const BentoComparadorSection = defineAsyncComponent(
+  () => import('../components/home/BentoComparadorSection.vue'),
+);
+const StatsSection = defineAsyncComponent(
+  () => import('../components/home/StatsSection.vue'),
 );
 const DirectorioMarcasSection = defineAsyncComponent(
   () => import('../components/home/DirectorioMarcasSection.vue'),
-);
-const SaludInfoSection = defineAsyncComponent(
-  () => import('../components/home/SaludInfoSection.vue'),
 );
 const CanvaSection = defineAsyncComponent(
   () => import('../components/home/CanvaSection.vue'),
@@ -23,23 +23,23 @@ const FaqSection = defineAsyncComponent(
 </script>
 
 <template>
-  <div class="home-map-first-page">
-    <!-- 1. Hub Principal: Mapa Interactivo de Villavicencio + Radar de Precios y Distancias -->
-    <MapHeroHub />
+  <div class="home-apple-airbnb-page">
+    <!-- 1. Hero Limpio y Acogedor: Estilo Apple / Airbnb con Buscador Flotante y Logo 3D -->
+    <HeroSection />
 
-    <!-- 2. Comparador Visual de Precios: Imágenes reales, fichas y barras gráficas SVG -->
-    <ComparadorPreciosVisual />
+    <!-- 2. Radar Panorámico de Mapa de Villavicencio + Fila Limpia de Farmacias -->
+    <RadarMapaSection />
 
-    <!-- 3. Cómo Funciona en 3 Pasos con Ilustraciones SVG Artesanales -->
-    <ComoFuncionaSection />
+    <!-- 3. Matriz Bento Grid: Comparativa de Precios, Ahorro, Recetas y Clima Llanero -->
+    <BentoComparadorSection />
 
-    <!-- 4. Directorio de Marcas y Boticarios Tradicionales de Barrio -->
+    <!-- 4. Estadísticas Clave de la Red Farmacéutica -->
+    <StatsSection />
+
+    <!-- 5. Directorio de Cadenas y Boticarios de Barrio -->
     <DirectorioMarcasSection />
 
-    <!-- 5. Guía de Salud Responsable, INVIMA y Urgencias Médicas -->
-    <SaludInfoSection />
-
-    <!-- 6. Afiliación para Droguerías y Farmacias Locales -->
+    <!-- 6. Afiliación para Farmacias Locales -->
     <CanvaSection />
 
     <!-- 7. Preguntas Frecuentes -->
@@ -48,10 +48,10 @@ const FaqSection = defineAsyncComponent(
 </template>
 
 <style scoped>
-.home-map-first-page {
+.home-apple-airbnb-page {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: clamp(32px, 5vw, 64px);
   width: 100%;
 }
 </style>

@@ -13,6 +13,8 @@ const router = useRouter();
 const query = ref('');
 const inputFocused = ref(false);
 
+const CHIPS_RAPIDOS = ['Acetaminofén', 'Ibuprofeno', 'Amoxicilina', 'Loratadina'];
+
 const sugerencias = computed(() => {
   const q = query.value.trim().toLowerCase();
   const list = Object.values(COMPARATIVA_MEDICAMENTOS);
@@ -29,6 +31,15 @@ function buscar(term?: string): void {
   }
 }
 
+function scrollToRadar(): void {
+  const el = document.getElementById('radar-mapa');
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth' });
+  } else {
+    router.push('/ubicaciones');
+  }
+}
+
 function onBlur(): void {
   setTimeout(() => {
     inputFocused.value = false;
@@ -40,10 +51,10 @@ function onBlur(): void {
   <PageHero
     eyebrow="Salud y Ahorro en Villavicencio"
     title="Encuentra tus medicamentos al mejor precio y más cerca de ti."
-    lede="Compara precios entre droguerías de Villavicencio, consulta disponibilidad inmediata, verifica si requieren receta médica y localiza la farmacia más cercana a tu barrio."
+    lede="Compara precios en tiempo real entre droguerías y boticarios de Villavicencio, localiza farmacias de turno 24 horas y ahorra hasta un 45% en tus fórmulas."
   >
     <template #actions>
-      <!-- Buscador Rápido de Medicamentos con Autocompletado -->
+      <!-- Buscador Flotante Estilo Airbnb con Sugerencias Inteligentes -->
       <div class="hero-search-wrapper">
         <form class="hero-search-form" @submit.prevent="buscar()">
           <div class="input-container">
@@ -54,20 +65,20 @@ function onBlur(): void {
             <input
               v-model="query"
               type="search"
-              placeholder="Ej: Acetaminofén, Ibuprofeno, Amoxicilina..."
+              placeholder="¿Qué medicamento buscas? (ej. Acetaminofén, Ibuprofeno...)"
               aria-label="Buscar medicamento para comparar precios"
               @focus="inputFocused = true"
               @blur="onBlur"
             />
           </div>
           <button type="submit" class="hero-search-btn">
-            Comparar Precios
+            <span>🔍 Comparar</span>
           </button>
         </form>
 
         <!-- Dropdown de Sugerencias con Precios Mínimos en Villavicencio -->
         <div v-if="inputFocused && sugerencias.length > 0" class="hero-sug-box">
-          <div class="sug-header">Medicamentos populares en Villavicencio</div>
+          <div class="sug-header">Medicamentos frecuentes en Villavicencio</div>
           <div
             v-for="sug in sugerencias"
             :key="sug.medicamentoNombre"
@@ -77,7 +88,7 @@ function onBlur(): void {
             <div class="sug-left">
               <strong>{{ sug.medicamentoNombre }}</strong>
               <span class="sug-badge" :class="sug.requiereReceta ? 'badge-receta' : 'badge-libre'">
-                {{ sug.requiereReceta ? 'Bajo Receta' : 'Venta Libre' }}
+                {{ sug.requiereReceta ? 'Bajo Fórmula' : 'Venta Libre' }}
               </span>
             </div>
             <div class="sug-right">
@@ -86,14 +97,29 @@ function onBlur(): void {
             </div>
           </div>
         </div>
+
+        <!-- Chips Rápidos de Acceso -->
+        <div class="hero-chips-bar">
+          <span class="chips-hint">Populares:</span>
+          <button
+            v-for="chip in CHIPS_RAPIDOS"
+            :key="chip"
+            type="button"
+            class="chip-pill"
+            @click="buscar(chip)"
+          >
+            {{ chip }}
+          </button>
+        </div>
       </div>
 
+      <!-- Botones de Acción Hero -->
       <div class="hero-buttons">
-        <AppButton size="lg" variant="secondary" @click="$router.push('/ubicaciones')">
-          Droguerías en Villavicencio
+        <AppButton size="lg" variant="primary" @click="scrollToRadar">
+          📍 Ver Mapa de Farmacias
         </AppButton>
-        <AppButton size="lg" variant="ghost" @click="$router.push('/servicios')">
-          Afiliar mi droguería
+        <AppButton size="lg" variant="secondary" @click="$router.push('/ubicaciones')">
+          Directorio de Sedes
         </AppButton>
       </div>
     </template>
@@ -113,7 +139,7 @@ function onBlur(): void {
   position: relative;
   width: 100%;
   max-width: 580px;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
 .hero-search-form {
@@ -121,22 +147,28 @@ function onBlur(): void {
   gap: 8px;
   background: var(--glass-strong);
   padding: 6px;
-  border-radius: 18px;
+  border-radius: 999px;
   border: 1px solid var(--line);
   box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.4), var(--inset);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.hero-search-form:focus-within {
+  border-color: var(--blue-bright);
+  box-shadow: 0 0 0 2px rgba(10, 132, 255, 0.25), 0 16px 36px -10px rgba(0, 0, 0, 0.4);
 }
 
 [data-theme="light"] .hero-search-form {
   background: #ffffff;
-  border-color: rgba(15, 23, 42, 0.12);
-  box-shadow: 0 16px 36px -10px rgba(10, 132, 255, 0.14), inset 0 1px 0 #ffffff;
+  border-color: rgba(15, 23, 42, 0.14);
+  box-shadow: 0 16px 36px -10px rgba(10, 132, 255, 0.12), inset 0 1px 0 #ffffff;
 }
 
 .input-container {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding-left: 12px;
+  padding-left: 16px;
   flex: 1;
 }
 
@@ -156,21 +188,55 @@ function onBlur(): void {
 }
 
 .hero-search-btn {
-  padding: 12px 22px;
-  border-radius: 14px;
+  padding: 10px 22px;
+  border-radius: 999px;
   background: linear-gradient(150deg, #3d9bff, var(--blue-deep));
   color: #ffffff;
-  font-weight: 700;
-  font-size: 0.92rem;
+  font-weight: 750;
+  font-size: 0.9rem;
   border: 1px solid rgba(255, 255, 255, 0.25);
   cursor: pointer;
   white-space: nowrap;
-  transition: transform 0.2s var(--spring), box-shadow 0.2s;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
   box-shadow: 0 4px 14px -3px rgba(10, 132, 255, 0.6);
 }
 
 .hero-search-btn:hover {
   transform: translateY(-1px);
+  box-shadow: 0 6px 18px -3px rgba(10, 132, 255, 0.7);
+}
+
+/* Chips Populares */
+.hero-chips-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.chips-hint {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.chip-pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--glass-control-bg);
+  border: 1px solid var(--line-soft);
+  color: var(--ink-soft);
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.chip-pill:hover {
+  background: var(--line-soft);
+  color: var(--ink);
+  border-color: var(--blue-bright);
 }
 
 /* Dropdown */
@@ -263,6 +329,7 @@ function onBlur(): void {
   font-size: 0.92rem;
   font-weight: 800;
   color: var(--ink);
+  font-variant-numeric: tabular-nums;
 }
 
 .hero-buttons {
@@ -278,9 +345,12 @@ function onBlur(): void {
 @media (max-width: 620px) {
   .hero-search-form {
     flex-direction: column;
+    border-radius: 20px;
+    padding: 8px;
   }
   .hero-search-btn {
     width: 100%;
+    border-radius: 14px;
   }
   .hero-buttons {
     width: 100%;
