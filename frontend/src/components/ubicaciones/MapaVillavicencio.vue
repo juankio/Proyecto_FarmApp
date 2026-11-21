@@ -4,7 +4,7 @@ import type { Drogueria } from '../../data/droguerias';
 import { VILLAVICENCIO_BOUNDS, obtenerCadenaInfo } from '../../data/droguerias';
 
 const props = defineProps<{
-  droguerias: (Drogueria & { distanciaKm?: number })[];
+  droguerias: (Drogueria & { distanciaKm?: number; precioOferta?: number; esMejorPrecio?: boolean })[];
   userLat: number | null;
   userLng: number | null;
   barrioSeleccionado?: string;
@@ -28,6 +28,16 @@ let userMarker: any = null;
 let userAccuracyCircle: any = null;
 let resizeObserver: ResizeObserver | null = null;
 let themeObserver: MutationObserver | null = null;
+const markersMap = new Map<number, { marker: any; lat: number; lng: number }>();
+
+function enfocarDrogueria(id: number) {
+  const item = markersMap.get(id);
+  if (!item || !mapInstance) return;
+  mapInstance.flyTo([item.lat, item.lng], 16, { duration: 0.8 });
+  item.marker.openPopup();
+}
+
+defineExpose({ enfocarDrogueria, centrarTodaLaCiudad });
 
 // Sectores de Villavicencio para navegación rápida
 const SECTORES = [
@@ -207,6 +217,7 @@ function renderizarMarcadores(L: any) {
   if (!mapInstance || !markersLayer) return;
 
   markersLayer.clearLayers();
+  markersMap.clear();
 
   if (!props.droguerias.length) return;
 
@@ -215,6 +226,9 @@ function renderizarMarcadores(L: any) {
     const clasePin = `pin-${brand.slug}`;
     const badge24hHtml = d.es24h ? '<span class="pin-badge-24h">24H</span>' : '';
     const afiliadaClass = d.afiliada ? 'pin-afiliada-glow' : '';
+    const precioTagHtml = d.precioOferta
+      ? `<span class="pin-price-tag ${d.esMejorPrecio ? 'price-best' : ''}">$${Math.round(d.precioOferta).toLocaleString('es-CO')}</span>`
+      : '';
 
     const customIcon = L.divIcon({
       className: 'farmapp-leaflet-marker',
@@ -222,6 +236,7 @@ function renderizarMarcadores(L: any) {
         <div class="custom-pin ${clasePin} ${afiliadaClass}" title="${d.nombre} (${brand.nombre})">
           <span class="pin-symbol">${brand.icono}</span>
           ${badge24hHtml}
+          ${precioTagHtml}
         </div>
       `,
       iconSize: [30, 30],
@@ -230,6 +245,7 @@ function renderizarMarcadores(L: any) {
     });
 
     const marker = L.marker([d.lat, d.lng], { icon: customIcon });
+    markersMap.set(d.id, { marker, lat: d.lat, lng: d.lng });
 
     const linkWhatsApp = `https://wa.me/${d.whatsapp}?text=${encodeURIComponent('Hola ' + d.nombre + ', los vi en FarmApp Villavicencio.')}`;
     const linkMaps = `https://www.google.com/maps/dir/?api=1&destination=${d.lat},${d.lng}`;
@@ -838,6 +854,45 @@ onBeforeUnmount(() => {
 :deep(.pin-afiliada-glow) {
   border-color: #fbbf24 !important;
   box-shadow: 0 0 12px rgba(245, 158, 11, 0.7), 0 4px 8px rgba(0, 0, 0, 0.5) !important;
+}
+
+:deep(.pin-price-tag) {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-1, #0c1426);
+  color: var(--ink, #ffffff);
+  border: 1px solid var(--line, rgba(255, 255, 255, 0.25));
+  font-size: 0.65rem;
+  font-weight: 850;
+  padding: 1px 6px;
+  border-radius: 6px;
+  white-space: nowrap;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  z-index: 5;
+}
+
+[data-theme='light'] :deep(.pin-price-tag) {
+  background: #ffffff;
+  color: #0b1220;
+  border-color: rgba(15, 23, 42, 0.2);
+  box-shadow: 0 3px 8px rgba(15, 23, 42, 0.15);
+}
+
+:deep(.pin-price-tag.price-best) {
+  background: #30d158 !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+  font-weight: 900;
+  box-shadow: 0 0 12px rgba(48, 209, 88, 0.8) !important;
+  animation: pulse-price 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse-price {
+  0%, 100% { transform: translateX(-50%) scale(1); }
+  50% { transform: translateX(-50%) scale(1.08); }
 }
 
 /* Marcador GPS del Usuario */
