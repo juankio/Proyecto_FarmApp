@@ -18,9 +18,28 @@ import { formatPrecioCop } from '../../utils/format';
 
 const router = useRouter();
 const mapaRef = ref<any>(null);
+const drogueriaSeleccionadaId = ref<number | null>(null);
 
 function enfocarEnMapa(id: number) {
+  drogueriaSeleccionadaId.value = id;
   mapaRef.value?.enfocarDrogueria(id);
+}
+
+function onSelectDrogueriaDesdeMapa(id: number) {
+  drogueriaSeleccionadaId.value = id;
+  const el = document.getElementById(`drog-card-${id}`);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+function limpiarFiltros() {
+  busqueda.value = '';
+  barrioSeleccionado.value = 'Todos los barrios';
+  solo24h.value = false;
+  soloDomicilio.value = false;
+  soloBoticarios.value = false;
+  criterioOrden.value = 'precio';
 }
 
 // Estados reactivos de búsqueda y filtrado
@@ -236,7 +255,7 @@ function generarLinkWhatsApp(drog: DrogueriaConPrecio): string {
 
       <!-- Barra de Filtros Inteligentes -->
       <div class="hub-controls-bar">
-        <div class="search-input-box">
+        <div class="search-input-box" :class="{ focused: inputFocused }">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8" />
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -246,7 +265,18 @@ function generarLinkWhatsApp(drog: DrogueriaConPrecio): string {
             type="search"
             placeholder="Buscar por droguería, medicamento o dirección..."
             aria-label="Buscar droguería o medicamento"
+            @focus="inputFocused = true"
+            @blur="inputFocused = false"
           />
+          <button
+            v-if="busqueda"
+            type="button"
+            class="clear-search-btn"
+            title="Limpiar búsqueda"
+            @click="busqueda = ''"
+          >
+            ✕
+          </button>
         </div>
 
         <div class="neighborhood-select-box">
@@ -353,6 +383,7 @@ function generarLinkWhatsApp(drog: DrogueriaConPrecio): string {
           :user-lat="userLat"
           :user-lng="userLng"
           :barrio-seleccionado="barrioSeleccionado"
+          @select-drogueria="onSelectDrogueriaDesdeMapa"
         />
       </div>
 
@@ -390,9 +421,13 @@ function generarLinkWhatsApp(drog: DrogueriaConPrecio): string {
 
           <div
             v-for="(drog, index) in drogueriasResultado.slice(0, 10)"
+            :id="`drog-card-${drog.id}`"
             :key="drog.id"
             class="drogueria-card-mini"
-            :class="{ 'card--best-price': drog.esMejorPrecio }"
+            :class="{
+              'card--best-price': drog.esMejorPrecio,
+              'card--selected': drogueriaSeleccionadaId === drog.id
+            }"
             role="button"
             tabindex="0"
             :aria-label="`Ver ${drog.nombre} en el mapa`"
@@ -446,6 +481,16 @@ function generarLinkWhatsApp(drog: DrogueriaConPrecio): string {
               </a>
             </div>
           </div>
+
+          <!-- Estado vacío si ningún resultado coincide con los filtros -->
+          <div v-if="drogueriasResultado.length === 0" class="empty-results-box">
+            <span class="empty-icon">📍</span>
+            <h4 class="empty-title">No hay droguerías con este filtro</h4>
+            <p class="empty-desc">Prueba cambiando de barrio o limpiando los términos de búsqueda.</p>
+            <button type="button" class="btn-reset-filters" @click="limpiarFiltros">
+              Restablecer filtros
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -472,8 +517,11 @@ function generarLinkWhatsApp(drog: DrogueriaConPrecio): string {
 .ambient-glow {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.28;
+  filter: blur(60px);
+  opacity: 0.22;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+  contain: paint;
 }
 
 .glow-blue {
@@ -585,6 +633,7 @@ function generarLinkWhatsApp(drog: DrogueriaConPrecio): string {
   line-height: 1.14;
   color: var(--ink);
   max-width: 22ch;
+  text-wrap: balance;
 }
 
 .highlight-price {
@@ -606,6 +655,7 @@ function generarLinkWhatsApp(drog: DrogueriaConPrecio): string {
   line-height: 1.55;
   color: var(--muted);
   max-width: 68ch;
+  text-wrap: pretty;
 }
 
 /* Selector de Chips de Medicamentos Populares */
@@ -643,7 +693,9 @@ function generarLinkWhatsApp(drog: DrogueriaConPrecio): string {
   border: 1px solid var(--line);
   color: var(--ink-soft);
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-property: background-color, border-color, color, box-shadow;
+  transition-duration: 180ms;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .med-chip:hover {
@@ -698,6 +750,27 @@ function generarLinkWhatsApp(drog: DrogueriaConPrecio): string {
   font-size: 0.92rem;
   font-family: inherit;
   outline: none;
+}
+
+.clear-search-btn {
+  background: var(--line-soft);
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  color: var(--muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.clear-search-btn:hover {
+  background: var(--line);
+  color: var(--ink);
 }
 
 .neighborhood-select-box select option {
@@ -974,6 +1047,13 @@ function generarLinkWhatsApp(drog: DrogueriaConPrecio): string {
   background: linear-gradient(150deg, rgba(48, 209, 88, 0.06), var(--glass));
 }
 
+.card--selected {
+  border-color: var(--blue-bright) !important;
+  box-shadow: 0 0 0 2px rgba(61, 155, 255, 0.4), 0 10px 28px -10px rgba(10, 132, 255, 0.5) !important;
+  background: linear-gradient(150deg, rgba(61, 155, 255, 0.14), var(--glass)) !important;
+  transform: translateY(-2px);
+}
+
 .mini-card-top {
   display: flex;
   align-items: flex-start;
@@ -1043,6 +1123,7 @@ function generarLinkWhatsApp(drog: DrogueriaConPrecio): string {
   font-weight: 850;
   color: var(--ink);
   letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
 .card--best-price .price-amount {
@@ -1076,6 +1157,7 @@ function generarLinkWhatsApp(drog: DrogueriaConPrecio): string {
   font-size: 0.78rem;
   font-weight: 700;
   color: var(--blue-bright);
+  font-variant-numeric: tabular-nums;
 }
 
 .time-meta {
@@ -1102,6 +1184,54 @@ function generarLinkWhatsApp(drog: DrogueriaConPrecio): string {
   filter: brightness(1.08);
 }
 
+.empty-results-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 32px 20px;
+  border-radius: 16px;
+  background: var(--glass);
+  border: 1px dashed var(--line);
+  gap: 8px;
+}
+
+.empty-icon {
+  font-size: 2rem;
+}
+
+.empty-title {
+  font-size: 0.96rem;
+  font-weight: 750;
+  color: var(--ink);
+  margin: 0;
+}
+
+.empty-desc {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin: 0;
+  max-width: 28ch;
+}
+
+.btn-reset-filters {
+  margin-top: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--glass-control-bg);
+  border: 1px solid var(--line);
+  color: var(--blue-bright);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.btn-reset-filters:hover {
+  background: var(--line-soft);
+  border-color: var(--blue-bright);
+}
+
 /* Responsive */
 @media (max-width: 1080px) {
   .hub-stage-grid {
@@ -1119,6 +1249,22 @@ function generarLinkWhatsApp(drog: DrogueriaConPrecio): string {
   .hub-toggle-row {
     flex-direction: column;
     align-items: stretch;
+  }
+  .toggle-pill,
+  .sort-pill {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .med-chip {
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .wa-quick-btn {
+    min-height: 38px;
+    padding: 6px 14px;
   }
 }
 </style>

@@ -145,6 +145,8 @@ import SectionHeader from '../ui/SectionHeader.vue';
 .como-funciona {
   position: relative;
   padding: 48px 0;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 450px;
 }
 
 .steps-grid {
@@ -219,12 +221,14 @@ import SectionHeader from '../ui/SectionHeader.vue';
   color: var(--ink);
   letter-spacing: -0.025em;
   line-height: 1.25;
+  text-wrap: balance;
 }
 
 .step-desc {
   font-size: 0.9rem;
   color: var(--muted);
   line-height: 1.5;
+  text-wrap: pretty;
 }
 
 .step-bullets {

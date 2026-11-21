@@ -300,12 +300,14 @@ function generarEnlaceWhatsApp(drogNombre: string, whatsapp: string, precio: num
   letter-spacing: -0.035em;
   color: var(--ink);
   line-height: 1.18;
+  text-wrap: balance;
 }
 
 .section-subtitle {
   font-size: 1.02rem;
   color: var(--muted);
   line-height: 1.5;
+  text-wrap: pretty;
 }
 
 /* Scroll horizontal de medicamentos */
@@ -330,7 +332,9 @@ function generarEnlaceWhatsApp(drogNombre: string, whatsapp: string, precio: num
   box-shadow: var(--shadow-sm), var(--inset);
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-property: transform, border-color, background-color, box-shadow;
+  transition-duration: 180ms;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   flex-shrink: 0;
 }
 
@@ -352,6 +356,8 @@ function generarEnlaceWhatsApp(drogNombre: string, whatsapp: string, precio: num
   border-radius: 10px;
   object-fit: cover;
   background: rgba(255, 255, 255, 0.1);
+  outline: 1px solid rgba(255, 255, 255, 0.12);
+  outline-offset: -1px;
 }
 
 .tab-copy {
@@ -407,6 +413,9 @@ function generarEnlaceWhatsApp(drogNombre: string, whatsapp: string, precio: num
   max-height: 130px;
   object-fit: contain;
   z-index: 1;
+  outline: 1px solid rgba(255, 255, 255, 0.1);
+  outline-offset: -1px;
+  border-radius: 12px;
   transition: transform 0.3s ease;
 }
 
@@ -471,6 +480,7 @@ function generarEnlaceWhatsApp(drogNombre: string, whatsapp: string, precio: num
   letter-spacing: -0.025em;
   color: var(--ink);
   line-height: 1.2;
+  text-wrap: balance;
 }
 
 .prod-dosis {
@@ -483,6 +493,7 @@ function generarEnlaceWhatsApp(drogNombre: string, whatsapp: string, precio: num
   font-size: 0.9rem;
   color: var(--muted);
   line-height: 1.5;
+  text-wrap: pretty;
 }
 
 /* Callout de Ahorro */
@@ -521,6 +532,7 @@ function generarEnlaceWhatsApp(drogNombre: string, whatsapp: string, precio: num
   font-weight: 850;
   color: #30d158;
   letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
 .callout-sub {
@@ -584,7 +596,9 @@ function generarEnlaceWhatsApp(drogNombre: string, whatsapp: string, precio: num
   border-radius: 14px;
   background: var(--glass);
   border: 1px solid var(--line);
-  transition: all 0.2s ease;
+  transition-property: border-color, background-color, transform;
+  transition-duration: 180ms;
+  transition-timing-function: ease-out;
 }
 
 .price-row-item:hover {
@@ -648,6 +662,7 @@ function generarEnlaceWhatsApp(drogNombre: string, whatsapp: string, precio: num
   font-size: 1.15rem;
   font-weight: 850;
   color: var(--ink);
+  font-variant-numeric: tabular-nums;
 }
 
 .row--winner .price-figure {

@@ -119,6 +119,8 @@ const CADENAS_SHOWCASE = [
 .directorio-section {
   position: relative;
   padding: 48px 0;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 420px;
 }
 
 .marcas-grid {
@@ -185,6 +187,7 @@ const CADENAS_SHOWCASE = [
   font-weight: 800;
   color: var(--ink);
   line-height: 1.2;
+  text-wrap: balance;
 }
 
 .marca-sedes {
@@ -198,6 +201,7 @@ const CADENAS_SHOWCASE = [
   color: var(--muted);
   line-height: 1.5;
   margin: 0;
+  text-wrap: pretty;
 }
 
 .servicios-tags {

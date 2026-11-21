@@ -105,6 +105,8 @@ const GUIAS_SALUD = [
 .salud-info {
   position: relative;
   padding: 48px 0;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 450px;
 }
 
 .guias-grid {
@@ -161,6 +163,7 @@ const GUIAS_SALUD = [
   font-weight: 800;
   color: var(--ink);
   line-height: 1.25;
+  text-wrap: balance;
 }
 
 .guia-desc {
@@ -168,6 +171,7 @@ const GUIAS_SALUD = [
   color: var(--muted);
   line-height: 1.55;
   margin: 0;
+  text-wrap: pretty;
 }
 
 .guia-tips {
