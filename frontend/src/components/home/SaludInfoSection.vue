@@ -79,7 +79,20 @@ const GUIAS_SALUD = [
           <div class="guia-tips">
             <div v-for="tip in guia.tips" :key="tip" class="tip-item">
               <span class="tip-dot">✓</span>
-              <span>{{ tip }}</span>
+              <span>
+                <template v-if="tip.includes('123')">
+                  Línea de Emergencias: <a href="tel:123" class="tip-link">123</a>
+                </template>
+                <template v-else-if="tip.includes('(608) 681-8800')">
+                  Hospital Departamental: <a href="tel:6086818800" class="tip-link">(608) 681-8800</a>
+                </template>
+                <template v-else-if="tip.includes('(608) 661-4400')">
+                  Clínica Servimédicos: <a href="tel:6086614400" class="tip-link">(608) 661-4400</a>
+                </template>
+                <template v-else>
+                  {{ tip }}
+                </template>
+              </span>
             </div>
           </div>
         </div>
@@ -179,5 +192,16 @@ const GUIAS_SALUD = [
 .tip-dot {
   color: #30d158;
   font-weight: 850;
+}
+
+.tip-link {
+  color: var(--blue-bright, #0a84ff);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 700;
+}
+
+.tip-link:hover {
+  color: #38bdf8;
 }
 </style>
