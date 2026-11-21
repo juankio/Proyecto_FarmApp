@@ -8,6 +8,7 @@ const props = defineProps<{
   userLat: number | null;
   userLng: number | null;
   barrioSeleccionado?: string;
+  minimal?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -437,8 +438,8 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="map-card-wrapper">
-    <div class="map-header">
+  <div class="map-card-wrapper" :class="{ 'map-card-wrapper--minimal': minimal }">
+    <div v-if="!minimal" class="map-header">
       <div class="map-title-row">
         <span class="map-badge">Red Metropolitana</span>
         <h3>Mapa Oficial de Droguerías en Villavicencio</h3>
@@ -472,7 +473,7 @@ onBeforeUnmount(() => {
     </div>
 
     <!-- Barra de acceso rápido a sectores clave de la ciudad -->
-    <div class="sectors-bar">
+    <div v-if="!minimal" class="sectors-bar">
       <button
         v-for="s in SECTORES"
         :key="s.id"
@@ -486,7 +487,7 @@ onBeforeUnmount(() => {
     </div>
 
     <!-- Contenedor del Mapa Real -->
-    <div class="map-stage">
+    <div class="map-stage" :class="{ 'map-stage--minimal': minimal }">
       <div v-if="cargando" class="map-loading-overlay">
         <div class="loading-spinner" />
         <p>Cargando mapa de Villavicencio con droguerías...</p>
@@ -517,6 +518,15 @@ onBeforeUnmount(() => {
   box-shadow: var(--shadow-sm), var(--inset);
   padding: 16px;
   margin-bottom: 24px;
+}
+
+.map-card-wrapper--minimal {
+  padding: 0;
+  margin-bottom: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
 }
 
 .map-header {
@@ -698,6 +708,12 @@ onBeforeUnmount(() => {
   border-radius: 16px;
   overflow: hidden;
   border: 1px solid var(--line-soft);
+}
+
+.map-stage--minimal {
+  height: 480px;
+  border-radius: 0;
+  border: none;
 }
 
 .leaflet-map-element {

@@ -105,6 +105,15 @@ function generarLinkWhatsApp(drog: Drogueria): string {
   );
   return `https://wa.me/${drog.whatsapp}?text=${msg}`;
 }
+
+function centrarTodaLaCiudad() {
+  barrioFiltro.value = 'Todos los barrios';
+  solo24h.value = false;
+  soloDomicilio.value = false;
+  soloBoticarios.value = false;
+  drogueriaActivaId.value = null;
+  mapaRef.value?.centrarTodaLaCiudad?.();
+}
 </script>
 
 <template>
@@ -115,10 +124,10 @@ function generarLinkWhatsApp(drog: Drogueria): string {
       lede="Explora más de 85 puntos de atención georreferenciados en toda la ciudad. Ubica farmacias de turno 24 horas, servicios a domicilio y boticarios de confianza cerca de tu barrio."
     />
 
-    <!-- Contenedor Panorámico del Mapa con Controles Flotantes Tipo Isla -->
+    <!-- Contenedor Panorámico del Mapa con Flujo Vertical Estricto (Sin superposiciones) -->
     <div class="map-panoramic-card">
-      <!-- Isla de Controles Flotante (Apple Maps style) -->
-      <div class="floating-island-controls">
+      <!-- Barra Superior de Controles Apple / Airbnb (In-flow) -->
+      <div class="radar-controls-bar">
         <div class="island-group">
           <button
             type="button"
@@ -146,7 +155,7 @@ function generarLinkWhatsApp(drog: Drogueria): string {
           </button>
         </div>
 
-        <div class="island-group">
+        <div class="island-group island-group--actions">
           <div class="island-select-wrapper">
             <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
@@ -171,13 +180,27 @@ function generarLinkWhatsApp(drog: Drogueria): string {
             </svg>
             <span>{{ gpsActivo ? 'Cerca de ti' : 'Mi GPS' }}</span>
           </button>
+
+          <button
+            type="button"
+            class="island-reset-btn"
+            title="Ver toda la ciudad"
+            @click="centrarTodaLaCiudad"
+          >
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+              <path d="M3 3v5h5" />
+            </svg>
+            <span>Toda la ciudad</span>
+          </button>
         </div>
       </div>
 
-      <!-- Canvas de Leaflet -->
+      <!-- Canvas de Leaflet Limpio (Sin cabecera duplicada ni colisiones) -->
       <div class="map-canvas-wrapper">
         <MapaVillavicencio
           ref="mapaRef"
+          :minimal="true"
           :droguerias="drogueriasFiltradas"
           :user-lat="userLat"
           :user-lng="userLng"
@@ -194,7 +217,14 @@ function generarLinkWhatsApp(drog: Drogueria): string {
             <span class="tray-title">Farmacias en el radar</span>
             <span class="tray-counter">{{ drogueriasFiltradas.length }} encontradas</span>
           </div>
-          <span class="tray-hint">Toca una tarjeta para centrarla en el mapa</span>
+
+          <div class="radar-legend-chips">
+            <span class="legend-chip"><span class="legend-dot dot-rebaja" /> La Rebaja</span>
+            <span class="legend-chip"><span class="legend-dot dot-cruzverde" /> Cruz Verde</span>
+            <span class="legend-chip"><span class="legend-dot dot-cadenas" /> Otras Cadenas</span>
+            <span class="legend-chip"><span class="legend-dot dot-independiente" /> De Barrio</span>
+            <span class="legend-chip"><span class="badge-24h-mini">24H</span> De Turno</span>
+          </div>
         </div>
 
         <div class="tray-scroll-row">
@@ -268,38 +298,27 @@ function generarLinkWhatsApp(drog: Drogueria): string {
   margin-top: 24px;
 }
 
-/* Isla Flotante de Controles */
-.floating-island-controls {
-  position: absolute;
-  top: 18px;
-  left: 20px;
-  right: 20px;
-  z-index: 20;
+/* Barra Superior de Controles (In-flow) */
+.radar-controls-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
-  pointer-events: none;
+  padding: 12px 18px;
+  background: var(--bg-1, #080d1a);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+[data-theme='light'] .radar-controls-bar {
+  background: #ffffff;
 }
 
 .island-group {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 8px;
-  border-radius: 999px;
-  background: var(--glass-dark);
-  backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid var(--line);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
-  pointer-events: auto;
-}
-
-[data-theme='light'] .island-group {
-  background: rgba(255, 255, 255, 0.92);
-  border-color: rgba(15, 23, 42, 0.12);
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+  flex-wrap: wrap;
 }
 
 .island-btn {
@@ -310,18 +329,24 @@ function generarLinkWhatsApp(drog: Drogueria): string {
   border-radius: 999px;
   font-size: 0.8rem;
   font-weight: 600;
-  background: transparent;
-  border: 1px solid transparent;
+  background: var(--glass-dark);
+  border: 1px solid var(--line);
   color: var(--ink-soft);
   cursor: pointer;
-  transition-property: background-color, border-color, color;
+  transition-property: background-color, border-color, color, transform;
   transition-duration: 150ms;
   min-height: 36px;
+}
+
+[data-theme='light'] .island-btn {
+  background: #f1f5f9;
+  border-color: rgba(15, 23, 42, 0.08);
 }
 
 .island-btn:hover {
   background: var(--line-soft);
   color: var(--ink);
+  transform: translateY(-1px);
 }
 
 .island-btn.active {
@@ -335,9 +360,18 @@ function generarLinkWhatsApp(drog: Drogueria): string {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 0 10px;
+  padding: 0 12px;
+  height: 36px;
+  border-radius: 999px;
+  background: var(--glass-dark);
+  border: 1px solid var(--line);
   color: var(--ink);
   font-size: 0.82rem;
+}
+
+[data-theme='light'] .island-select-wrapper {
+  background: #f1f5f9;
+  border-color: rgba(15, 23, 42, 0.08);
 }
 
 .island-select-wrapper select {
@@ -348,6 +382,7 @@ function generarLinkWhatsApp(drog: Drogueria): string {
   font-weight: 600;
   outline: none;
   cursor: pointer;
+  max-width: 170px;
 }
 
 .island-select-wrapper select option {
@@ -385,16 +420,41 @@ function generarLinkWhatsApp(drog: Drogueria): string {
   background: linear-gradient(140deg, #30d158, #059669);
 }
 
-/* Canvas del Mapa */
+.island-reset-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 36px;
+  transition: all 0.15s ease;
+}
+
+.island-reset-btn:hover {
+  color: var(--ink);
+  border-color: var(--blue-bright);
+  background: var(--line-soft);
+}
+
+/* Canvas del Mapa (In-flow, altura limpia) */
 .map-canvas-wrapper {
   position: relative;
   width: 100%;
-  height: 520px;
+  height: 480px;
+  overflow: hidden;
+  background: #0b1220;
 }
 
 /* Bandeja Inferior de Tarjetas */
 .radar-cards-tray {
-  padding: 20px 24px 24px;
+  position: relative;
+  padding: 18px 24px 22px;
   background: var(--bg-1, #080d1a);
   border-top: 1px solid var(--line-soft);
 }
@@ -409,6 +469,7 @@ function generarLinkWhatsApp(drog: Drogueria): string {
   justify-content: space-between;
   margin-bottom: 14px;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
 .tray-title-box {
@@ -441,9 +502,42 @@ function generarLinkWhatsApp(drog: Drogueria): string {
   border-radius: 999px;
 }
 
-.tray-hint {
-  font-size: 0.76rem;
-  color: var(--muted);
+/* Chips de Leyenda Elegantes */
+.radar-legend-chips {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.legend-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot-rebaja { background: #dc2626; }
+.dot-cruzverde { background: #059669; }
+.dot-cadenas { background: #0284c7; }
+.dot-independiente { background: #7c3aed; }
+
+.badge-24h-mini {
+  background: #10b981;
+  color: #ffffff;
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 1px 4px;
+  border-radius: 3px;
 }
 
 .tray-scroll-row {
@@ -451,7 +545,7 @@ function generarLinkWhatsApp(drog: Drogueria): string {
   align-items: stretch;
   gap: 14px;
   overflow-x: auto;
-  padding-bottom: 8px;
+  padding-bottom: 6px;
   scrollbar-width: thin;
 }
 
@@ -569,20 +663,20 @@ function generarLinkWhatsApp(drog: Drogueria): string {
 }
 
 @media (max-width: 768px) {
-  .floating-island-controls {
-    position: static;
-    padding: 14px;
-    background: var(--bg-1, #080d1a);
-    border-bottom: 1px solid var(--line-soft);
+  .radar-controls-bar {
+    padding: 12px;
   }
   .island-group {
     width: 100%;
-    justify-content: space-between;
+    justify-content: flex-start;
+  }
+  .island-select-wrapper select {
+    max-width: 130px;
   }
   .map-canvas-wrapper {
-    height: 420px;
+    height: 380px;
   }
-  .tray-hint {
+  .radar-legend-chips {
     display: none;
   }
 }
