@@ -43,6 +43,7 @@ let markersLayer: any = null;
 let tileLayer: any = null;
 let userMarker: any = null;
 let userAccuracyCircle: any = null;
+let temporizadorZoom: number | undefined;
 let resizeObserver: ResizeObserver | null = null;
 let themeObserver: MutationObserver | null = null;
 const markersMap = new Map<number, { marker: any; lat: number; lng: number }>();
@@ -234,7 +235,10 @@ function inicializarMapa(L: any) {
   resizeObserver.observe(mapContainer.value);
 
   renderizarMarcadores(L);
-  mapInstance.on('zoomend', () => renderizarMarcadores(L));
+  mapInstance.on('zoomend', () => {
+    window.clearTimeout(temporizadorZoom);
+    temporizadorZoom = window.setTimeout(() => renderizarMarcadores(L), 120);
+  });
   if (props.comuna != null) irAComuna(props.comuna);
   cargando.value = false;
 
@@ -257,10 +261,10 @@ function renderizarMarcadores(L: any) {
 
   const zoom = mapInstance.getZoom();
   // Con comuna activa se conservan los 10 círculos para poder cambiar de zona, incluso al hacer zoom.
-  const agrupar = zoom <= 14 || props.comuna != null;
+  const agrupar = zoom <= 14;
   // Con una comuna activa se conservan los 10 círculos para poder cambiar de zona.
   const base =
-    props.comuna != null && props.drogueriasTotales?.length ? props.drogueriasTotales : props.droguerias;
+    agrupar && props.comuna != null && props.drogueriasTotales?.length ? props.drogueriasTotales : props.droguerias;
   const grupos = new Map<number, typeof base>();
 
   base.forEach((d) => {
@@ -365,18 +369,23 @@ function renderizarMarcadores(L: any) {
     markersLayer.addLayer(marker);
   });
 
-  if (agrupar) {
+  if (agrupar || props.comuna != null) {
     COMUNAS.forEach((comuna) => {
-      if (grupos.has(comuna.id)) return;
+      if (agrupar && grupos.has(comuna.id)) return;
+      const conteo = agrupar
+        ? (grupos.get(comuna.id)?.length ?? 0)
+        : (props.drogueriasTotales?.filter((d) => d.comuna === comuna.id).length ?? 0);
+      const claseVacia = conteo === 0 ? ' cluster-vacia' : '';
+      const activa = props.comuna === comuna.id ? ' cluster-activa' : '';
       const icono = L.divIcon({
         className: 'farmapp-cluster',
-        html: `<div class="cluster-pin cluster-comuna cluster-vacia" data-comuna="${comuna.id}" style="--comuna-color:${comuna.color}" title="Comuna ${comuna.id} · ${comuna.nombre} · sin droguerías registradas">${comuna.id}</div>`,
+        html: `<div class="cluster-pin cluster-comuna${claseVacia}${activa}" data-comuna="${comuna.id}" style="--comuna-color:${comuna.color}" title="Comuna ${comuna.id} · ${comuna.nombre} · ${conteo ? conteo + ' droguerías' : 'sin droguerías'}">${comuna.id}</div>`,
         iconSize: [40, 40],
         iconAnchor: [20, 20],
       });
       const marcador = L.marker(comuna.centro, {
         icon: icono,
-        title: `Comuna ${comuna.id} · ${comuna.nombre} · sin droguerías`,
+        title: `Comuna ${comuna.id} · ${comuna.nombre} · ${conteo ? conteo + ' droguerías' : 'sin droguerías'}`,
       });
       markersLayer.addLayer(marcador);
     });
@@ -524,6 +533,7 @@ onMounted(async () => {
 });
 
 onBeforeUnmount(() => {
+  window.clearTimeout(temporizadorZoom);
   if (resizeObserver) {
     resizeObserver.disconnect();
     resizeObserver = null;
