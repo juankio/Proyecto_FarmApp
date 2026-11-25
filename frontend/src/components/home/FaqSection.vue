@@ -22,11 +22,18 @@ import { faq } from '../../data/faq';
 </template>
 
 <style scoped>
+#preguntas {
+  scroll-margin-top: 124px;
+}
+
 .faq-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+  justify-content: center;
   gap: 22px;
   align-items: start;
+  max-width: 1080px;
+  margin-inline: auto;
 }
 
 .faq-title {

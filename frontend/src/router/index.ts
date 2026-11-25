@@ -4,9 +4,32 @@ import HomeView from '../views/HomeView.vue';
 
 export const router = createRouter({
   history: createWebHistory(),
-  scrollBehavior(to, _from, saved) {
+  scrollBehavior(to, from, saved) {
     if (saved) return saved;
-    if (to.hash) return { el: to.hash, behavior: 'smooth', top: 90 };
+    if (to.hash) {
+      return new Promise((resolve) => {
+        let alturaPrevia = 0;
+        let estables = 0;
+        let espera = 0;
+        const verificar = () => {
+          const objetivo = document.querySelector<HTMLElement>(to.hash);
+          const altura = document.documentElement.scrollHeight;
+          if (objetivo && altura === alturaPrevia) estables++;
+          else estables = 0;
+          alturaPrevia = altura;
+          espera++;
+          if ((objetivo && estables >= 3) || espera >= 40) {
+            const top = objetivo
+              ? Math.max(0, objetivo.getBoundingClientRect().top + window.scrollY - 124)
+              : 0;
+            resolve({ left: 0, top, behavior: from.path === to.path ? 'smooth' : 'auto' });
+            return;
+          }
+          window.setTimeout(verificar, 60);
+        };
+        verificar();
+      });
+    }
     return { top: 0 };
   },
   routes: [
