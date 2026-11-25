@@ -74,15 +74,12 @@ async function salir(): Promise<void> {
   height: 64px;
   padding: 0 12px 0 16px;
   border-radius: 12px;
-  background: rgba(255, 252, 245, 0.94);
-  border: 1px solid rgba(22, 36, 29, 0.16);
+  background: var(--bg-1);
+  border: 1px solid var(--surface-border);
   box-shadow: 0 2px 0 rgba(22, 36, 29, 0.04), 0 10px 30px -20px rgba(22, 36, 29, 0.45);
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
 }
 
 [data-theme="dark"] .bar {
-  background: rgba(17, 30, 25, 0.94);
   border-color: rgba(242, 239, 228, 0.16);
 }
 
