@@ -43,7 +43,7 @@ let markersLayer: any = null;
 let tileLayer: any = null;
 let userMarker: any = null;
 let userAccuracyCircle: any = null;
-let temporizadorZoom: number | undefined;
+let temporizadorRender: number | undefined;
 let modoAgrupado: boolean | null = null;
 let resizeObserver: ResizeObserver | null = null;
 let themeObserver: MutationObserver | null = null;
@@ -233,8 +233,7 @@ function inicializarMapa(L: any) {
     if (!mapInstance) return;
     const debeAgrupar = mapInstance.getZoom() <= 14;
     if (modoAgrupado === debeAgrupar) return;
-    window.clearTimeout(temporizadorZoom);
-    temporizadorZoom = window.setTimeout(() => renderizarMarcadores(L), 120);
+    programarRender(L);
   });
   if (props.comuna != null) irAComuna(props.comuna);
   cargando.value = false;
@@ -246,6 +245,11 @@ function inicializarMapa(L: any) {
       centrarTodaLaCiudad();
     }
   }, 200);
+}
+
+function programarRender(L: any): void {
+  window.clearTimeout(temporizadorRender);
+  temporizadorRender = window.setTimeout(() => renderizarMarcadores(L), 120);
 }
 
 function renderizarMarcadores(L: any) {
@@ -444,6 +448,11 @@ function centrarTodaLaCiudad() {
   }
 }
 
+function centrarTodaLaCiudadSinAnimacion() {
+  sectorActivo.value = 'todos';
+  mapInstance?.fitBounds(VILLAVICENCIO_BOUNDS, { padding: [24, 24], maxZoom: 14, animate: false });
+}
+
 function irAComuna(id: number) {
   comunaPendiente.value = id;
   const comuna = comunaPorId(id);
@@ -469,11 +478,8 @@ function irASector(sector: (typeof SECTORES)[number]) {
 watch(
   () => props.droguerias,
   () => {
-    if ((window as any).L) {
-      renderizarMarcadores((window as any).L);
-    }
+    if ((window as any).L) programarRender((window as any).L);
   },
-  { deep: true },
 );
 
 watch(
@@ -510,7 +516,7 @@ watch(
   () => props.comuna,
   (id) => {
     if (!mapInstance) return;
-    if (id == null) centrarTodaLaCiudad();
+    if (id == null) centrarTodaLaCiudadSinAnimacion();
     else irAComuna(id);
   },
 );
@@ -531,7 +537,7 @@ onMounted(async () => {
 });
 
 onBeforeUnmount(() => {
-  window.clearTimeout(temporizadorZoom);
+  window.clearTimeout(temporizadorRender);
   if (resizeObserver) {
     resizeObserver.disconnect();
     resizeObserver = null;

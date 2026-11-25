@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import PageHero from '../components/layout/PageHero.vue';
 import AppButton from '../components/ui/AppButton.vue';
 import AppInput from '../components/ui/AppInput.vue';
@@ -206,6 +206,14 @@ const drogueriasProcesadas = computed<DrogueriaConDistancia[]>(() => {
   return lista;
 });
 
+const TAMANO_PAGINA = 24;
+const drogueriasVisibles = ref(TAMANO_PAGINA);
+const drogueriasMostradas = computed(() => drogueriasProcesadas.value.slice(0, drogueriasVisibles.value));
+
+watch(drogueriasProcesadas, () => {
+  drogueriasVisibles.value = TAMANO_PAGINA;
+});
+
 function generarLinkWhatsApp(d: Drogueria): string {
   const texto = encodeURIComponent(
     `Hola ${d.nombre}, los encontré en FarmApp Villavicencio y quiero consultar disponibilidad y precios de medicamentos.`,
@@ -218,14 +226,19 @@ function generarLinkMaps(d: Drogueria): string {
 }
 
 function onSelectDrogueria(id: number): void {
-  const el = document.getElementById(`drog-${id}`);
-  if (el) {
+  const indice = drogueriasProcesadas.value.findIndex((d) => d.id === id);
+  if (indice < 0) return;
+  if (indice >= drogueriasVisibles.value) drogueriasVisibles.value = indice + 1;
+
+  nextTick(() => {
+    const el = document.getElementById(`drog-${id}`);
+    if (!el) return;
     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     el.classList.add('drog-card--highlight');
     setTimeout(() => {
       el.classList.remove('drog-card--highlight');
     }, 2400);
-  }
+  });
 }
 
 onMounted(() => {
@@ -371,7 +384,7 @@ onMounted(() => {
     <!-- Lista / Cuadrícula de Droguerías -->
     <div v-if="drogueriasProcesadas.length > 0" class="droguerias-grid">
       <article
-        v-for="d in drogueriasProcesadas"
+        v-for="d in drogueriasMostradas"
         :id="`drog-${d.id}`"
         :key="d.id"
         class="drog-card"
@@ -448,6 +461,12 @@ onMounted(() => {
           </a>
         </div>
       </article>
+    </div>
+
+    <div v-if="drogueriasVisibles < drogueriasProcesadas.length" class="ver-mas-wrap">
+      <button type="button" class="ver-mas-btn" @click="drogueriasVisibles += TAMANO_PAGINA">
+        Ver más droguerías ({{ drogueriasProcesadas.length - drogueriasVisibles }} restantes)
+      </button>
     </div>
 
     <!-- Estado vacío -->
@@ -634,6 +653,30 @@ onMounted(() => {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 20px;
+}
+
+.ver-mas-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.ver-mas-btn {
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: 1px solid var(--surface-border);
+  background: var(--bg-1);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+
+.ver-mas-btn:hover {
+  background: var(--surface-2);
+  border-color: var(--verde);
 }
 
 .drog-card {
