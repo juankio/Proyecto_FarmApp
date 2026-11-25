@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
 import HeroSection from '../components/home/HeroSection.vue';
-
-const RadarMapaSection = defineAsyncComponent(
-  () => import('../components/home/RadarMapaSection.vue'),
-);
+import UbicacionesView from './UbicacionesView.vue';
 const BentoComparadorSection = defineAsyncComponent(
   () => import('../components/home/BentoComparadorSection.vue'),
 );
@@ -27,8 +24,8 @@ const FaqSection = defineAsyncComponent(
     <!-- 1. Hero Limpio y Acogedor: Estilo Apple / Airbnb con Buscador Flotante y Logo 3D -->
     <HeroSection />
 
-    <!-- 2. Radar Panorámico de Mapa de Villavicencio + Fila Limpia de Farmacias -->
-    <RadarMapaSection />
+    <!-- 2. Mismo mapa y filtros que la página de Droguerías -->
+    <UbicacionesView embebido />
 
     <!-- 3. Matriz Bento Grid: Comparativa de Precios, Ahorro, Recetas y Clima Llanero -->
     <BentoComparadorSection />

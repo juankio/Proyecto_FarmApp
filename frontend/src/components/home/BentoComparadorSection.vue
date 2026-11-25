@@ -1,19 +1,20 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import SectionHeader from '../ui/SectionHeader.vue';
+import ProductoIcono from '../ui/ProductoIcono.vue';
 import { COMPARATIVA_MEDICAMENTOS, InfoComparativa } from '../../data/comparador_precios';
 import { formatPrecioCop } from '../../utils/format';
 
 const seleccionadoKey = ref<string>('Acetaminofén');
 
 const MEDICAMENTOS_POPULARES = [
-  { key: 'Acetaminofén', nombre: 'Acetaminofén 500 mg', dosis: 'Caja x 100 tab · MK / Genfar', imagen: 'https://res.cloudinary.com/dc4vyurnu/image/upload/v1731731665/magnesium_t4bs8u.gif', rx: false },
-  { key: 'Ibuprofeno', nombre: 'Ibuprofeno 400 mg', dosis: 'Caja x 50 cáps · Laproff', imagen: 'https://res.cloudinary.com/dc4vyurnu/image/upload/v1731731664/medicina_tz4d0o.gif', rx: false },
-  { key: 'Amoxicilina', nombre: 'Amoxicilina 500 mg', dosis: 'Caja x 50 cáps · Genfar', imagen: 'https://res.cloudinary.com/dc4vyurnu/image/upload/v1731731667/ordenes_bzoct8.gif', rx: true },
-  { key: 'Loratadina', nombre: 'Loratadina 10 mg', dosis: 'Caja x 20 tab · Lafrancol', imagen: 'https://res.cloudinary.com/dc4vyurnu/image/upload/v1731731665/magnesium_t4bs8u.gif', rx: false },
-  { key: 'Metformina', nombre: 'Metformina 850 mg', dosis: 'Caja x 30 tab · La Santé', imagen: 'https://res.cloudinary.com/dc4vyurnu/image/upload/v1731731664/medicina_tz4d0o.gif', rx: true },
-  { key: 'Omeprazol', nombre: 'Omeprazol 20 mg', dosis: 'Caja x 30 cáps · Farmandina', imagen: 'https://res.cloudinary.com/dc4vyurnu/image/upload/v1731731667/ordenes_bzoct8.gif', rx: false },
-  { key: 'Losartán', nombre: 'Losartán 50 mg', dosis: 'Caja x 30 tab · MK', imagen: 'https://res.cloudinary.com/dc4vyurnu/image/upload/v1731731665/magnesium_t4bs8u.gif', rx: true },
+  { key: 'Acetaminofén', nombre: 'Acetaminofén 500 mg', dosis: 'Caja x 100 tab · MK / Genfar', rx: false },
+  { key: 'Ibuprofeno', nombre: 'Ibuprofeno 400 mg', dosis: 'Caja x 50 cáps · Laproff', rx: false },
+  { key: 'Amoxicilina', nombre: 'Amoxicilina 500 mg', dosis: 'Caja x 50 cáps · Genfar', rx: true },
+  { key: 'Loratadina', nombre: 'Loratadina 10 mg', dosis: 'Caja x 20 tab · Lafrancol', rx: false },
+  { key: 'Metformina', nombre: 'Metformina 850 mg', dosis: 'Caja x 30 tab · La Santé', rx: true },
+  { key: 'Omeprazol', nombre: 'Omeprazol 20 mg', dosis: 'Caja x 30 cáps · Farmandina', rx: false },
+  { key: 'Losartán', nombre: 'Losartán 50 mg', dosis: 'Caja x 30 tab · MK', rx: true },
 ];
 
 const medSeleccionado = computed(() => {
@@ -51,7 +52,7 @@ function linkWhatsApp(nombre: string, wa: string, precio: number): string {
 <template>
   <section class="bento-section section reveal">
     <SectionHeader
-      eyebrow="💰 Transparencia Farmacéutica"
+      eyebrow="Transparencia farmacéutica"
       title="Compara precios en Villavicencio antes de comprar"
       lede="El mismo principio activo puede variar miles de pesos entre droguerías a pocas cuadras de distancia. Consulta la comparativa real y ahorra con inteligencia."
     />
@@ -89,11 +90,11 @@ function linkWhatsApp(nombre: string, wa: string, precio: number): string {
           <!-- Columna Ficha Técnica -->
           <div class="med-dossier">
             <div class="med-thumb-box">
-              <img :src="medSeleccionado.imagen" :alt="medSeleccionado.nombre" class="med-thumb-img" />
+              <ProductoIcono :nombre="medSeleccionado.nombre" :presentacion="medSeleccionado.dosis" />
             </div>
             <div class="med-dossier-info">
               <span class="rx-pill" :class="medSeleccionado.rx ? 'rx--required' : 'rx--free'">
-                {{ medSeleccionado.rx ? '⚠️ Requiere Fórmula Médica' : '✅ Venta Libre sin Receta' }}
+                {{ medSeleccionado.rx ? 'Requiere fórmula médica' : 'Venta libre sin receta' }}
               </span>
               <h4 class="med-dossier-name">{{ medSeleccionado.nombre }}</h4>
               <p class="med-dossier-dosis">{{ medSeleccionado.dosis }}</p>
@@ -124,7 +125,7 @@ function linkWhatsApp(nombre: string, wa: string, precio: number): string {
                     <span class="bar-idx">#{{ idx + 1 }}</span>
                     <strong class="bar-pharm-name">{{ of.drogueriaNombre }}</strong>
                   </div>
-                  <span class="bar-dir">📍 {{ of.barrio }}</span>
+                  <span class="bar-dir">{{ of.barrio }}</span>
                 </div>
 
                 <div class="bar-visual-col">
@@ -220,9 +221,13 @@ function linkWhatsApp(nombre: string, wa: string, precio: number): string {
 
 .bento-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
   margin-top: 24px;
+}
+
+.bento-card {
+  min-width: 0;
 }
 
 .bento-card {
@@ -279,8 +284,8 @@ function linkWhatsApp(nombre: string, wa: string, precio: number): string {
 .savings-pill-highlight {
   padding: 6px 14px;
   border-radius: 999px;
-  background: rgba(48, 209, 88, 0.14);
-  color: #30d158;
+  background: rgba(31, 107, 79, 0.12);
+  color: var(--verde-texto);
   border: 1px solid rgba(48, 209, 88, 0.35);
   font-size: 0.82rem;
   font-weight: 700;
@@ -316,9 +321,9 @@ function linkWhatsApp(nombre: string, wa: string, precio: number): string {
 }
 
 .med-chip-btn.active {
-  background: rgba(10, 132, 255, 0.22);
-  color: var(--blue-bright);
-  border-color: var(--blue);
+  background: rgba(31, 107, 79, 0.16);
+  color: var(--verde-texto);
+  border-color: var(--verde);
   font-weight: 750;
 }
 
@@ -373,12 +378,12 @@ function linkWhatsApp(nombre: string, wa: string, precio: number): string {
 }
 
 .rx--free {
-  background: rgba(48, 209, 88, 0.16);
-  color: #30d158;
+  background: rgba(31, 107, 79, 0.14);
+  color: var(--verde-texto);
 }
 
 .rx--required {
-  background: rgba(255, 149, 0, 0.16);
+  background: rgba(192, 90, 50, 0.12);
   color: #ff9f0a;
 }
 
@@ -405,13 +410,13 @@ function linkWhatsApp(nombre: string, wa: string, precio: number): string {
   font-size: 0.68rem;
   font-weight: 700;
   text-transform: uppercase;
-  color: #30d158;
+  color: var(--verde-texto);
 }
 
 .win-val {
   font-size: 1.25rem;
   font-weight: 850;
-  color: #30d158;
+  color: var(--verde-texto);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
 }
@@ -485,7 +490,7 @@ function linkWhatsApp(nombre: string, wa: string, precio: number): string {
 }
 
 .bar--winner .bar-idx {
-  color: #30d158;
+  color: var(--verde-texto);
 }
 
 .bar-pharm-name {
@@ -521,11 +526,11 @@ function linkWhatsApp(nombre: string, wa: string, precio: number): string {
 }
 
 .fill--winner {
-  background: linear-gradient(90deg, #30d158, #059669);
+  background: linear-gradient(90deg, var(--verde), var(--verde-bright));
 }
 
 .fill--regular {
-  background: linear-gradient(90deg, var(--blue), var(--aqua));
+  background: linear-gradient(90deg, var(--verde), var(--verde-bright));
 }
 
 .bar-price-col {
@@ -543,13 +548,13 @@ function linkWhatsApp(nombre: string, wa: string, precio: number): string {
 }
 
 .bar--winner .bar-price-num {
-  color: #30d158;
+  color: var(--verde-texto);
 }
 
 .bar-pedir-link {
   font-size: 0.72rem;
   font-weight: 750;
-  color: #25d366;
+  color: var(--verde-texto);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -571,13 +576,13 @@ function linkWhatsApp(nombre: string, wa: string, precio: number): string {
 }
 
 .icon--cyan {
-  background: rgba(90, 200, 250, 0.14);
+  background: rgba(31, 107, 79, 0.1);
   color: var(--aqua);
   border: 1px solid rgba(90, 200, 250, 0.3);
 }
 
 .icon--purple {
-  background: rgba(185, 168, 255, 0.14);
+  background: rgba(216, 154, 43, 0.12);
   color: var(--lavender);
   border: 1px solid rgba(185, 168, 255, 0.3);
 }
@@ -617,13 +622,24 @@ function linkWhatsApp(nombre: string, wa: string, precio: number): string {
 
 @media (max-width: 1024px) {
   .bento-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .bento-hero {
     grid-column: span 1;
   }
   .comparison-stage {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .med-chips-row,
+  .bars-label-row,
+  .bento-head {
+    flex-wrap: wrap;
+  }
+  .med-chips-row,
+  .bars-dossier,
+  .med-dossier {
+    min-width: 0;
+    overflow-x: auto;
   }
 }
 </style>

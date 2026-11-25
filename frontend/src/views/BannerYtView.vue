@@ -5,8 +5,7 @@ import AppCard from '../components/ui/AppCard.vue';
 
 const enlaces = [
   { titulo: 'Vademécum', texto: 'Consulta medicamentos y sus indicaciones.', to: '/servicios' },
-  { titulo: 'Droguerías', texto: 'Ubica las droguerías más cercanas a ti.', to: '/servicios' },
-  { titulo: 'Feria', texto: 'Descubre las empresas y sus productos.', to: '/feria' },
+  { titulo: 'Droguerías', texto: 'Ubica las droguerías más cercanas a ti.', to: '/ubicaciones' },
 ];
 </script>
 
@@ -21,7 +20,6 @@ const enlaces = [
       </p>
       <div class="actions">
         <RouterLink to="/servicios"><AppButton size="lg">Leer más</AppButton></RouterLink>
-        <RouterLink to="/feria"><AppButton size="lg" variant="light">Ver feria</AppButton></RouterLink>
       </div>
     </div>
   </section>

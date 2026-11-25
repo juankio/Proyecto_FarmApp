@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue';
 import SectionHeader from '../ui/SectionHeader.vue';
 import MapaVillavicencio from '../ubicaciones/MapaVillavicencio.vue';
+import ZonasComunas from '../ubicaciones/ZonasComunas.vue';
 import {
   BARRIOS_VILLAVICENCIO,
   Drogueria,
@@ -12,6 +13,7 @@ import { formatPrecioCop } from '../../utils/format';
 
 const mapaRef = ref<any>(null);
 const barrioFiltro = ref('Todos los barrios');
+const comunaFiltro = ref<number | null>(null);
 const solo24h = ref(false);
 const soloDomicilio = ref(false);
 const soloBoticarios = ref(false);
@@ -70,6 +72,9 @@ const drogueriasFiltradas = computed<DrogueriaConDistancia[]>(() => {
   if (barrioFiltro.value !== 'Todos los barrios') {
     lista = lista.filter((d) => d.barrio === barrioFiltro.value);
   }
+  if (comunaFiltro.value !== null) {
+    lista = lista.filter((d) => d.comuna === comunaFiltro.value);
+  }
   if (solo24h.value) lista = lista.filter((d) => d.es24h);
   if (soloDomicilio.value) lista = lista.filter((d) => d.domicilio);
   if (soloBoticarios.value) lista = lista.filter((d) => d.cadena === 'Independiente');
@@ -108,6 +113,7 @@ function generarLinkWhatsApp(drog: Drogueria): string {
 
 function centrarTodaLaCiudad() {
   barrioFiltro.value = 'Todos los barrios';
+  comunaFiltro.value = null;
   solo24h.value = false;
   soloDomicilio.value = false;
   soloBoticarios.value = false;
@@ -119,94 +125,62 @@ function centrarTodaLaCiudad() {
 <template>
   <section id="radar-mapa" class="radar-section section reveal">
     <SectionHeader
-      eyebrow="📍 Geolocalización en Tiempo Real"
+      eyebrow="Geolocalización en tiempo real"
       title="Radar de Farmacias y Droguerías en Villavicencio"
-      lede="Explora más de 85 puntos de atención georreferenciados en toda la ciudad. Ubica farmacias de turno 24 horas, servicios a domicilio y boticarios de confianza cerca de tu barrio."
+      lede="Explora las droguerías georreferenciadas en toda la ciudad. Ubica farmacias de turno, servicios a domicilio y boticarios de confianza cerca de tu barrio."
     />
 
     <!-- Contenedor Panorámico del Mapa con Flujo Vertical Estricto (Sin superposiciones) -->
     <div class="map-panoramic-card">
-      <!-- Barra Superior de Controles Apple / Airbnb (In-flow) -->
-      <div class="radar-controls-bar">
-        <div class="island-group">
-          <button
-            type="button"
-            class="island-btn"
-            :class="{ active: solo24h }"
-            @click="solo24h = !solo24h"
-          >
-            <span>🌙</span> 24 Horas
-          </button>
-          <button
-            type="button"
-            class="island-btn"
-            :class="{ active: soloDomicilio }"
-            @click="soloDomicilio = !soloDomicilio"
-          >
-            <span>🛵</span> Domicilio
-          </button>
-          <button
-            type="button"
-            class="island-btn"
-            :class="{ active: soloBoticarios }"
-            @click="soloBoticarios = !soloBoticarios"
-          >
-            <span>🏺</span> Boticarios
-          </button>
-        </div>
-
-        <div class="island-group island-group--actions">
-          <div class="island-select-wrapper">
-            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-              <circle cx="12" cy="10" r="3" />
-            </svg>
-            <select v-model="barrioFiltro" aria-label="Filtrar por barrio de Villavicencio">
-              <option v-for="b in BARRIOS_VILLAVICENCIO" :key="b" :value="b">
-                {{ b }}
-              </option>
-            </select>
-          </div>
-
-          <button
-            type="button"
-            class="island-gps-btn"
-            :class="{ active: gpsActivo, loading: calculandoGps }"
-            title="Usar mi ubicación actual"
-            @click="solicitarGps"
-          >
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-              <polygon points="3 11 22 2 13 21 11 13 3 11" />
-            </svg>
-            <span>{{ gpsActivo ? 'Cerca de ti' : 'Mi GPS' }}</span>
-          </button>
-
-          <button
-            type="button"
-            class="island-reset-btn"
-            title="Ver toda la ciudad"
-            @click="centrarTodaLaCiudad"
-          >
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-              <path d="M3 3v5h5" />
-            </svg>
-            <span>Toda la ciudad</span>
-          </button>
-        </div>
-      </div>
-
       <!-- Canvas de Leaflet Limpio (Sin cabecera duplicada ni colisiones) -->
       <div class="map-canvas-wrapper">
         <MapaVillavicencio
           ref="mapaRef"
-          :minimal="true"
           :droguerias="drogueriasFiltradas"
+          :droguerias-totales="drogueriasVillavicencio"
           :user-lat="userLat"
           :user-lng="userLng"
           :barrio-seleccionado="barrioFiltro"
+          :comuna="comunaFiltro"
           @select-drogueria="onSelectDrogueria"
-        />
+          @select-comuna="comunaFiltro = $event"
+        >
+          <template #zonas>
+            <ZonasComunas
+              vertical
+              :droguerias="drogueriasVillavicencio"
+              :activa="comunaFiltro"
+              @select="comunaFiltro = $event"
+            />
+          </template>
+          <template #controles-extra>
+            <div class="island-group">
+              <button type="button" class="island-btn" :class="{ active: solo24h }" @click="solo24h = !solo24h">24 Horas</button>
+              <button type="button" class="island-btn" :class="{ active: soloDomicilio }" @click="soloDomicilio = !soloDomicilio">
+                <span>D</span> Domicilio
+              </button>
+              <button type="button" class="island-btn" :class="{ active: soloBoticarios }" @click="soloBoticarios = !soloBoticarios">
+                <span>B</span> Boticarios
+              </button>
+              <div class="island-select-wrapper">
+                <select v-model="barrioFiltro" aria-label="Filtrar por barrio de Villavicencio">
+                  <option v-for="b in BARRIOS_VILLAVICENCIO" :key="b" :value="b">{{ b }}</option>
+                </select>
+              </div>
+              <button
+                type="button"
+                class="island-gps-btn"
+                :class="{ active: gpsActivo, loading: calculandoGps }"
+                @click="solicitarGps"
+              >
+                <span>{{ gpsActivo ? 'Cerca de ti' : 'Mi GPS' }}</span>
+              </button>
+              <button type="button" class="island-reset-btn" @click="centrarTodaLaCiudad">
+                <span>Toda la ciudad</span>
+              </button>
+            </div>
+          </template>
+        </MapaVillavicencio>
       </div>
 
       <!-- Carrusel / Fila Limpia de Farmacias Destacadas (Airbnb style) -->
@@ -242,25 +216,26 @@ function centrarTodaLaCiudad() {
             <div class="tray-card-top">
               <span
                 class="card-brand-pill"
+                :class="{ 'brand-independiente': obtenerCadenaInfo(drog.cadena).tipo === 'independiente' }"
                 :style="{
                   backgroundColor: obtenerCadenaInfo(drog.cadena).colorLight,
                   color: obtenerCadenaInfo(drog.cadena).color,
                   borderColor: obtenerCadenaInfo(drog.cadena).color + '40',
                 }"
               >
-                {{ obtenerCadenaInfo(drog.cadena).tipo === 'independiente' ? '🏺 Boticario' : drog.cadena }}
+                {{ obtenerCadenaInfo(drog.cadena).tipo === 'independiente' ? 'Boticario' : drog.cadena }}
               </span>
               <span v-if="drog.distanciaKm !== undefined" class="card-dist-pill">
-                📍 {{ formatearDistancia(drog.distanciaKm) }}
+                {{ formatearDistancia(drog.distanciaKm) }}
               </span>
               <span v-else-if="drog.es24h" class="card-24h-pill">24H</span>
             </div>
 
             <h4 class="card-name">{{ drog.nombre }}</h4>
-            <p class="card-address">📍 {{ drog.barrio }} · {{ drog.direccion }}</p>
+            <p class="card-address">{{ drog.barrio }} · {{ drog.direccion }}</p>
 
             <div class="tray-card-actions">
-              <span class="card-time">⏰ {{ drog.horario }}</span>
+              <span class="card-time">{{ drog.horario }}</span>
               <a
                 :href="generarLinkWhatsApp(drog)"
                 target="_blank"
@@ -386,8 +361,8 @@ function centrarTodaLaCiudad() {
 }
 
 .island-select-wrapper select option {
-  background: #0c1426;
-  color: #ffffff;
+  background: var(--bg-0);
+  color: var(--ink);
 }
 
 [data-theme='light'] .island-select-wrapper select option {
@@ -401,8 +376,8 @@ function centrarTodaLaCiudad() {
   gap: 6px;
   padding: 6px 14px;
   border-radius: 999px;
-  background: linear-gradient(140deg, var(--blue), #0062cc);
-  color: #ffffff;
+  background: var(--verde);
+  color: var(--sobre-acento);
   border: none;
   font-size: 0.8rem;
   font-weight: 700;
@@ -446,9 +421,7 @@ function centrarTodaLaCiudad() {
 .map-canvas-wrapper {
   position: relative;
   width: 100%;
-  height: 480px;
-  overflow: hidden;
-  background: #0b1220;
+  min-height: 560px;
 }
 
 /* Bandeja Inferior de Tarjetas */
@@ -528,7 +501,7 @@ function centrarTodaLaCiudad() {
 
 .dot-rebaja { background: #dc2626; }
 .dot-cruzverde { background: #059669; }
-.dot-cadenas { background: #0284c7; }
+.dot-cadenas { background: var(--azul); }
 .dot-independiente { background: #7c3aed; }
 
 .badge-24h-mini {
@@ -574,7 +547,7 @@ function centrarTodaLaCiudad() {
 .tray-card.card--focused {
   border-color: var(--blue-bright);
   box-shadow: 0 0 0 2px rgba(61, 155, 255, 0.45), 0 10px 26px -8px rgba(10, 132, 255, 0.6);
-  background: linear-gradient(150deg, rgba(61, 155, 255, 0.12), var(--glass));
+  background: linear-gradient(150deg, rgba(31, 107, 79, 0.1), var(--glass));
 }
 
 .tray-card-top {
@@ -582,6 +555,10 @@ function centrarTodaLaCiudad() {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+}
+
+.card-brand-pill.brand-independiente {
+  color: var(--verde) !important;
 }
 
 .card-brand-pill {
@@ -603,7 +580,7 @@ function centrarTodaLaCiudad() {
   font-size: 0.68rem;
   font-weight: 800;
   background: rgba(48, 209, 88, 0.16);
-  color: #30d158;
+  color: var(--verde-texto);
   padding: 2px 6px;
   border-radius: 4px;
 }
@@ -650,7 +627,7 @@ function centrarTodaLaCiudad() {
   padding: 5px 12px;
   border-radius: 8px;
   background: #25d366;
-  color: #ffffff;
+  color: #06210f;
   font-size: 0.76rem;
   font-weight: 750;
   text-decoration: none;

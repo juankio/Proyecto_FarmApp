@@ -52,8 +52,8 @@ import SectionHeader from '../ui/SectionHeader.vue';
             Activa el botón de geolocalización GPS o selecciona tu barrio en Villavicencio (Centro, El Barzal, Siete de Agosto, La Esperanza, Porfía, etc.) para rastrear farmacias alrededor.
           </p>
           <ul class="step-bullets">
-            <li>📍 Cálculo de distancia exacto en metros o kilómetros</li>
-            <li>🏥 Más de 85 droguerías georreferenciadas</li>
+            <li>Cálculo de distancia exacto en metros o kilómetros</li>
+            <li>Droguerías georreferenciadas y verificadas</li>
           </ul>
         </div>
       </div>
@@ -93,8 +93,8 @@ import SectionHeader from '../ui/SectionHeader.vue';
             Visualiza en segundos quién tiene el precio más económico y quién te queda más cerca. Decide si prefieres ahorrar hasta un 45% o comprar en la esquina.
           </p>
           <ul class="step-bullets">
-            <li>🏷️ Transparencia de precios sin comisiones ocultas</li>
-            <li>⚖️ Filtro dual: "Mejor Precio" o "Menor Distancia"</li>
+            <li>Transparencia de precios sin comisiones ocultas</li>
+            <li>Filtro dual: "Mejor precio" o "Menor distancia"</li>
           </ul>
         </div>
       </div>
@@ -132,8 +132,8 @@ import SectionHeader from '../ui/SectionHeader.vue';
             Haz clic para abrir un chat directo con el regente de farmacia con el medicamento precargado en el mensaje, o presiona "Cómo llegar" para abrir la ruta en Google Maps.
           </p>
           <ul class="step-bullets">
-            <li>💬 Mensaje de cotización listo para enviar con 1 clic</li>
-            <li>🌙 Identificación de droguerías de turno abiertas 24H</li>
+            <li>Mensaje de cotización listo para enviar con un clic</li>
+            <li>Droguerías de turno abiertas 24 horas</li>
           </ul>
         </div>
       </div>

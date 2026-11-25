@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import PageHero from '../components/layout/PageHero.vue';
 import AppButton from '../components/ui/AppButton.vue';
 import AppInput from '../components/ui/AppInput.vue';
 import MapaVillavicencio from '../components/ubicaciones/MapaVillavicencio.vue';
+import ZonasComunas from '../components/ubicaciones/ZonasComunas.vue';
 import {
   BARRIOS_VILLAVICENCIO,
   Drogueria,
@@ -11,6 +12,9 @@ import {
   LISTA_CADENAS_FILTRO,
   obtenerCadenaInfo,
 } from '../data/droguerias';
+import { comunaPorId } from '../data/comunas';
+
+const props = defineProps<{ embebido?: boolean }>();
 
 const busqueda = ref('');
 const barrioSeleccionado = ref<string>('Todos los barrios');
@@ -19,12 +23,16 @@ const solo24h = ref(false);
 const soloDomicilio = ref(false);
 const soloAfiliadas = ref(false);
 const mostrarMapa = ref(true);
+const comunaActiva = ref<number | null>(null);
 
 // Geolocalización del usuario
 const userLat = ref<number | null>(null);
 const userLng = ref<number | null>(null);
 const calculandoGps = ref(false);
 const errorGps = ref('');
+const precisionGps = ref<number | null>(null);
+const ajustandoUbicacion = ref(false);
+const origenTipo = ref<'gps' | 'barrio' | 'manual'>('gps');
 
 // Cálculo de distancia en km con fórmula de Haversine
 function calcularDistanciaKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
@@ -39,6 +47,53 @@ function calcularDistanciaKm(lat1: number, lon1: number, lat2: number, lon2: num
       Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
+}
+
+watch(barrioSeleccionado, (barrio) => {
+  if (barrio === 'Todos los barrios') {
+    if (origenTipo.value === 'barrio') origenTipo.value = 'gps';
+    return;
+  }
+  const lista = drogueriasVillavicencio.filter((d) => d.barrio === barrio);
+  if (!lista.length) return;
+  userLat.value = lista.reduce((suma, d) => suma + d.lat, 0) / lista.length;
+  userLng.value = lista.reduce((suma, d) => suma + d.lng, 0) / lista.length;
+  precisionGps.value = null;
+  origenTipo.value = 'barrio';
+});
+
+const mensajeValidacion = computed(() => {
+  if (drogueriasProcesadas.value.length > 0) return '';
+  const activos: string[] = [];
+  if (cadenaSeleccionada.value !== 'Todas las marcas') activos.push(cadenaSeleccionada.value);
+  if (comunaActiva.value !== null) activos.push(comunaPorId(comunaActiva.value)?.nombre ?? `Comuna ${comunaActiva.value}`);
+  if (barrioSeleccionado.value !== 'Todos los barrios') activos.push(barrioSeleccionado.value);
+  if (busqueda.value.trim()) activos.push(`“${busqueda.value.trim()}”`);
+  return activos.length
+    ? `No hay droguerías de ${activos.join(' · ')} en esta selección. Prueba a quitar alguno de estos filtros.`
+    : 'No hay droguerías con estos filtros en Villavicencio.';
+});
+
+function limpiarFiltros(): void {
+  busqueda.value = '';
+  barrioSeleccionado.value = 'Todos los barrios';
+  cadenaSeleccionada.value = 'Todas las marcas';
+  comunaActiva.value = null;
+  solo24h.value = false;
+  soloDomicilio.value = false;
+  soloAfiliadas.value = false;
+}
+
+function activarAjuste(): void {
+  ajustandoUbicacion.value = !ajustandoUbicacion.value;
+}
+
+function onUbicacionAjustada(coords: { lat: number; lng: number }): void {
+  userLat.value = coords.lat;
+  userLng.value = coords.lng;
+  precisionGps.value = 20;
+  origenTipo.value = 'manual';
+  ajustandoUbicacion.value = false;
 }
 
 function formatearDistancia(km: number): string {
@@ -60,6 +115,8 @@ function solicitarGps(): void {
     (pos) => {
       userLat.value = pos.coords.latitude;
       userLng.value = pos.coords.longitude;
+      precisionGps.value = pos.coords.accuracy ?? null;
+      origenTipo.value = 'gps';
       calculandoGps.value = false;
     },
     () => {
@@ -94,6 +151,11 @@ const drogueriasProcesadas = computed<DrogueriaConDistancia[]>(() => {
         d.direccion.toLowerCase().includes(q) ||
         d.barrio.toLowerCase().includes(q),
     );
+  }
+
+  // Filtro por comuna
+  if (comunaActiva.value !== null) {
+    lista = lista.filter((d) => d.comuna === comunaActiva.value);
   }
 
   // Filtro por barrio
@@ -181,6 +243,7 @@ onMounted(() => {
 
 <template>
   <PageHero
+    v-if="!props.embebido"
     eyebrow="Red de Farmacias"
     title="Droguerías en Villavicencio"
     lede="Encuentra las droguerías más cercanas a tu barrio, farmacias abiertas 24 horas y droguerías con entrega a domicilio en toda la ciudad."
@@ -191,6 +254,26 @@ onMounted(() => {
   <section class="section reveal">
     <!-- Panel de controles y filtros -->
     <div class="filter-card">
+      <div class="panel-heading">
+        <div class="panel-heading-title">
+          <span class="map-badge">Red Metropolitana</span>
+          <h2>Mapa oficial de droguerías en Villavicencio</h2>
+        </div>
+        <button
+          type="button"
+          class="map-toggle-btn"
+          :class="{ active: mostrarMapa }"
+          @click="mostrarMapa = !mostrarMapa"
+        >
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6" />
+            <line x1="8" y1="2" x2="8" y2="18" />
+            <line x1="16" y1="6" x2="16" y2="22" />
+          </svg>
+          <span>{{ mostrarMapa ? 'Ocultar mapa' : 'Ver mapa' }}</span>
+        </button>
+      </div>
+
       <div class="filter-top">
         <div class="search-wrap">
           <AppInput
@@ -228,21 +311,22 @@ onMounted(() => {
             <circle cx="12" cy="12" r="3" />
             <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
           </svg>
-          <span>{{ userLat !== null ? 'GPS Activo' : 'Cerca de mí' }}</span>
+          <span>
+            {{ origenTipo === 'barrio' ? `Cerca de ${barrioSeleccionado}` : userLat !== null ? 'GPS Activo' : 'Cerca de mí' }}
+          </span>
         </button>
 
         <button
+          v-if="userLat !== null"
           type="button"
-          class="map-toggle-btn"
-          :class="{ active: mostrarMapa }"
-          @click="mostrarMapa = !mostrarMapa"
+          class="gps-btn ajustar-btn"
+          :class="{ active: ajustandoUbicacion }"
+          @click="activarAjuste"
         >
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" />
-            <line x1="8" y1="2" x2="8" y2="18" />
-            <line x1="16" y1="6" x2="16" y2="22" />
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4 11.5-11.5Z" />
           </svg>
-          <span>{{ mostrarMapa ? 'Ocultar mapa' : 'Ver mapa' }}</span>
+          <span>{{ ajustandoUbicacion ? 'Toca el mapa…' : 'Ajustar punto' }}</span>
         </button>
       </div>
 
@@ -250,52 +334,61 @@ onMounted(() => {
         {{ errorGps }}
       </div>
 
-      <!-- Filtros rápidos tipo chip -->
-      <div class="chip-row">
-        <button
-          type="button"
-          class="chip"
-          :class="{ active: solo24h }"
-          @click="solo24h = !solo24h"
-        >
-          <span class="chip-dot dot-24h" />
-          Abiertas 24 Horas
-        </button>
-        <button
-          type="button"
-          class="chip"
-          :class="{ active: soloDomicilio }"
-          @click="soloDomicilio = !soloDomicilio"
-        >
-          <span class="chip-dot dot-delivery" />
-          Con Domicilio
-        </button>
-        <button
-          type="button"
-          class="chip"
-          :class="{ active: soloAfiliadas }"
-          @click="soloAfiliadas = !soloAfiliadas"
-        >
-          <span class="chip-dot dot-afiliada" />
-          Verificadas FarmApp
-        </button>
-
-        <span class="results-count">
-          {{ drogueriasProcesadas.length }} droguería{{ drogueriasProcesadas.length === 1 ? '' : 's' }} encontrada{{ drogueriasProcesadas.length === 1 ? '' : 's' }}
-        </span>
+      <div v-if="precisionGps !== null && precisionGps > 300 && userLat !== null" class="gps-alert precision-alert">
+        Ubicación aproximada (±{{ precisionGps >= 1000 ? (precisionGps / 1000).toFixed(1) + ' km' : Math.round(precisionGps) + ' m' }}).
+        Usa «Ajustar punto» y toca el mapa para corregirla.
       </div>
+
     </div>
 
     <!-- Mapa Interactivo de Villavicencio -->
     <MapaVillavicencio
       v-if="mostrarMapa"
       :droguerias="drogueriasProcesadas"
+      :droguerias-totales="drogueriasVillavicencio"
       :user-lat="userLat"
       :user-lng="userLng"
       :barrio-seleccionado="barrioSeleccionado"
+      :comuna="comunaActiva"
+      :precision="precisionGps"
+      :ajustando-ubicacion="ajustandoUbicacion"
       @select-barrio="(b) => (barrioSeleccionado = b)"
       @select-drogueria="onSelectDrogueria"
-    />
+      @select-comuna="comunaActiva = $event"
+      @update-ubicacion="onUbicacionAjustada"
+      :mensaje-vacio="mensajeValidacion"
+      :integrado="true"
+    >
+      <template #zonas>
+        <ZonasComunas
+          vertical
+          :droguerias="drogueriasVillavicencio"
+          :activa="comunaActiva"
+          @select="comunaActiva = $event"
+        />
+      </template>
+      <template #controles-extra>
+        <div class="chip-row">
+          <button type="button" class="chip" :class="{ active: solo24h }" @click="solo24h = !solo24h">
+            <span class="chip-dot dot-24h" /> Abiertas 24 Horas
+          </button>
+          <button type="button" class="chip" :class="{ active: soloDomicilio }" @click="soloDomicilio = !soloDomicilio">
+            <span class="chip-dot dot-delivery" /> Con Domicilio
+          </button>
+          <button type="button" class="chip" :class="{ active: soloAfiliadas }" @click="soloAfiliadas = !soloAfiliadas">
+            <span class="chip-dot dot-afiliada" /> Verificadas FarmApp
+          </button>
+          <span class="results-count">
+            {{ drogueriasProcesadas.length }} droguería{{ drogueriasProcesadas.length === 1 ? '' : 's' }} encontrada{{ drogueriasProcesadas.length === 1 ? '' : 's' }}
+          </span>
+        </div>
+      </template>
+      <template #acciones-vacias>
+        <button v-if="cadenaSeleccionada !== 'Todas las marcas'" type="button" @click="cadenaSeleccionada = 'Todas las marcas'">Quitar marca</button>
+        <button v-if="comunaActiva !== null" type="button" @click="comunaActiva = null">Quitar zona</button>
+        <button type="button" @click="limpiarFiltros">Limpiar filtros</button>
+      </template>
+    </MapaVillavicencio>
 
     <!-- Lista / Cuadrícula de Droguerías -->
     <div v-if="drogueriasProcesadas.length > 0" class="droguerias-grid">
@@ -316,7 +409,7 @@ onMounted(() => {
                 borderColor: obtenerCadenaInfo(d.cadena).color + '44',
               }"
             >
-              {{ obtenerCadenaInfo(d.cadena).tipo === 'independiente' ? '🏺 Boticario de Barrio' : d.cadena }}
+              {{ obtenerCadenaInfo(d.cadena).tipo === 'independiente' ? 'Boticario de barrio' : d.cadena }}
             </span>
             <span class="badge-barrio">{{ d.barrio }}</span>
             <span v-if="d.es24h" class="badge-tag tag-24h">24H</span>
@@ -341,7 +434,7 @@ onMounted(() => {
             <span class="meta-label">Horario:</span>
             <span class="meta-value">{{ d.horario }}</span>
           </div>
-          <div class="meta-item">
+          <div v-if="d.telefono" class="meta-item">
             <span class="meta-label">Teléfono:</span>
             <a :href="`tel:${d.telefono.replace(/[^0-9]/g, '')}`" class="meta-link">
               {{ d.telefono }}
@@ -388,8 +481,10 @@ onMounted(() => {
       </AppButton>
     </div>
 
-    <!-- Sección de Afiliación / Suscripción para Droguerías -->
-    <div class="affiliate-banner">
+    </section>
+
+  <section v-if="!props.embebido" class="section reveal">
+      <!-- Sección de Afiliación / Suscripción para Droguerías -->
       <div class="affiliate-copy">
         <span class="affiliate-tag">Para Droguerías y Farmacias</span>
         <h2>¿Tienes una droguería en Villavicencio?</h2>
@@ -403,21 +498,57 @@ onMounted(() => {
           <AppButton size="lg">Afiliar mi droguería</AppButton>
         </RouterLink>
       </div>
-    </div>
   </section>
 </template>
 
 <style scoped>
+.section.reveal {
+  margin-top: 6px;
+}
+
 .filter-card {
   padding: 20px;
-  border-radius: var(--radius-lg);
-  background: var(--glass);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  background: var(--bg-1);
   border: 1px solid var(--line);
-  box-shadow: var(--shadow-sm), var(--inset);
-  margin-bottom: 28px;
+  border-bottom: none;
+  box-shadow: none;
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.panel-heading-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.panel-heading h2 {
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  margin: 0;
+  color: var(--ink);
+}
+
+.panel-heading .map-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(31, 107, 79, 0.12);
+  border: 1px solid rgba(31, 107, 79, 0.3);
+  color: var(--verde-texto);
 }
 
 .filter-top {
@@ -523,6 +654,12 @@ onMounted(() => {
   font-size: 0.88rem;
 }
 
+.precision-alert {
+  color: var(--verde-deep);
+  background: rgba(216, 154, 43, 0.1);
+  border-color: rgba(216, 154, 43, 0.35);
+}
+
 .chip-row {
   display: flex;
   align-items: center;
@@ -565,9 +702,9 @@ onMounted(() => {
   border-radius: 50%;
 }
 
-.dot-24h { background: #30d158; }
-.dot-delivery { background: #0a84ff; }
-.dot-afiliada { background: #ffd60a; }
+.dot-24h { background: var(--verde); }
+.dot-delivery { background: var(--azul); }
+.dot-afiliada { background: var(--ambar); }
 
 .results-count {
   margin-left: auto;
@@ -584,31 +721,31 @@ onMounted(() => {
 
 .drog-card {
   padding: 22px;
-  border-radius: var(--radius-lg);
-  background: var(--glass);
-  border: 1px solid var(--line);
-  box-shadow: var(--shadow-sm), var(--inset);
+  border-radius: 16px;
+  background: var(--bg-1);
+  border: 1px solid var(--surface-border);
+  box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
   gap: 12px;
-  transition: transform 0.24s var(--spring), box-shadow 0.24s;
+  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease), border-color 0.2s;
 }
 
 .drog-card:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
-  border-color: rgba(90, 200, 250, 0.3);
+  border-color: rgba(31, 107, 79, 0.4);
 }
 
 .drog-card--highlight {
-  border-color: var(--blue-bright) !important;
-  box-shadow: 0 0 24px rgba(10, 132, 255, 0.45), var(--inset) !important;
+  border-color: var(--verde) !important;
+  box-shadow: 0 0 0 2px rgba(31, 107, 79, 0.18), var(--shadow-md) !important;
   transform: translateY(-4px) !important;
 }
 
 .drog-card--featured {
-  border-color: rgba(26, 140, 255, 0.35);
-  background: linear-gradient(160deg, rgba(26, 140, 255, 0.08), var(--glass));
+  border-color: rgba(31, 107, 79, 0.28);
+  background: var(--bg-1);
 }
 
 .drog-header {
@@ -656,23 +793,23 @@ onMounted(() => {
 
 .tag-24h {
   background: rgba(48, 209, 88, 0.15);
-  color: #30d158;
+  color: var(--verde-texto);
   border: 1px solid rgba(48, 209, 88, 0.3);
 }
 
 .tag-afiliada {
-  background: rgba(255, 214, 10, 0.15);
-  color: #ffd60a;
-  border: 1px solid rgba(255, 214, 10, 0.3);
+  background: rgba(216, 154, 43, 0.16);
+  color: #8a5c0a;
+  border: 1px solid rgba(216, 154, 43, 0.4);
 }
 
 .drog-distancia {
-  font-size: 0.84rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  color: var(--aqua);
-  background: rgba(90, 200, 250, 0.12);
+  color: var(--verde-deep);
+  background: rgba(31, 107, 79, 0.1);
   padding: 4px 8px;
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
 .drog-title {
@@ -697,8 +834,8 @@ onMounted(() => {
 
 .drog-meta {
   padding: 12px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  background: var(--bg-2);
   border: 1px solid var(--line-soft);
   display: flex;
   flex-direction: column;
@@ -759,7 +896,7 @@ onMounted(() => {
 
 .drog-btn--wa {
   background: #25d366;
-  color: #ffffff;
+  color: #06210f;
   box-shadow: 0 4px 14px -3px rgba(37, 211, 102, 0.5);
 }
 
@@ -847,6 +984,28 @@ onMounted(() => {
   .results-count {
     margin-left: 0;
     width: 100%;
+  }
+  .panel-heading {
+    gap: 8px;
+  }
+  .panel-heading h2 {
+    font-size: 1.05rem;
+  }
+  .panel-heading .map-toggle-btn {
+    min-height: 36px;
+    padding: 0 10px;
+    font-size: 0.78rem;
+  }
+  .filter-card {
+    padding: 14px;
+    gap: 12px;
+  }
+  .chip-row {
+    gap: 6px;
+  }
+  .chip {
+    padding: 6px 10px;
+    font-size: 0.74rem;
   }
 }
 </style>

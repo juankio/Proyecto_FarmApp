@@ -49,36 +49,38 @@ function onBlur(): void {
 
 <template>
   <PageHero
-    eyebrow="Salud y Ahorro en Villavicencio"
+    eyebrow="Salud y ahorro en Villavicencio"
     title="Encuentra tus medicamentos al mejor precio y más cerca de ti."
-    lede="Compara precios en tiempo real entre droguerías y boticarios de Villavicencio, localiza farmacias de turno 24 horas y ahorra hasta un 45% en tus fórmulas."
+    lede="Comparamos precios reales entre droguerías y boticarios de la ciudad. Ubica la farmacia de turno, pide a domicilio y paga menos por tu fórmula."
   >
     <template #actions>
-      <!-- Buscador Flotante Estilo Airbnb con Sugerencias Inteligentes -->
       <div class="hero-search-wrapper">
         <form class="hero-search-form" @submit.prevent="buscar()">
-          <div class="input-container">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          <span class="search-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <circle cx="11" cy="11" r="7" />
+              <line x1="21" y1="21" x2="16.4" y2="16.4" />
             </svg>
-            <input
-              v-model="query"
-              type="search"
-              placeholder="¿Qué medicamento buscas? (ej. Acetaminofén, Ibuprofeno...)"
-              aria-label="Buscar medicamento para comparar precios"
-              @focus="inputFocused = true"
-              @blur="onBlur"
-            />
-          </div>
+          </span>
+          <input
+            v-model="query"
+            type="search"
+            placeholder="Acetaminofén, Ibuprofeno, Losartán…"
+            aria-label="Buscar medicamento para comparar precios"
+            @focus="inputFocused = true"
+            @blur="onBlur"
+          />
           <button type="submit" class="hero-search-btn">
-            <span>🔍 Comparar</span>
+            <span>Comparar</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <line x1="4" y1="12" x2="19" y2="12" />
+              <polyline points="13 6 19 12 13 18" />
+            </svg>
           </button>
         </form>
 
-        <!-- Dropdown de Sugerencias con Precios Mínimos en Villavicencio -->
         <div v-if="inputFocused && sugerencias.length > 0" class="hero-sug-box">
-          <div class="sug-header">Medicamentos frecuentes en Villavicencio</div>
+          <div class="sug-header">Frecuentes en Villavicencio</div>
           <div
             v-for="sug in sugerencias"
             :key="sug.medicamentoNombre"
@@ -88,7 +90,7 @@ function onBlur(): void {
             <div class="sug-left">
               <strong>{{ sug.medicamentoNombre }}</strong>
               <span class="sug-badge" :class="sug.requiereReceta ? 'badge-receta' : 'badge-libre'">
-                {{ sug.requiereReceta ? 'Bajo Fórmula' : 'Venta Libre' }}
+                {{ sug.requiereReceta ? 'Con fórmula' : 'Venta libre' }}
               </span>
             </div>
             <div class="sug-right">
@@ -98,9 +100,8 @@ function onBlur(): void {
           </div>
         </div>
 
-        <!-- Chips Rápidos de Acceso -->
         <div class="hero-chips-bar">
-          <span class="chips-hint">Populares:</span>
+          <span class="chips-hint">Populares</span>
           <button
             v-for="chip in CHIPS_RAPIDOS"
             :key="chip"
@@ -113,13 +114,24 @@ function onBlur(): void {
         </div>
       </div>
 
-      <!-- Botones de Acción Hero -->
       <div class="hero-buttons">
         <AppButton size="lg" variant="primary" @click="scrollToRadar">
-          📍 Ver Mapa de Farmacias
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 10c0 5.2-8 12-8 12s-8-6.8-8-12a8 8 0 1 1 16 0Z" />
+            <circle cx="12" cy="10" r="2.6" />
+          </svg>
+          Ver mapa de farmacias
         </AppButton>
         <AppButton size="lg" variant="secondary" @click="$router.push('/ubicaciones')">
-          Directorio de Sedes
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+            <line x1="8" y1="6" x2="20" y2="6" />
+            <line x1="8" y1="12" x2="20" y2="12" />
+            <line x1="8" y1="18" x2="20" y2="18" />
+            <circle cx="4" cy="6" r="1.2" />
+            <circle cx="4" cy="12" r="1.2" />
+            <circle cx="4" cy="18" r="1.2" />
+          </svg>
+          Directorio de sedes
         </AppButton>
       </div>
     </template>
@@ -138,132 +150,141 @@ function onBlur(): void {
 .hero-search-wrapper {
   position: relative;
   width: 100%;
-  max-width: 580px;
-  margin-bottom: 16px;
+  max-width: 560px;
+  margin-bottom: 18px;
 }
 
 .hero-search-form {
   display: flex;
-  gap: 8px;
-  background: var(--glass-strong);
-  padding: 6px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.4), var(--inset);
-  transition: border-color 0.2s, box-shadow 0.2s;
+  align-items: center;
+  gap: 4px;
+  background: var(--bg-1);
+  padding: 6px 6px 6px 4px;
+  border-radius: 14px;
+  border: 1.5px solid var(--ink);
+  box-shadow: 4px 4px 0 rgba(22, 36, 29, 0.9);
+  transition: box-shadow 0.18s var(--ease), transform 0.18s var(--ease);
 }
 
 .hero-search-form:focus-within {
-  border-color: var(--blue-bright);
-  box-shadow: 0 0 0 2px rgba(10, 132, 255, 0.25), 0 16px 36px -10px rgba(0, 0, 0, 0.4);
+  transform: translate(-1px, -1px);
+  box-shadow: 6px 6px 0 rgba(31, 107, 79, 0.85);
 }
 
-[data-theme="light"] .hero-search-form {
-  background: #ffffff;
-  border-color: rgba(15, 23, 42, 0.14);
-  box-shadow: 0 16px 36px -10px rgba(10, 132, 255, 0.12), inset 0 1px 0 #ffffff;
+.search-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  color: var(--verde);
+  flex: 0 0 auto;
 }
 
-.input-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding-left: 16px;
+.input-container,
+.hero-search-form input {
   flex: 1;
 }
 
-.input-container svg {
-  color: var(--muted);
-  flex-shrink: 0;
-}
-
-.input-container input {
+.hero-search-form input {
   width: 100%;
   border: none;
   background: transparent;
   color: var(--ink);
-  font-size: 0.96rem;
+  font-size: 0.94rem;
   font-family: inherit;
+  padding: 10px 4px;
   outline: none;
+  min-width: 0;
+}
+
+.hero-search-form input::placeholder {
+  color: var(--muted-2);
 }
 
 .hero-search-btn {
-  padding: 10px 22px;
-  border-radius: 999px;
-  background: linear-gradient(150deg, #3d9bff, var(--blue-deep));
-  color: #ffffff;
-  font-weight: 750;
-  font-size: 0.9rem;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border-radius: 10px;
+  background: var(--verde);
+  color: var(--sobre-acento);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.88rem;
+  border: 1px solid var(--verde-deep);
   cursor: pointer;
   white-space: nowrap;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-  box-shadow: 0 4px 14px -3px rgba(10, 132, 255, 0.6);
+  transition: background-color 0.18s var(--ease), transform 0.18s var(--ease);
 }
 
 .hero-search-btn:hover {
+  background: var(--verde-deep);
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px -3px rgba(10, 132, 255, 0.7);
 }
 
-/* Chips Populares */
+.hero-search-btn svg {
+  transition: transform 0.18s var(--ease);
+}
+
+.hero-search-btn:hover svg {
+  transform: translateX(3px);
+}
+
 .hero-chips-bar {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 10px;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: 14px;
   flex-wrap: wrap;
 }
 
 .chips-hint {
-  font-size: 0.76rem;
+  font-size: 0.7rem;
   font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--muted);
+  margin-right: 4px;
 }
 
 .chip-pill {
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: var(--glass-control-bg);
-  border: 1px solid var(--line-soft);
+  padding: 3px 2px;
+  background: none;
+  border: 0;
+  border-bottom: 1px dashed rgba(31, 107, 79, 0.4);
+  border-radius: 0;
   color: var(--ink-soft);
-  font-size: 0.76rem;
+  font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+  transition: color 0.15s, border-color 0.15s;
 }
 
 .chip-pill:hover {
-  background: var(--line-soft);
-  color: var(--ink);
-  border-color: var(--blue-bright);
+  color: var(--verde);
+  border-color: var(--verde);
 }
 
-/* Dropdown */
 .hero-sug-box {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 10px);
   left: 0;
   right: 0;
-  border-radius: 16px;
-  background: var(--bg-1, #0c1426);
-  border: 1px solid var(--line);
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.65);
+  border-radius: 14px;
+  background: var(--bg-1);
+  border: 1px solid var(--surface-border);
+  box-shadow: var(--shadow-md);
   z-index: 100;
   overflow: hidden;
 }
 
-[data-theme="light"] .hero-sug-box {
-  background: #ffffff;
-  box-shadow: 0 20px 48px rgba(15, 23, 42, 0.16);
-}
-
 .sug-header {
-  padding: 10px 14px 6px;
-  font-size: 0.72rem;
+  padding: 12px 16px 8px;
+  font-size: 0.68rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.14em;
   color: var(--muted);
   border-bottom: 1px solid var(--line-soft);
 }
@@ -272,7 +293,8 @@ function onBlur(): void {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 14px;
+  gap: 12px;
+  padding: 11px 16px;
   cursor: pointer;
   transition: background 0.18s;
   border-bottom: 1px solid var(--line-soft);
@@ -283,45 +305,51 @@ function onBlur(): void {
 }
 
 .sug-item:hover {
-  background: var(--nav-hover-bg);
+  background: rgba(31, 107, 79, 0.06);
 }
 
 .sug-left {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
 }
 
 .sug-left strong {
   font-size: 0.9rem;
   color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sug-badge {
-  font-size: 0.68rem;
+  font-size: 0.64rem;
   font-weight: 700;
-  padding: 2px 6px;
-  border-radius: 4px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  white-space: nowrap;
 }
 
 .badge-libre {
-  background: rgba(48, 209, 88, 0.15);
-  color: #30d158;
+  background: rgba(31, 107, 79, 0.12);
+  color: var(--verde-deep);
 }
 
 .badge-receta {
-  background: rgba(255, 69, 58, 0.15);
-  color: #ff453a;
+  background: rgba(192, 90, 50, 0.14);
+  color: #8f3e1d;
 }
 
 .sug-right {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  flex: 0 0 auto;
 }
 
 .sug-right small {
-  font-size: 0.68rem;
+  font-size: 0.64rem;
   color: var(--muted);
 }
 
@@ -338,23 +366,25 @@ function onBlur(): void {
   flex-wrap: wrap;
 }
 
+.hero-buttons :deep(.app-button svg) {
+  flex: 0 0 auto;
+}
+
 .denied {
   margin-top: 16px;
 }
 
 @media (max-width: 620px) {
   .hero-search-form {
-    flex-direction: column;
-    border-radius: 20px;
-    padding: 8px;
+    flex-wrap: wrap;
+    border-radius: 14px;
   }
   .hero-search-btn {
     width: 100%;
-    border-radius: 14px;
+    justify-content: center;
+    border-radius: 9px;
   }
-  .hero-buttons {
-    width: 100%;
-  }
+  .hero-buttons,
   .hero-buttons :deep(.app-button) {
     width: 100%;
   }

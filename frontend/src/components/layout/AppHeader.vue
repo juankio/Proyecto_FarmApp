@@ -19,9 +19,9 @@ async function salir(): Promise<void> {
 
 <template>
   <header class="header">
-    <div class="bar glass glass--bright">
+    <div class="bar">
       <RouterLink to="/" class="brand" aria-label="FarmApp, ir al inicio">
-        <AppLogo :size="32" />
+        <AppLogo :size="34" />
         <span>FarmApp</span>
       </RouterLink>
 
@@ -60,10 +60,10 @@ async function salir(): Promise<void> {
 <style scoped>
 .header {
   position: sticky;
-  top: 14px;
+  top: 12px;
   z-index: 1000;
   width: var(--shell);
-  margin: 14px auto 0;
+  margin: 12px auto 0;
 }
 
 .bar {
@@ -71,41 +71,37 @@ async function salir(): Promise<void> {
   align-items: center;
   justify-content: space-between;
   gap: 18px;
-  height: 66px;
-  padding: 0 12px 0 18px;
-  border-radius: 22px;
+  height: 64px;
+  padding: 0 12px 0 16px;
+  border-radius: 12px;
+  background: rgba(255, 252, 245, 0.94);
+  border: 1px solid rgba(22, 36, 29, 0.16);
+  box-shadow: 0 2px 0 rgba(22, 36, 29, 0.04), 0 10px 30px -20px rgba(22, 36, 29, 0.45);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
 }
 
-[data-theme="light"] .bar {
-  background: rgba(255, 255, 255, 0.82) !important;
-  border: 1px solid rgba(255, 255, 255, 0.95) !important;
-  box-shadow:
-    inset 0 1px 0 #ffffff,
-    0 8px 24px -6px rgba(10, 132, 255, 0.08),
-    0 2px 6px -2px rgba(15, 23, 42, 0.04) !important;
+[data-theme="dark"] .bar {
+  background: rgba(17, 30, 25, 0.94);
+  border-color: rgba(242, 239, 228, 0.16);
 }
 
 .brand {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-weight: 800;
-  font-size: 1.24rem;
-  letter-spacing: -0.045em;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.3rem;
+  letter-spacing: -0.025em;
   color: var(--ink);
   flex-shrink: 0;
 }
 
 .brand :deep(.app-logo),
 .brand img {
-  width: 32px;
-  height: 32px;
-  filter: drop-shadow(0 6px 16px rgba(10, 132, 255, 0.5));
-}
-
-[data-theme="light"] .brand :deep(.app-logo),
-[data-theme="light"] .brand img {
-  filter: drop-shadow(0 4px 12px rgba(0, 102, 255, 0.35));
+  width: 34px;
+  height: 34px;
 }
 
 .desktop {
@@ -115,31 +111,37 @@ async function salir(): Promise<void> {
 }
 
 .desktop a {
+  position: relative;
   min-height: 44px;
   padding: 12px 14px;
-  border-radius: 999px;
+  border-radius: 8px;
   font-size: 0.88rem;
   font-weight: 500;
   color: var(--ink-soft);
-  transition: background 0.22s, color 0.22s, box-shadow 0.22s;
+  transition: color 0.18s, background-color 0.18s;
 }
 
 .desktop a:hover {
-  background: var(--nav-hover-bg);
-  color: var(--ink);
+  color: var(--verde-deep);
+  background: rgba(31, 107, 79, 0.06);
 }
 
 .desktop a.router-link-active {
-  background: var(--nav-active-bg);
-  color: var(--nav-active-color);
-  font-weight: 600;
-  box-shadow: inset 0 1px 0 var(--nav-active-border);
+  color: var(--verde-deep);
+  font-weight: 700;
+  background: transparent;
+  box-shadow: none;
 }
 
-[data-theme="light"] .desktop a.router-link-active {
-  background: rgba(10, 132, 255, 0.14);
-  color: #0062cc !important;
-  box-shadow: inset 0 1px 0 rgba(10, 132, 255, 0.25);
+.desktop a.router-link-active::after {
+  content: '';
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 8px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--verde);
 }
 
 .actions {
@@ -157,56 +159,18 @@ async function salir(): Promise<void> {
   min-width: 44px;
   min-height: 44px;
   padding: 0;
-  border-radius: 12px;
-  border: 1px solid var(--glass-control-border);
-  background: var(--glass-control-bg);
-  box-shadow: var(--glass-control-shadow);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  color: var(--ink);
+  border-radius: 9px;
+  border: 1px solid rgba(22, 36, 29, 0.16);
+  background: transparent;
+  color: var(--ink-soft);
   cursor: pointer;
-  transition:
-    background 0.22s,
-    transform 0.24s var(--spring),
-    border-color 0.22s,
-    box-shadow 0.22s,
-    color 0.22s;
+  transition: background-color 0.18s, border-color 0.18s, color 0.18s;
 }
 
 .theme-toggle:hover {
-  background: var(--glass-control-bg-hover);
-  border-color: var(--glass-control-border-hover);
-  box-shadow: var(--glass-control-shadow-hover);
-  color: var(--blue-bright);
-  transform: translateY(-1px);
-}
-
-[data-theme="light"] .theme-toggle,
-[data-theme="light"] .panel {
-  background: rgba(255, 255, 255, 0.65);
-  border-color: rgba(15, 23, 42, 0.08);
-  box-shadow: inset 0 1px 0 #ffffff, 0 2px 6px -2px rgba(15, 23, 42, 0.04);
-  color: var(--ink);
-}
-
-[data-theme="light"] .theme-toggle:hover,
-[data-theme="light"] .panel:hover {
-  background: rgba(10, 132, 255, 0.12);
-  border-color: rgba(10, 132, 255, 0.3);
-  box-shadow: inset 0 1px 0 #ffffff, 0 4px 14px -3px rgba(10, 132, 255, 0.2);
-  color: #0062cc;
-}
-
-[data-theme="light"] .login {
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.45),
-    0 8px 20px -6px rgba(10, 132, 255, 0.45);
-}
-
-[data-theme="light"] .login:hover {
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.55),
-    0 12px 26px -8px rgba(10, 132, 255, 0.6);
+  background: rgba(31, 107, 79, 0.08);
+  border-color: rgba(31, 107, 79, 0.4);
+  color: var(--verde-deep);
 }
 
 .user-name {
@@ -221,52 +185,41 @@ async function salir(): Promise<void> {
 }
 
 .panel {
-  padding: 10px 15px;
-  border-radius: 12px;
-  border: 1px solid var(--glass-control-border);
-  background: var(--glass-control-bg);
-  box-shadow: var(--glass-control-shadow);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  color: var(--ink-soft);
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 9px;
+  border: 1px solid rgba(31, 107, 79, 0.3);
+  background: rgba(31, 107, 79, 0.08);
+  color: var(--verde-deep);
   font-size: 0.84rem;
-  font-weight: 600;
-  transition:
-    background 0.22s,
-    transform 0.24s var(--spring),
-    border-color 0.22s,
-    box-shadow 0.22s,
-    color 0.22s;
+  font-weight: 700;
+  transition: background-color 0.18s, border-color 0.18s;
 }
 
 .panel:hover {
-  background: var(--glass-control-bg-hover);
-  border-color: var(--glass-control-border-hover);
-  box-shadow: var(--glass-control-shadow-hover);
-  color: var(--ink);
-  transform: translateY(-1px);
+  background: rgba(31, 107, 79, 0.14);
+  border-color: rgba(31, 107, 79, 0.5);
 }
 
 .login {
+  display: inline-flex;
+  align-items: center;
   padding: 10px 18px;
-  border: 1px solid rgba(255, 255, 255, 0.26);
-  border-radius: 12px;
-  background: linear-gradient(150deg, #3d9bff, var(--blue-deep));
-  color: #fff;
+  border: 1px solid var(--verde-deep);
+  border-radius: 9px;
+  background: var(--verde);
+  color: var(--sobre-acento);
+  font-family: inherit;
   font-size: 0.86rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.45),
-    0 12px 26px -12px rgba(10, 132, 255, 0.85);
-  transition: transform 0.24s var(--spring), box-shadow 0.24s var(--ease);
+  transition: background-color 0.18s, transform 0.18s var(--ease);
 }
 
 .login:hover {
+  background: var(--verde-deep);
   transform: translateY(-1px);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.55),
-    0 18px 34px -14px rgba(10, 132, 255, 1);
 }
 
 @media (min-width: 1180px) {
@@ -288,14 +241,15 @@ async function salir(): Promise<void> {
     display: none;
   }
   .bar {
-    padding: 0 10px 0 14px;
+    padding: 0 8px 0 12px;
     gap: 8px;
+    height: 58px;
   }
 }
 
 @media (max-width: 420px) {
   .brand {
-    font-size: 1.12rem;
+    font-size: 1.1rem;
     gap: 8px;
   }
 }

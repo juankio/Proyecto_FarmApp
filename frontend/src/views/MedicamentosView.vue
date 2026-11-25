@@ -18,6 +18,12 @@ const store = useMedicamentosStore();
 
 const filtroReceta = ref<'todos' | 'libre' | 'receta'>('todos');
 const ordenPrecio = ref<'relevancia' | 'menor-precio'>('relevancia');
+const POPULARES = ['Acetaminofén', 'Ibuprofeno', 'Amoxicilina', 'Loratadina', 'Metformina', 'Omeprazol'];
+
+function buscarSugerencia(nombre: string): void {
+  busqueda.value = nombre;
+  buscar();
+}
 
 const {
   items,
@@ -78,9 +84,9 @@ const resumen = computed(() => {
     return filtro.value ? `Sin resultados para “${filtro.value}”` : 'No hay medicamentos con estos filtros';
   }
   if (filtro.value) {
-    return `${itemsFiltrados.value.length} resultado${itemsFiltrados.value.length === 1 ? '' : 's'} para “${filtro.value}”`;
+    return `${total.value} resultado${total.value === 1 ? '' : 's'} para “${filtro.value}”`;
   }
-  return `${itemsFiltrados.value.length} medicamentos en Villavicencio`;
+  return `${total.value} medicamentos en Villavicencio`;
 });
 
 function cerrarDetalle(): void {
@@ -179,6 +185,12 @@ function cerrarDetalle(): void {
       </span>
       <h2>No encontramos ese medicamento</h2>
       <p>Prueba con otro nombre o revisa el catálogo completo de Villavicencio.</p>
+      <div class="sugerencias-busqueda">
+        <span>Prueba con:</span>
+        <button v-for="nombre in POPULARES" :key="nombre" type="button" @click="buscarSugerencia(nombre)">
+          {{ nombre }}
+        </button>
+      </div>
       <AppButton @click="limpiar">Ver todos</AppButton>
     </div>
 
@@ -410,6 +422,36 @@ function cerrarDetalle(): void {
 .empty-icon svg {
   width: 30px;
   height: 30px;
+}
+
+.sugerencias-busqueda {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.sugerencias-busqueda span {
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+.sugerencias-busqueda button {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--surface-border);
+  background: var(--bg-2);
+  color: var(--verde-texto);
+  font-family: inherit;
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sugerencias-busqueda button:hover {
+  border-color: var(--verde);
 }
 
 .catalog-empty h2 {

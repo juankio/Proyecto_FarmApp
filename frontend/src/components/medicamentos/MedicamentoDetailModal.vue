@@ -77,7 +77,7 @@ function generarLinkWhatsAppDrogueria(oferta: OfertaDrogueria, medNombre: string
       <div class="comparador-section">
         <div class="comparador-header">
           <span class="comparador-title">Comparativa de Precios en Villavicencio</span>
-          <span class="comparador-tag">Precios en tiempo real</span>
+          <span class="comparador-tag">Precios de referencia · confirma por WhatsApp</span>
         </div>
 
         <div class="ofertas-list">
@@ -157,7 +157,7 @@ function generarLinkWhatsAppDrogueria(oferta: OfertaDrogueria, medNombre: string
 
 .alerta-receta--libre .alerta-badge {
   background: rgba(48, 209, 88, 0.2);
-  color: #30d158;
+  color: var(--verde-texto);
 }
 
 .alerta-receta--receta .alerta-badge {
@@ -315,7 +315,7 @@ function generarLinkWhatsAppDrogueria(oferta: OfertaDrogueria, medNombre: string
   padding: 6px 12px;
   border-radius: 8px;
   background: #25d366;
-  color: #ffffff;
+  color: #06210f;
   font-size: 0.8rem;
   font-weight: 700;
   text-decoration: none;

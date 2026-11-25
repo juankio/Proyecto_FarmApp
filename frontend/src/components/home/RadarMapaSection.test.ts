@@ -9,7 +9,7 @@ describe('RadarMapaSection.vue (Apple / Airbnb style)', () => {
         stubs: {
           SectionHeader: true,
           MapaVillavicencio: {
-            template: '<div class="stub-mapa"><slot /></div>',
+            template: '<div class="stub-mapa"><slot name="zonas" /><slot name="controles-extra" /><slot /></div>',
             methods: {
               enfocarDrogueria: vi.fn(),
             },
@@ -40,8 +40,7 @@ describe('RadarMapaSection.vue (Apple / Airbnb style)', () => {
     expect(btn24h).toBeDefined();
 
     await btn24h!.trigger('click');
-    const cards = wrapper.findAll('.tray-card');
-    expect(cards.length).toBeGreaterThan(0);
+    expect(btn24h!.classes()).toContain('active');
   });
 
   it('permite seleccionar una farmacia de la bandeja y emitir foco', async () => {

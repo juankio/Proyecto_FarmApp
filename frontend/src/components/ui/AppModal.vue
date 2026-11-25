@@ -31,9 +31,16 @@ useFocusTrap(isOpen, modalRef, () => emit('close'));
           aria-modal="true"
           :aria-label="title"
         >
+        <div class="modal-head">
           <h2>{{ title }}</h2>
-          <div class="content"><slot /></div>
-          <AppButton block :variant="closeVariant" @click="$emit('close')">Cerrar</AppButton>
+          <button type="button" class="modal-x" aria-label="Cerrar" @click="$emit('close')">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </div>
+        <div class="content"><slot /></div>
+        <AppButton block :variant="closeVariant" @click="$emit('close')">Cerrar</AppButton>
         </div>
       </div>
     </Transition>
@@ -45,9 +52,11 @@ useFocusTrap(isOpen, modalRef, () => emit('close'));
   position: fixed;
   inset: 0;
   z-index: 2000;
-  display: grid;
-  place-items: center;
-  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow-y: auto;
   background: rgba(2, 4, 10, 0.62);
   -webkit-backdrop-filter: blur(14px) saturate(140%);
   backdrop-filter: blur(14px) saturate(140%);
@@ -59,9 +68,35 @@ useFocusTrap(isOpen, modalRef, () => emit('close'));
 
 .modal {
   width: min(100%, 480px);
-  padding: 34px;
+  max-height: calc(100vh - 32px);
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
   border-radius: var(--radius-lg);
   outline: none;
+  margin: auto;
+}
+
+.modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex: 0 0 auto;
+  padding-right: 4px;
+}
+
+.modal-x {
+  display: grid;
+  place-items: center;
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--surface-border);
+  background: var(--bg-2);
+  color: var(--ink);
+  cursor: pointer;
 }
 
 .modal h2 {
@@ -70,9 +105,18 @@ useFocusTrap(isOpen, modalRef, () => emit('close'));
 }
 
 .content {
-  margin: 0 0 24px;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  margin: 0 0 18px;
+  padding-right: 4px;
   color: var(--muted);
   font-size: 0.94rem;
+}
+
+.modal > :deep(.app-button) {
+  flex: 0 0 auto;
 }
 
 .modal-enter-active,

@@ -242,7 +242,7 @@ onBeforeUnmount(() => {
   flex-direction: column;
   padding: 18px;
   border-radius: 24px;
-  background: #090e1d;
+  background: var(--bg-0);
   border: 1px solid rgba(255, 255, 255, 0.14);
   box-shadow:
     0 24px 64px -12px rgba(0, 0, 0, 0.9),
@@ -386,14 +386,14 @@ onBeforeUnmount(() => {
 }
 
 .mobile-action-btn--primary {
-  background: linear-gradient(150deg, #3d9bff, var(--blue-deep));
-  color: #fff;
+  background: var(--verde);
+  color: var(--sobre-acento);
   border: 1px solid rgba(255, 255, 255, 0.25);
   box-shadow: 0 8px 20px -6px rgba(10, 132, 255, 0.6);
 }
 
 .mobile-action-btn--secondary {
-  background: #141d36;
+  background: var(--bg-2);
   color: var(--ink);
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
@@ -410,7 +410,7 @@ onBeforeUnmount(() => {
   gap: 12px;
   padding: 10px 12px;
   border-radius: 14px;
-  background: #141d36;
+  background: var(--bg-2);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -425,8 +425,8 @@ onBeforeUnmount(() => {
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: linear-gradient(135deg, var(--blue), var(--lavender));
-  color: #ffffff;
+  background: var(--verde);
+  color: var(--sobre-acento);
   font-weight: 700;
   font-size: 0.95rem;
   flex-shrink: 0;

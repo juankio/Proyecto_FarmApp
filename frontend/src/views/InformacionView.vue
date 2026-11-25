@@ -16,9 +16,6 @@ import { texto, valores } from '../data/informacion';
   >
     <template #actions>
       <AppButton size="lg" @click="$router.push('/servicios')">Ver servicios</AppButton>
-      <AppButton size="lg" variant="secondary" @click="$router.push('/feria')">
-        Conocer la feria
-      </AppButton>
     </template>
 
     <template #media>

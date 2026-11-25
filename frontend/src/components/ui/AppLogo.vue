@@ -20,12 +20,12 @@ withDefaults(
   >
     <defs>
       <linearGradient id="farmAppGradDark" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="#75fbfd" />
-        <stop offset="100%" stop-color="#38bdf8" />
+        <stop offset="0%" stop-color="#7ee0b0" />
+        <stop offset="100%" stop-color="#1f6b4f" />
       </linearGradient>
       <linearGradient id="farmAppGradLight" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="#0066ee" />
-        <stop offset="100%" stop-color="#004bb5" />
+        <stop offset="0%" stop-color="#3e9b72" />
+        <stop offset="100%" stop-color="#12452f" />
       </linearGradient>
     </defs>
     <g transform="translate(0, 800) scale(1, -1)" class="mark">

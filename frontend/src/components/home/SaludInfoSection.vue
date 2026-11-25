@@ -194,7 +194,7 @@ const GUIAS_SALUD = [
 }
 
 .tip-dot {
-  color: #30d158;
+  color: var(--verde-texto);
   font-weight: 850;
 }
 

@@ -29,7 +29,7 @@ describe('BentoComparadorSection.vue', () => {
 
     await amoxiChip!.trigger('click');
     expect(wrapper.find('.med-dossier-name').text()).toContain('Amoxicilina');
-    expect(wrapper.find('.rx-pill').text()).toContain('Requiere Fórmula');
+    expect(wrapper.find('.rx-pill').text()).toContain('Requiere fórmula');
   });
 
   it('calcula y muestra el ahorro porcentual y en pesos', () => {

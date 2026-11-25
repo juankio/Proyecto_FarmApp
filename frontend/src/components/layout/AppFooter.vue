@@ -85,21 +85,13 @@ const columnas = [
   margin-top: 56px;
   padding: 60px 0 28px;
   border-radius: 40px 40px 0 0;
-  background:
-    radial-gradient(80% 60% at 50% 0%, rgba(10, 132, 255, 0.14), transparent 62%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03));
-  -webkit-backdrop-filter: blur(30px) saturate(180%);
-  backdrop-filter: blur(30px) saturate(180%);
-  border-top: 1px solid var(--line);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 -30px 70px -40px rgba(0, 0, 0, 0.8);
+  background: linear-gradient(180deg, var(--bg-2), var(--bg-0));
+  border-top: 1px solid var(--surface-border);
 }
 
 [data-theme="light"] .footer {
-  background:
-    radial-gradient(80% 60% at 50% 0%, rgba(10, 132, 255, 0.08), transparent 62%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(244, 248, 255, 0.8));
-  border-top: 1px solid rgba(15, 23, 42, 0.08);
-  box-shadow: inset 0 1px 0 #ffffff, 0 -10px 24px -14px rgba(10, 132, 255, 0.08);
+  background: linear-gradient(180deg, #fffdf5, var(--bg-2));
+  border-top: 1px solid rgba(22, 36, 29, 0.1);
 }
 
 [data-theme="light"] .social a {
@@ -109,8 +101,8 @@ const columnas = [
 }
 
 [data-theme="light"] .social a:hover {
-  background: rgba(10, 132, 255, 0.1);
-  border-color: rgba(10, 132, 255, 0.3);
+  background: rgba(31, 107, 79, 0.08);
+  border-color: rgba(31, 107, 79, 0.3);
   box-shadow: inset 0 1px 0 #ffffff, 0 4px 12px -3px rgba(10, 132, 255, 0.2);
 }
 
@@ -135,7 +127,10 @@ const columnas = [
 .brand img {
   width: 34px;
   height: 34px;
-  filter: drop-shadow(0 6px 16px rgba(10, 132, 255, 0.5));
+}
+
+.brand :deep(.app-logo) {
+  filter: drop-shadow(0 4px 10px rgba(31, 107, 79, 0.35));
 }
 
 [data-theme="light"] .brand :deep(.app-logo),
@@ -162,15 +157,15 @@ const columnas = [
   min-width: 44px;
   min-height: 44px;
   border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid var(--line);
+  background: rgba(31, 107, 79, 0.08);
+  border: 1px solid var(--surface-border);
   transition: transform 0.24s var(--spring), background 0.22s, border-color 0.22s;
 }
 
 .social a:hover {
   transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.14);
-  border-color: rgba(255, 255, 255, 0.26);
+  background: rgba(31, 107, 79, 0.2);
+  border-color: rgba(31, 107, 79, 0.45);
 }
 
 .social svg {
@@ -198,7 +193,7 @@ h4 {
   font-size: 0.76rem;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: var(--aqua);
+  color: var(--verde);
   margin-bottom: 4px;
 }
 

@@ -91,11 +91,12 @@ import { accesos } from '../data/site';
 }
 
 .cta h2 {
-  color: var(--ink);
+  color: var(--texto-panel);
 }
 
 .cta p {
-  color: var(--ink-soft);
+  color: var(--texto-panel);
+  opacity: 0.8;
 }
 
 .cta-actions {

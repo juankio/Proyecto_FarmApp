@@ -102,6 +102,9 @@
   pointer-events: none;
   contain: layout paint;
   background-color: var(--bg-0);
+  background-image: url('../assets/bg-botica.svg');
+  background-size: 240px 240px;
+  background-repeat: repeat;
   transform: translate3d(var(--px, 0px), var(--py, 0px), 0);
   transition: transform 0.5s ease-out;
   will-change: transform;
@@ -119,10 +122,11 @@
 .aurora {
   inset: calc(-36% + var(--scroll, 0) * 0.02px);
   background:
-    radial-gradient(40% 34% at 24% 30%, rgba(10, 132, 255, 0.46), transparent 72%),
-    radial-gradient(34% 30% at 78% 22%, rgba(139, 92, 246, 0.34), transparent 72%);
-  filter: blur(42px) saturate(150%);
-  opacity: 0.68;
+    radial-gradient(46% 38% at 18% 12%, rgba(31, 107, 79, 0.2), transparent 70%),
+    radial-gradient(38% 34% at 88% 4%, rgba(216, 154, 43, 0.18), transparent 72%);
+  filter: blur(50px) saturate(120%);
+  opacity: 0.75;
+  mix-blend-mode: multiply;
   margin-top: calc(var(--scroll, 0) * 0.02px);
 }
 
@@ -166,6 +170,7 @@
 }
 
 .sweep {
+  display: none;
   position: fixed;
   inset: -30%;
   z-index: 2;
@@ -196,8 +201,8 @@
   left: -14vw;
   width: clamp(300px, 52vw, 820px);
   aspect-ratio: 1;
-  background: radial-gradient(circle at 40% 40%, rgba(10, 132, 255, 0.5), transparent 68%);
-  opacity: 0.5;
+  background: radial-gradient(circle at 40% 40%, rgba(31, 107, 79, 0.28), transparent 68%);
+  opacity: 0.4;
 }
 
 .orb-b {
@@ -205,8 +210,8 @@
   right: -18vw;
   width: clamp(260px, 44vw, 700px);
   aspect-ratio: 1;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.42), transparent 70%);
-  opacity: 0.42;
+  background: radial-gradient(circle, rgba(192, 90, 50, 0.24), transparent 70%);
+  opacity: 0.32;
 }
 
 .orb-c {

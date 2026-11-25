@@ -40,29 +40,13 @@ withDefaults(
   color: var(--muted);
 }
 
-.blue .app-stat__value {
-  color: var(--blue-bright);
-  text-shadow: 0 0 24px rgba(10, 132, 255, 0.5);
-}
-
-.mint .app-stat__value {
-  color: var(--mint);
-  text-shadow: 0 0 24px rgba(126, 224, 192, 0.45);
-}
-
-.aqua .app-stat__value {
-  color: var(--aqua);
-  text-shadow: 0 0 24px rgba(90, 200, 250, 0.45);
-}
-
-.lavender .app-stat__value {
-  color: var(--lavender);
-  text-shadow: 0 0 24px rgba(185, 168, 255, 0.45);
-}
-
+.blue .app-stat__value,
+.mint .app-stat__value,
+.aqua .app-stat__value,
+.lavender .app-stat__value,
 .rose .app-stat__value {
-  color: var(--rose);
-  text-shadow: 0 0 24px rgba(255, 122, 184, 0.45);
+  color: var(--verde-texto);
+  text-shadow: 0 0 20px rgba(31, 107, 79, 0.25);
 }
 
 [data-theme="light"] .app-stat__value {

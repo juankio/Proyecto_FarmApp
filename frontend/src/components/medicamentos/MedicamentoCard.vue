@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppButton from '../ui/AppButton.vue';
+import ProductoIcono from '../ui/ProductoIcono.vue';
 import type { Medicamento } from '../../types/catalogo';
 import { obtenerComparativa } from '../../data/comparador_precios';
 import { formatPrecioCop } from '../../utils/format';
@@ -31,10 +32,7 @@ function consulta(m: Medicamento) {
   <article class="med-card">
     <div class="med-top">
       <span class="med-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-          <path d="M10.6 3.4a5 5 0 0 1 7.1 7.1l-7.2 7.1a5 5 0 0 1-7.1-7.1l7.2-7.1Z" stroke-linecap="round" />
-          <path d="m6.9 6.9 7.2 7.2" stroke-linecap="round" />
-        </svg>
+        <ProductoIcono :nombre="medicamento.nombre" :presentacion="medicamento.presentacion" />
       </span>
       <div class="med-top-tags">
         <span
@@ -134,7 +132,7 @@ function consulta(m: Medicamento) {
 
 .rx-libre {
   background: rgba(48, 209, 88, 0.14);
-  color: #30d158;
+  color: var(--verde-texto);
   border: 1px solid rgba(48, 209, 88, 0.3);
 }
 

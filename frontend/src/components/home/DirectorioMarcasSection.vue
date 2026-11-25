@@ -46,12 +46,12 @@ const CADENAS_SHOWCASE = [
     descripcion: 'Droguerías independientes asociadas con excelente surtido en avenidas principales.',
   },
   {
-    nombre: '🏺 Boticarios de Barrio',
+    nombre: 'Boticarios de barrio',
     tag: 'Farmacias Tradicionales',
     sedesVillavicencio: '25+ boticas',
     color: '#7c3aed',
     bgLight: 'rgba(124, 58, 237, 0.12)',
-    sigla: '🏺',
+    sigla: 'BOT',
     servicios: ['Atención personalizada', 'Fórmula magistral', 'Precios de barrio', 'Vecinos'],
     descripcion: 'Droguerías de toda la vida atendidas por sus dueños en Montecarlo, Catumare, Kirpas y Reliquia.',
   },
@@ -90,7 +90,7 @@ const CADENAS_SHOWCASE = [
           <div class="marca-info-head">
             <span class="marca-tag">{{ marca.tag }}</span>
             <h3 class="marca-title">{{ marca.nombre }}</h3>
-            <span class="marca-sedes">📍 {{ marca.sedesVillavicencio }}</span>
+            <span class="marca-sedes">{{ marca.sedesVillavicencio }}</span>
           </div>
         </div>
 
@@ -159,7 +159,7 @@ const CADENAS_SHOWCASE = [
   height: 48px;
   border-radius: 14px;
   background: var(--brand-color);
-  color: #ffffff;
+  color: var(--sobre-acento);
   display: grid;
   place-items: center;
   font-weight: 900;
@@ -218,6 +218,12 @@ const CADENAS_SHOWCASE = [
   border-radius: 6px;
   background: var(--brand-light);
   color: var(--brand-color);
+}
+
+[data-theme='dark'] .marca-tag,
+[data-theme='dark'] .srv-tag,
+[data-theme='dark'] .link-ver-mapa {
+  color: #86d9b5 !important;
 }
 
 .marca-card-footer {

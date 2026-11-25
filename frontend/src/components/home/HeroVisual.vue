@@ -1,400 +1,329 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import AppSurface from '../ui/AppSurface.vue';
-import AppLogo from '../ui/AppLogo.vue';
 import { drogueriasVillavicencio } from '../../data/droguerias';
 
-// 6 droguerías de Villavicencio orbitando en la constelación visual
-const destacadas = computed(() => drogueriasVillavicencio.slice(0, 6));
+type Pin = {
+  marca: string;
+  barrio: string;
+  rating: string;
+  color: string;
+  x: number;
+  y: number;
+  delay: string;
+};
+
+const pines: Pin[] = [
+  { marca: 'La Rebaja', barrio: 'Centro', rating: '4.8', color: '#b0281f', x: 32, y: 30, delay: '0s' },
+  { marca: 'Cruz Verde', barrio: 'El Barzal', rating: '4.6', color: '#1e7a45', x: 66, y: 22, delay: '0.5s' },
+  { marca: 'Pasteur', barrio: 'Siete de Agosto', rating: '4.5', color: '#22303a', x: 48, y: 62, delay: '1s' },
+  { marca: 'La Economía', barrio: 'La Esperanza', rating: '4.4', color: '#c05a32', x: 74, y: 70, delay: '1.5s' },
+];
 </script>
 
 <template>
-  <div class="visual">
-    <div class="halo" />
-    <div class="halo-core" />
-    <div class="halo-ring" />
+  <div class="recetario">
+    <svg
+      class="trazado"
+      viewBox="0 0 420 360"
+      role="img"
+      aria-label="Mapa ilustrado de Villavicencio con droguerías cercanas"
+    >
+      <defs>
+        <pattern id="retícula" width="22" height="22" patternUnits="userSpaceOnUse">
+          <path d="M22 0H0v22" fill="none" stroke="#1F6B4F" stroke-opacity="0.1" stroke-width="1" />
+        </pattern>
+      </defs>
+      <rect width="420" height="360" fill="url(#retícula)" />
+      <g fill="none" stroke="#1F6B4F" stroke-opacity="0.28" stroke-width="1.4">
+        <path d="M-10 76c62-30 78 22 132 4s86-46 148-16 96 6 160-26" />
+        <path d="M-10 118c62-30 78 22 132 4s86-46 148-16 96 6 160-26" />
+        <path d="M-10 262c62-30 78 22 132 4s86-46 148-16 96 6 160-26" />
+      </g>
+      <path
+        d="M-6 196c54 8 74-26 118-18s52 44 100 40 58-34 108-22 76 40 108 34"
+        fill="none"
+        stroke="#2A6480"
+        stroke-opacity="0.35"
+        stroke-width="3"
+        stroke-linecap="round"
+      />
+      <g fill="#1F6B4F" fill-opacity="0.12">
+        <path d="M298 300c16-14 40-12 52 4-8 18-32 26-52 16-4-2-4-14 0-20Z" />
+        <path d="M36 34c12-10 30-9 38 3-6 13-24 19-38 12-3-1-3-10 0-15Z" />
+      </g>
+      <circle cx="210" cy="180" r="86" fill="none" stroke="#1F6B4F" stroke-opacity="0.16" stroke-dasharray="3 7" />
+      <circle cx="210" cy="180" r="132" fill="none" stroke="#1F6B4F" stroke-opacity="0.1" stroke-dasharray="2 9" />
+    </svg>
 
-    <!-- Núcleo central con el logo de FarmApp -->
-    <div class="logo-wrapper">
-      <AppLogo :size="160" class="hero-logo" />
+    <div class="pines">
+      <div
+        v-for="pin in pines"
+        :key="pin.marca"
+        class="pin"
+        :style="{ left: pin.x + '%', top: pin.y + '%', '--pin-color': pin.color, animationDelay: pin.delay }"
+      >
+        <span class="pin-dot">
+          <span class="pin-core" />
+        </span>
+        <span class="pin-label">
+          <strong>{{ pin.marca }}</strong>
+          <span>{{ pin.barrio }}</span>
+          <span class="pin-rating">
+            <svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor" aria-hidden="true">
+              <path d="m12 2 3 6.4 7 1-5 4.9 1.2 7L12 18l-6.2 3.3L7 14.3 2 9.4l7-1L12 2Z" />
+            </svg>
+            {{ pin.rating }}
+          </span>
+        </span>
+      </div>
     </div>
 
-    <!-- Droguerías de Villavicencio orbitando con acceso interactivo -->
-    <RouterLink
-      v-for="(drog, idx) in destacadas"
-      :key="drog.id"
-      to="/ubicaciones"
-      class="float-badge"
-      :class="`pos-${idx}`"
-      :title="`Ver ${drog.nombre}`"
-      :aria-label="`Ver ${drog.nombre}`"
-    >
-      <div class="badge-icon">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <path d="M12 2v20M2 12h20" />
-        </svg>
-      </div>
-      <div class="badge-content">
-        <span class="badge-title">{{ drog.cadena }}</span>
-        <span class="badge-subtitle">{{ drog.barrio }} • {{ drog.es24h ? '24H' : 'Domicilio' }}</span>
-      </div>
-    </RouterLink>
+    <div class="sello" aria-hidden="true">
+      <svg viewBox="0 0 120 120" width="104" height="104" fill="currentColor">
+        <circle cx="60" cy="60" r="56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-dasharray="4 4" />
+        <circle cx="60" cy="60" r="46" fill="none" stroke="currentColor" stroke-width="1" />
+        <path d="M60 38v44M42 52h36" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+        <text x="60" y="88" text-anchor="middle" font-size="7.4" letter-spacing="1.6" fill="currentColor">FARMACIA</text>
+        <text x="60" y="26" text-anchor="middle" font-size="7.4" letter-spacing="1.6" fill="currentColor">VERIFICADA</text>
+      </svg>
+    </div>
 
-    <!-- Indicador inferior de cobertura local -->
-    <AppSurface tone="glass" radius="999px" class="chip">
-      <span class="dot" />
-      <span>Droguerías en Villavicencio • Cobertura Local</span>
-    </AppSurface>
+    <figure class="ahorro">
+      <figcaption>Ahorro promedio</figcaption>
+      <p class="ahorro-cifra">38<span>%</span></p>
+      <p class="ahorro-nota">Comparando 5 droguerías del mismo barrio</p>
+    </figure>
+
+    <p class="cobertura">
+      <span class="cobertura-punto" aria-hidden="true" />
+      {{ drogueriasVillavicencio.length }} droguerías verificadas · Villavicencio, Meta
+    </p>
   </div>
 </template>
 
 <style scoped>
-.visual {
+.recetario {
   position: relative;
-  width: min(100%, 480px);
-  aspect-ratio: 1 / 1;
-  display: grid;
-  place-items: center;
-  margin-inline: auto;
+  width: 100%;
+  aspect-ratio: 420 / 360;
+  border-radius: 22px;
+  background: var(--bg-1);
+  border: 1.5px solid var(--ink);
+  box-shadow: 8px 8px 0 rgba(22, 36, 29, 0.9);
+  overflow: visible;
+  isolation: isolate;
 }
 
-/* Fondo halo con rico contraste y resplandor en modo claro y oscuro */
-.halo {
+.trazado {
   position: absolute;
-  inset: -6%;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 50% 50%,
-    rgba(10, 132, 255, 0.45) 0%,
-    rgba(0, 180, 255, 0.22) 42%,
-    rgba(117, 251, 253, 0.12) 65%,
-    transparent 76%
-  );
-  filter: blur(28px);
-  pointer-events: none;
-}
-
-[data-theme="light"] .halo {
-  background: radial-gradient(
-    circle at 50% 50%,
-    rgba(0, 102, 255, 0.38) 0%,
-    rgba(10, 132, 255, 0.24) 40%,
-    rgba(56, 189, 248, 0.14) 65%,
-    transparent 78%
-  );
-  filter: blur(24px);
-}
-
-.halo-core {
-  position: absolute;
-  width: 56%;
-  height: 56%;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(10, 132, 255, 0.32) 0%,
-    rgba(90, 200, 250, 0.15) 55%,
-    transparent 72%
-  );
-  filter: blur(14px);
-  pointer-events: none;
-}
-
-[data-theme="light"] .halo-core {
-  background: radial-gradient(
-    circle,
-    rgba(0, 98, 204, 0.42) 0%,
-    rgba(10, 132, 255, 0.22) 55%,
-    transparent 72%
-  );
-  filter: blur(14px);
-}
-
-.halo-ring {
-  position: absolute;
-  inset: 13%;
-  border-radius: 50%;
-  border: 1px dashed rgba(140, 210, 255, 0.22);
-  pointer-events: none;
-  animation: spin-slow 50s linear infinite;
-}
-
-[data-theme="light"] .halo-ring {
-  border-color: rgba(0, 102, 255, 0.22);
-  box-shadow: inset 0 0 36px rgba(0, 102, 255, 0.06);
-}
-
-/* Núcleo central del logo */
-.logo-wrapper {
-  position: relative;
-  width: 36%;
-  max-width: 170px;
-  aspect-ratio: 1 / 1;
-  display: grid;
-  place-items: center;
-  z-index: 2;
-  animation: float-main 7s ease-in-out infinite;
-}
-
-.hero-logo {
+  inset: 0;
   width: 100%;
   height: 100%;
-  filter: drop-shadow(0 20px 42px rgba(10, 132, 255, 0.55));
+  border-radius: 21px;
+  background:
+    radial-gradient(80% 70% at 70% 20%, rgba(216, 154, 43, 0.16), transparent 62%),
+    radial-gradient(70% 60% at 20% 84%, rgba(31, 107, 79, 0.12), transparent 66%);
 }
 
-[data-theme="light"] .hero-logo {
-  filter: drop-shadow(0 18px 36px rgba(0, 85, 212, 0.42));
-}
-
-/* Badges flotantes de las empresas */
-.float-badge {
+.pines {
   position: absolute;
-  z-index: 3;
+  inset: 0;
+}
+
+.pin {
+  position: absolute;
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 12px 6px 7px;
-  border-radius: 999px;
-  text-decoration: none;
-  background: rgba(18, 26, 44, 0.75);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  box-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  transition:
-    transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 0.25s ease,
-    border-color 0.25s ease;
+  transform: translate(-50%, -50%);
+  animation: pin-in 0.7s var(--ease) backwards;
 }
 
-.float-badge:hover {
-  transform: translateY(-4px) scale(1.06);
-  border-color: rgba(117, 251, 253, 0.5);
-  box-shadow:
-    0 14px 30px -4px rgba(10, 132, 255, 0.35),
-    0 0 16px rgba(117, 251, 253, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.35);
-}
-
-[data-theme="light"] .float-badge {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(0, 102, 255, 0.18);
-  box-shadow: 0 10px 24px -4px rgba(10, 132, 255, 0.12), inset 0 1px 0 #ffffff;
-}
-
-[data-theme="light"] .float-badge:hover {
-  transform: translateY(-4px) scale(1.06);
-  border-color: rgba(0, 102, 255, 0.45);
-  box-shadow:
-    0 14px 28px -4px rgba(0, 102, 255, 0.24),
-    0 0 12px rgba(0, 102, 255, 0.15),
-    inset 0 1px 0 #ffffff;
-}
-
-/* Posiciones simétricas en constelación alrededor del logo central */
-.pos-0 {
-  top: 3%;
-  left: 0%;
-  animation: float-a 7s ease-in-out infinite 0s;
-}
-
-.pos-1 {
-  top: 3%;
-  right: 0%;
-  animation: float-b 6.6s ease-in-out infinite -1.8s;
-}
-
-.pos-2 {
-  top: 38%;
-  right: -4%;
-  animation: float-a 7.4s ease-in-out infinite -3.2s;
-}
-
-.pos-3 {
-  bottom: 8%;
-  right: 1%;
-  animation: float-b 6.8s ease-in-out infinite -4.5s;
-}
-
-.pos-4 {
-  bottom: 8%;
-  left: 1%;
-  animation: float-a 6.4s ease-in-out infinite -2.2s;
-}
-
-.pos-5 {
-  top: 38%;
-  left: -4%;
-  animation: float-b 7.2s ease-in-out infinite -5s;
-}
-
-.badge-icon {
-  width: 32px;
-  height: 32px;
-  min-width: 32px;
-  border-radius: 50%;
+.pin-dot {
   display: grid;
   place-items: center;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  overflow: hidden;
+  width: 22px;
+  height: 22px;
+  border-radius: 50% 50% 50% 2px;
+  background: var(--pin-color);
+  border: 2px solid var(--bg-1);
+  box-shadow: 0 4px 10px rgba(22, 36, 29, 0.28);
+  transform: rotate(-45deg);
+  flex: 0 0 auto;
 }
 
-[data-theme="light"] .badge-icon {
-  background: rgba(240, 246, 255, 0.95);
-  border-color: rgba(0, 102, 255, 0.15);
+.pin-core {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--bg-1);
 }
 
-.badge-icon img {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
+.pin-label {
+  display: grid;
+  gap: 1px;
+  padding: 7px 10px;
+  border-radius: 9px;
+  background: var(--bg-1);
+  border: 1px solid var(--surface-border);
+  box-shadow: 0 6px 14px -8px rgba(22, 36, 29, 0.5);
+  white-space: nowrap;
 }
 
-.badge-content {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.15;
-  text-align: left;
-}
-
-.badge-title {
-  font-size: 0.75rem;
-  font-weight: 700;
+.pin-label strong {
+  font-size: 0.72rem;
+  font-weight: 800;
   color: var(--ink);
-  white-space: nowrap;
+  letter-spacing: -0.01em;
 }
 
-[data-theme="light"] .badge-title {
-  color: #0f172a;
-}
-
-.badge-subtitle {
-  font-size: 0.64rem;
-  font-weight: 500;
+.pin-label > span:not(.pin-rating) {
+  font-size: 0.62rem;
   color: var(--muted);
-  white-space: nowrap;
 }
 
-[data-theme="light"] .badge-subtitle {
-  color: #64748b;
-}
-
-/* Chip inferior */
-.chip {
-  position: absolute;
-  bottom: -4%;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
+.pin-rating {
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 7px 15px;
-  border-radius: 999px;
-  font-size: 0.74rem;
+  gap: 3px;
+  margin-top: 2px;
+  font-size: 0.64rem;
+  font-weight: 800;
+  color: var(--verde-texto);
+}
+
+.sello {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  transform: rotate(9deg);
+  opacity: 0.9;
+  color: var(--verde);
+}
+
+.ahorro {
+  position: absolute;
+  left: -26px;
+  bottom: -44px;
+  margin: 0;
+  padding: 16px 20px 14px;
+  border-radius: 14px;
+  background: var(--panel-oscuro);
+  color: var(--texto-panel);
+  border: 1px solid var(--panel-oscuro);
+  box-shadow: 6px 6px 0 rgba(192, 90, 50, 0.55);
+  min-width: 186px;
+}
+
+.ahorro figcaption {
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--texto-panel);
+  opacity: 0.72;
+}
+
+.ahorro-cifra {
+  margin: 2px 0 0;
+  font-family: var(--font-display);
+  font-size: 2.9rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--texto-panel);
+  font-variant-numeric: tabular-nums;
+}
+
+.ahorro-cifra span {
+  font-size: 1.4rem;
+  vertical-align: super;
+  color: var(--ambar);
+}
+
+.ahorro-nota {
+  margin-top: 4px;
+  font-size: 0.66rem;
+  line-height: 1.45;
+  color: var(--texto-panel);
+  opacity: 0.75;
+  max-width: 22ch;
+}
+
+.cobertura {
+  position: absolute;
+  right: 16px;
+  bottom: -46px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.72rem;
   font-weight: 600;
   color: var(--ink-soft);
-  z-index: 4;
-  white-space: nowrap;
 }
 
-[data-theme="light"] .chip {
-  background: rgba(255, 255, 255, 0.92);
-  border-color: rgba(0, 102, 255, 0.16);
-  box-shadow: 0 8px 20px -4px rgba(10, 132, 255, 0.1), inset 0 1px 0 #ffffff;
-  color: #334155;
-}
-
-.dot {
+.cobertura-punto {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--mint);
-  box-shadow: 0 0 0 4px rgba(126, 224, 192, 0.22);
-  animation: pulse 2.4s ease-in-out infinite;
+  background: var(--verde);
+  box-shadow: 0 0 0 3px rgba(31, 107, 79, 0.18);
 }
 
-@keyframes float-main {
-  0%,
-  100% {
-    transform: translateY(0) rotate(-0.5deg);
+@keyframes pin-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -34%);
   }
-  50% {
-    transform: translateY(-10px) rotate(0.8deg);
-  }
-}
-
-@keyframes float-a {
-  0%,
-  100% {
-    transform: translateY(0) rotate(-0.8deg);
-  }
-  50% {
-    transform: translateY(-8px) rotate(1deg);
-  }
-}
-
-@keyframes float-b {
-  0%,
-  100% {
-    transform: translateY(0) rotate(0.8deg);
-  }
-  50% {
-    transform: translateY(-9px) rotate(-1deg);
-  }
-}
-
-@keyframes spin-slow {
   to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes pulse {
-  0%,
-  100% {
     opacity: 1;
-  }
-  50% {
-    opacity: 0.55;
+    transform: translate(-50%, -50%);
   }
 }
 
-@media (max-width: 560px) {
-  .logo-wrapper,
-  .float-badge {
-    animation: none;
+@media (max-width: 1024px) {
+  .recetario {
+    max-width: 460px;
+    margin-inline: auto;
+    box-shadow: 6px 6px 0 rgba(22, 36, 29, 0.9);
   }
-  .visual {
-    width: min(100%, 380px);
+  .sello {
+    right: -6px;
+    transform: rotate(9deg) scale(0.82);
   }
 }
 
-@media (max-width: 440px) {
-  .badge-content {
+@media (max-width: 620px) {
+  .recetario {
+    aspect-ratio: 1 / 1;
+    box-shadow: 4px 4px 0 rgba(22, 36, 29, 0.9);
+  }
+  .pin-label {
+    padding: 5px 7px;
+  }
+  .pin-label strong {
+    font-size: 0.64rem;
+  }
+  .ahorro {
+    left: 8px;
+    bottom: -22px;
+    padding: 12px 14px;
+    min-width: 148px;
+  }
+  .ahorro-cifra {
+    font-size: 2.1rem;
+  }
+  .cobertura {
+    position: static;
+    margin: 28px auto 0;
+    justify-content: center;
+  }
+  .sello {
     display: none;
-  }
-  .float-badge {
-    padding: 6px;
-    border-radius: 50%;
-  }
-  .badge-icon {
-    width: 30px;
-    height: 30px;
-    min-width: 30px;
-  }
-  .badge-icon img {
-    width: 22px;
-    height: 22px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .logo-wrapper,
-  .float-badge,
-  .halo-ring,
-  .dot {
-    animation: none !important;
+  .pin {
+    animation: none;
   }
 }
 </style>

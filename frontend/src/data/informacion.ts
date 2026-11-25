@@ -6,7 +6,7 @@ export type ValorInformacion = {
 export const valores: ValorInformacion[] = [
   { titulo: 'Información confiable', texto: 'Fuentes verificadas y actualizadas sobre medicamentos.' },
   { titulo: 'Cercanía', texto: 'Conectamos personas con droguerías y farmacias de su zona.' },
-  { titulo: 'Comunidad', texto: 'Impulsamos emprendimientos locales desde nuestra feria.' },
+  { titulo: 'Comunidad', texto: 'Impulsamos emprendimientos locales y el comercio de barrio.' },
 ];
 
 export const texto =

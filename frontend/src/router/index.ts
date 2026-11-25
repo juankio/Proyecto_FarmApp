@@ -18,10 +18,6 @@ export const router = createRouter({
       meta: { title: 'Servicios' },
     },
     {
-      path: '/feria',
-      redirect: '/ubicaciones',
-    },
-    {
       path: '/proyectos/:slug',
       redirect: '/ubicaciones',
     },
@@ -51,7 +47,7 @@ export const router = createRouter({
     },
     {
       path: '/info-cenacap',
-      redirect: '/feria',
+      redirect: '/informacion',
     },
     {
       path: '/lenguajes',

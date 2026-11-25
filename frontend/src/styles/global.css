@@ -33,27 +33,28 @@ h5,
 h6 {
   font-family: var(--font-display);
   color: var(--ink);
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 1.08;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
   margin: 0;
   text-wrap: balance;
 }
 
 h1 {
-  font-size: clamp(2.3rem, 5.8vw, 4.4rem);
-  letter-spacing: -0.052em;
-  line-height: 1.02;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 600;
+  letter-spacing: -0.028em;
+  line-height: 1.03;
 }
 
 h2 {
-  font-size: clamp(1.75rem, 3.4vw, 2.7rem);
-  letter-spacing: -0.045em;
+  font-size: clamp(1.7rem, 3.2vw, 2.55rem);
+  letter-spacing: -0.022em;
 }
 
 h3 {
   font-size: clamp(1.1rem, 1.6vw, 1.3rem);
-  letter-spacing: -0.03em;
+  letter-spacing: -0.012em;
 }
 
 p {
@@ -96,8 +97,8 @@ select option {
 }
 
 ::selection {
-  background: rgba(10, 132, 255, 0.34);
-  color: #fff;
+  background: rgba(31, 107, 79, 0.24);
+  color: var(--verde-deep);
 }
 
 ::-webkit-scrollbar {
@@ -184,16 +185,17 @@ button {
 .eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 7px 14px;
-  border-radius: 999px;
-  background: rgba(90, 200, 250, 0.1);
-  border: 1px solid rgba(90, 200, 250, 0.24);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
-  color: var(--aqua);
-  font-size: 0.72rem;
+  gap: 10px;
+  padding: 0 0 6px;
+  border-radius: 0;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid rgba(31, 107, 79, 0.35);
+  box-shadow: none;
+  color: var(--verde-texto);
+  font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
 }
 
@@ -226,17 +228,15 @@ button {
 .glass {
   position: relative;
   border-radius: var(--radius-md);
-  background: var(--glass);
-  -webkit-backdrop-filter: blur(var(--blur-lg)) saturate(180%);
-  backdrop-filter: blur(var(--blur-lg)) saturate(180%);
-  border: 1px solid var(--line);
-  box-shadow: var(--inset), var(--shadow-md);
+  background: var(--surface-raised);
+  border: 1px solid var(--surface-border);
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
   isolation: isolate;
 }
 
 .glass::before {
-  content: '';
+  content: none;
   position: absolute;
   inset: 0;
   border-radius: inherit;
@@ -248,7 +248,7 @@ button {
 }
 
 .glass::after {
-  content: '';
+  content: none;
   position: absolute;
   inset: 0;
   border-radius: inherit;
@@ -291,26 +291,17 @@ button {
   overflow: hidden;
   isolation: isolate;
   border-radius: var(--radius-md);
-  border: 1px solid var(--line);
-  box-shadow: var(--inset), var(--shadow-md);
-  -webkit-backdrop-filter: blur(var(--blur-lg)) saturate(180%);
-  backdrop-filter: blur(var(--blur-lg)) saturate(180%);
+  border: 1px solid var(--surface-border);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-sm);
 }
 
 .surface::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  z-index: 0;
-  background:
-    radial-gradient(120% 80% at 50% -12%, rgba(255, 255, 255, 0.18), transparent 56%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 32%);
+  content: none;
 }
 
 .surface::after {
-  content: '';
+  content: none;
   position: absolute;
   inset: 0;
   border-radius: inherit;
@@ -341,15 +332,23 @@ button {
 }
 
 .surface--raised {
-  background: var(--glass-strong);
-  border-color: rgba(255, 255, 255, 0.24);
-  box-shadow: var(--inset), var(--glow-blue);
+  background: var(--surface-raised);
+  border-color: var(--surface-border);
+  box-shadow: var(--shadow-md);
 }
 
 .surface--dark {
   background: var(--glass-dark);
   border-color: rgba(255, 255, 255, 0.12);
-  color: var(--ink);
+  color: var(--texto-panel);
+}
+
+.surface--dark :is(h1, h2, h3, h4, p, span) {
+  color: var(--texto-panel);
+}
+
+.surface--dark .eyebrow {
+  color: var(--ambar);
 }
 
 [data-theme="light"] .surface {

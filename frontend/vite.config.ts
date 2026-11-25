@@ -18,6 +18,14 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       proxy: {
+        '/api/farmacias/foto': {
+          target: 'http://localhost:3000',
+          changeOrigin: true,
+        },
+        '/api/medicamentos': {
+          target: 'http://localhost:3000',
+          changeOrigin: true,
+        },
         '/api': {
           target: proxyTarget,
           changeOrigin: true,

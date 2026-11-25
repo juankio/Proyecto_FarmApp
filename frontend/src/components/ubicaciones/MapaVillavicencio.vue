@@ -1,24 +1,40 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import type { Drogueria } from '../../data/droguerias';
-import { VILLAVICENCIO_BOUNDS, obtenerCadenaInfo } from '../../data/droguerias';
+import {
+  VILLAVICENCIO_BOUNDS,
+  calificacionDrogueria,
+  obtenerCadenaInfo,
+  resenasDrogueria,
+} from '../../data/droguerias';
+import { logoMarkup } from '../../utils/logosMarcas';
+import { COMUNAS, comunaPorId } from '../../data/comunas';
 
 const props = defineProps<{
   droguerias: (Drogueria & { distanciaKm?: number; precioOferta?: number; esMejorPrecio?: boolean })[];
+  drogueriasTotales?: (Drogueria & { distanciaKm?: number })[];
   userLat: number | null;
   userLng: number | null;
   barrioSeleccionado?: string;
+  comuna?: number | null;
+  precision?: number | null;
+  ajustandoUbicacion?: boolean;
+  mensajeVacio?: string;
+  integrado?: boolean;
   minimal?: boolean;
 }>();
 
 const emit = defineEmits<{
   (e: 'select-drogueria', id: number): void;
   (e: 'select-barrio', barrio: string): void;
+  (e: 'select-comuna', id: number): void;
+  (e: 'update-ubicacion', coords: { lat: number; lng: number }): void;
 }>();
 
 const mapContainer = ref<HTMLDivElement | null>(null);
 const cargando = ref(true);
 const errorCarga = ref(false);
+const comunaPendiente = ref<number | null>(null);
 const sectorActivo = ref<string>('todos');
 
 // Referencias a instancias de Leaflet
@@ -38,17 +54,15 @@ function enfocarDrogueria(id: number) {
   item.marker.openPopup();
 }
 
-defineExpose({ enfocarDrogueria, centrarTodaLaCiudad });
-
 // Sectores de Villavicencio para navegación rápida
 const SECTORES = [
-  { id: 'todos', label: '🏙️ Toda la Ciudad' },
-  { id: 'barzal', label: '🏥 El Barzal (Salud)', lat: 4.143, lng: -73.6345, zoom: 16 },
-  { id: 'centro', label: '🏛️ Centro Histórico', lat: 4.1505, lng: -73.6365, zoom: 16 },
-  { id: 'siete-agosto', label: '🛍️ 7 de Agosto / Viva', lat: 4.136, lng: -73.637, zoom: 15 },
-  { id: 'esperanza', label: '🏘️ La Esperanza', lat: 4.133, lng: -73.6265, zoom: 15 },
-  { id: 'porfia', label: '📍 Porfía / Sur', lat: 4.073, lng: -73.663, zoom: 14 },
-  { id: 'oriente', label: '🗺️ Kirpas / San Benito', lat: 4.128, lng: -73.6, zoom: 14 },
+  { id: 'todos', label: 'Toda la ciudad' },
+  { id: 'barzal', label: 'El Barzal (Salud)', lat: 4.143, lng: -73.6345, zoom: 16 },
+  { id: 'centro', label: 'Centro histórico', lat: 4.1505, lng: -73.6365, zoom: 16 },
+  { id: 'siete-agosto', label: '7 de Agosto / Viva', lat: 4.136, lng: -73.637, zoom: 15 },
+  { id: 'esperanza', label: 'La Esperanza', lat: 4.133, lng: -73.6265, zoom: 15 },
+  { id: 'porfia', label: 'Porfía / Sur', lat: 4.073, lng: -73.663, zoom: 14 },
+  { id: 'oriente', label: 'Kirpas / San Benito', lat: 4.128, lng: -73.6, zoom: 14 },
 ] as const;
 
 // Cargar Leaflet (local primero, fallback a cdnjs)
@@ -111,21 +125,19 @@ const CAPAS_MAPA: Record<
   { label: string; url: string; subdomains?: string[]; maxZoom: number; attribution: string }
 > = {
   osm: {
-    label: '🗺️ Calles (OpenStreetMap)',
-    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    subdomains: ['a', 'b', 'c'],
+    label: 'Calles',
+    url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
     maxZoom: 19,
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors',
+    attribution: '&copy; OpenStreetMap',
   },
   esri: {
-    label: '🏢 Calles Esri',
+    label: 'Detalle',
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
     maxZoom: 18,
-    attribution: 'Tiles &copy; <a href="https://www.esri.com" target="_blank">Esri</a>',
+    attribution: 'Tiles &copy; <a href="https://www.esri.com" target="_blank" rel="noopener">Esri</a>',
   },
   satelite: {
-    label: '🛰️ Satélite Real',
+    label: 'Satélite',
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     maxZoom: 18,
     attribution:
@@ -155,19 +167,25 @@ function actualizarCapaBase(L: any) {
 
   // Si por alguna razón la capa seleccionada falla, respaldar con OpenStreetMap
   tileLayer.on('tileerror', () => {
-    if (tipoCapa.value !== 'osm') {
-      console.warn('[FarmApp] Alternando a OpenStreetMap estándar');
-      tipoCapa.value = 'osm';
-      mapInstance.removeLayer(tileLayer);
-      tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        subdomains: ['a', 'b', 'c'],
-        attribution: '&copy; OpenStreetMap',
-      }).addTo(mapInstance);
-    }
+    console.warn('[FarmApp] Tile falló, se retira capa actual');
+    if (!mapInstance || !tileLayer) return;
+    mapInstance.removeLayer(tileLayer);
+    tileLayer = null;
+    tipoCapa.value = 'osm';
+    tileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap',
+    }).addTo(mapInstance);
   });
 
   tileLayer.addTo(mapInstance);
+}
+
+function reintentarMapa(L: any) {
+  if (!mapInstance) return;
+  errorCarga.value = false;
+  tipoCapa.value = 'osm';
+  actualizarCapaBase(L);
 }
 
 function inicializarMapa(L: any) {
@@ -180,6 +198,19 @@ function inicializarMapa(L: any) {
     minZoom: 11,
     maxZoom: 18,
     scrollWheelZoom: true,
+  });
+
+  const seleccionarComunaDesdeMapa = (evento: Event) => {
+    const objetivo = (evento.target as HTMLElement | null)?.closest?.('[data-comuna]');
+    if (!objetivo || objetivo.classList.contains('cluster-vacia')) return;
+    const id = Number(objetivo.getAttribute('data-comuna'));
+    if (Number.isFinite(id)) emit('select-comuna', id);
+  };
+  mapContainer.value.addEventListener('pointerdown', seleccionarComunaDesdeMapa, true);
+  mapInstance.on('click', (evento: any) => {
+    if (props.ajustandoUbicacion) {
+      emit('update-ubicacion', { lat: evento.latlng.lat, lng: evento.latlng.lng });
+    }
   });
 
   actualizarCapaBase(L);
@@ -203,6 +234,8 @@ function inicializarMapa(L: any) {
   resizeObserver.observe(mapContainer.value);
 
   renderizarMarcadores(L);
+  mapInstance.on('zoomend', () => renderizarMarcadores(L));
+  if (props.comuna != null) irAComuna(props.comuna);
   cargando.value = false;
 
   // Ajuste inicial para abarcar toda la ciudad de Villavicencio
@@ -220,32 +253,62 @@ function renderizarMarcadores(L: any) {
   markersLayer.clearLayers();
   markersMap.clear();
 
-  if (!props.droguerias.length) return;
+  if (!props.droguerias.length && !props.drogueriasTotales?.length) return;
 
-  props.droguerias.forEach((d) => {
+  const zoom = mapInstance.getZoom();
+  // Con comuna activa se conservan los 10 círculos para poder cambiar de zona, incluso al hacer zoom.
+  const agrupar = zoom <= 14 || props.comuna != null;
+  // Con una comuna activa se conservan los 10 círculos para poder cambiar de zona.
+  const base =
+    props.comuna != null && props.drogueriasTotales?.length ? props.drogueriasTotales : props.droguerias;
+  const grupos = new Map<number, typeof base>();
+
+  base.forEach((d) => {
+    const clave = agrupar ? d.comuna : d.id;
+    const lista = grupos.get(clave) ?? [];
+    lista.push(d);
+    grupos.set(clave, lista);
+  });
+
+  grupos.forEach((lista, idComuna) => {
+    if (agrupar && (lista.length > 1 || props.comuna != null)) {
+      const comuna = comunaPorId(idComuna);
+      if (comuna) {
+        const iconoGrupo = L.divIcon({
+          className: 'farmapp-cluster',
+          html: `<div class="cluster-pin cluster-comuna ${props.comuna === comuna.id ? 'cluster-activa' : ''}" data-comuna="${comuna.id}" style="--comuna-color:${comuna.color}" title="Comuna ${comuna.id} · ${comuna.nombre} · ${lista.length} droguerías">${comuna.id}</div>`,
+          iconSize: [40, 40],
+          iconAnchor: [20, 20],
+        });
+        const grupo = L.marker(comuna.centro, {
+          icon: iconoGrupo,
+          title: `Comuna ${comuna.id} · ${comuna.nombre}`,
+        });
+        markersLayer.addLayer(grupo);
+        return;
+      }
+    }
+
+    const d = lista[0];
     const brand = obtenerCadenaInfo(d.cadena);
-    const clasePin = `pin-${brand.slug}`;
-    const badge24hHtml = d.es24h ? '<span class="pin-badge-24h">24H</span>' : '';
-    const afiliadaClass = d.afiliada ? 'pin-afiliada-glow' : '';
-    const precioTagHtml = d.precioOferta
-      ? `<span class="pin-price-tag ${d.esMejorPrecio ? 'price-best' : ''}">$${Math.round(d.precioOferta).toLocaleString('es-CO')}</span>`
-      : '';
+
+    const opiniones = resenasDrogueria(d.id);
 
     const customIcon = L.divIcon({
       className: 'farmapp-leaflet-marker',
       html: `
-        <div class="custom-pin ${clasePin} ${afiliadaClass}" title="${d.nombre} (${brand.nombre})">
-          <span class="pin-symbol">${brand.icono}</span>
-          ${badge24hHtml}
-          ${precioTagHtml}
+        <div class="custom-pin" title="${d.nombre} (${brand.nombre})">
+          <span class="pin-symbol" style="width:26px;height:26px;flex:0 0 26px;overflow:hidden;border-radius:50%">
+            ${logoMarkup(d.cadena, 26)}
+          </span>
         </div>
       `,
-      iconSize: [30, 30],
-      iconAnchor: [15, 30],
+      iconSize: [34, 34],
+      iconAnchor: [17, 17],
       popupAnchor: [0, -30],
     });
 
-    const marker = L.marker([d.lat, d.lng], { icon: customIcon });
+    const marker = L.marker([d.lat, d.lng], { icon: customIcon, title: `${d.nombre} · ${brand.nombre}` });
     markersMap.set(d.id, { marker, lat: d.lat, lng: d.lng });
 
     const linkWhatsApp = `https://wa.me/${d.whatsapp}?text=${encodeURIComponent('Hola ' + d.nombre + ', los vi en FarmApp Villavicencio.')}`;
@@ -257,25 +320,31 @@ function renderizarMarcadores(L: any) {
 
     const badgeTipoHtml =
       brand.tipo === 'independiente'
-        ? `<span class="popup-brand-badge brand-independiente">🏺 Boticario de Barrio</span>`
-        : `<span class="popup-brand-badge" style="background:${brand.colorLight}; color:${brand.color}; border-color:${brand.color}44;">🏷️ ${brand.nombre}</span>`;
+        ? `<span class="popup-brand-badge brand-independiente">Boticario de barrio</span>`
+        : `<span class="popup-brand-badge" style="background:${brand.colorLight}; color:${brand.color}; border-color:${brand.color}55;">${brand.nombre}</span>`;
 
     const popupHtml = `
       <div class="leaflet-popup-card">
+        ${logoMarkup(d.cadena, 46)}
         <div class="popup-pill-row">
           ${badgeTipoHtml}
           <span class="popup-barrio">${d.barrio}</span>
         </div>
         <div class="popup-status-row">
-          <span class="popup-tag ${d.es24h ? 'tag-green' : 'tag-blue'}">${d.es24h ? 'Abierto 24 Horas' : 'Horario Diurno'}</span>
-          ${d.afiliada ? '<span class="popup-tag tag-gold">★ Verificada</span>' : ''}
-          ${d.domicilio ? '<span class="popup-tag tag-cyan">🛵 Domicilio</span>' : ''}
+          <span class="popup-tag ${d.es24h ? 'tag-green' : 'tag-verde'}">${d.es24h ? 'Abierto 24 Horas' : 'Horario Diurno'}</span>
+          ${d.afiliada ? '<span class="popup-tag tag-gold">Verificada</span>' : ''}
+          ${d.domicilio ? '<span class="popup-tag tag-terracota">Domicilio</span>' : ''}
         </div>
         <h4 class="popup-title">${d.nombre}</h4>
+        <p class="popup-rating">
+          <span class="popup-rating-value">${calificacionDrogueria(d.id)}</span>
+          <span class="popup-rating-stars" aria-hidden="true">★★★★★</span>
+          <span class="popup-rating-count">${opiniones} reseñas</span>
+        </p>
         <p class="popup-dir">${d.direccion}</p>
         ${distanciaHtml}
         <p class="popup-meta"><strong>Horario:</strong> ${d.horario}</p>
-        <p class="popup-meta"><strong>Teléfono:</strong> <a href="tel:${d.telefono}">${d.telefono}</a></p>
+        ${d.telefono ? `<p class="popup-meta"><strong>Teléfono:</strong> <a href="tel:${d.telefono}">${d.telefono}</a></p>` : ''}
         <div class="popup-btn-row">
           <a href="${linkWhatsApp}" target="_blank" rel="noopener" class="popup-btn popup-btn--wa">
             Pedir por WhatsApp
@@ -295,6 +364,23 @@ function renderizarMarcadores(L: any) {
 
     markersLayer.addLayer(marker);
   });
+
+  if (agrupar) {
+    COMUNAS.forEach((comuna) => {
+      if (grupos.has(comuna.id)) return;
+      const icono = L.divIcon({
+        className: 'farmapp-cluster',
+        html: `<div class="cluster-pin cluster-comuna cluster-vacia" data-comuna="${comuna.id}" style="--comuna-color:${comuna.color}" title="Comuna ${comuna.id} · ${comuna.nombre} · sin droguerías registradas">${comuna.id}</div>`,
+        iconSize: [40, 40],
+        iconAnchor: [20, 20],
+      });
+      const marcador = L.marker(comuna.centro, {
+        icon: icono,
+        title: `Comuna ${comuna.id} · ${comuna.nombre} · sin droguerías`,
+      });
+      markersLayer.addLayer(marcador);
+    });
+  }
 }
 
 function actualizarUbicacionUsuario(L: any) {
@@ -313,7 +399,7 @@ function actualizarUbicacionUsuario(L: any) {
     const userPos: [number, number] = [props.userLat, props.userLng];
 
     userAccuracyCircle = L.circle(userPos, {
-      radius: 350,
+      radius: Math.min(3000, Math.max(50, props.precision ?? 350)),
       color: '#0a84ff',
       fillColor: '#0a84ff',
       fillOpacity: 0.16,
@@ -349,6 +435,13 @@ function centrarTodaLaCiudad() {
       duration: 0.8,
     });
   }
+}
+
+function irAComuna(id: number) {
+  comunaPendiente.value = id;
+  const comuna = comunaPorId(id);
+  if (!mapInstance || !comuna) return;
+  mapInstance.flyTo(comuna.centro, 15, { duration: 1 });
 }
 
 function irASector(sector: (typeof SECTORES)[number]) {
@@ -406,6 +499,15 @@ watch(
   },
 );
 
+watch(
+  () => props.comuna,
+  (id) => {
+    if (!mapInstance) return;
+    if (id == null) centrarTodaLaCiudad();
+    else irAComuna(id);
+  },
+);
+
 onMounted(async () => {
   try {
     const L = await cargarLeafletScript();
@@ -435,17 +537,81 @@ onBeforeUnmount(() => {
     mapInstance = null;
   }
 });
+
+defineExpose({ enfocarDrogueria, centrarTodaLaCiudad, irAComuna });
 </script>
 
 <template>
-  <div class="map-card-wrapper" :class="{ 'map-card-wrapper--minimal': minimal }">
-    <div v-if="!minimal" class="map-header">
+  <div
+    class="map-card-wrapper"
+    :class="{ 'map-card-wrapper--minimal': minimal, 'map-card-wrapper--integrado': integrado }"
+  >
+    <div v-if="!minimal && !integrado" class="map-header">
       <div class="map-title-row">
         <span class="map-badge">Red Metropolitana</span>
         <h3>Mapa Oficial de Droguerías en Villavicencio</h3>
       </div>
+    </div>
+
+    <div class="map-layout">
+    <slot name="zonas">
+      <div v-if="!minimal" class="sectors-bar">
+      <button
+        v-for="s in SECTORES"
+        :key="s.id"
+        type="button"
+        class="sector-pill"
+        :class="{ active: sectorActivo === s.id }"
+        @click="irASector(s)"
+      >
+        {{ s.label }}
+      </button>
+      </div>
+    </slot>
+
+    <!-- Contenedor del Mapa Real -->
+    <div class="map-stage" :class="{ 'map-stage--minimal': minimal, 'map-stage--ajustando': ajustandoUbicacion }">
+      <div v-if="cargando" class="map-loading-overlay">
+        <div class="loading-spinner" />
+        <p>Cargando mapa de Villavicencio con droguerías...</p>
+      </div>
+
+      <div v-if="errorCarga" class="map-error-overlay">
+        <p>No se pudo conectar con el servicio de mapas en este momento.</p>
+        <div class="map-error-actions">
+          <button type="button" class="retry-maps-btn" @click="reintentarMapa">
+            Reintentar conexión
+          </button>
+          <a
+            href="https://www.google.com/maps/search/droguerias/@4.135,-73.630,13z"
+            target="_blank"
+            rel="noopener"
+            class="external-maps-link"
+          >
+            Abrir en Google Maps
+          </a>
+        </div>
+      </div>
+
+      <div v-if="!cargando && !errorCarga && props.droguerias.length === 0 && mensajeVacio" class="map-empty-overlay">
+        <div class="map-empty-card">
+          <span class="map-empty-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+              <circle cx="11" cy="11" r="6.5" />
+              <path d="m16 16 4.5 4.5" />
+            </svg>
+          </span>
+          <p>{{ mensajeVacio }}</p>
+          <div class="map-empty-actions"><slot name="acciones-vacias" /></div>
+        </div>
+      </div>
+
+      <div ref="mapContainer" class="leaflet-map-element" />
+    </div>
+    </div>
+
+    <div class="map-footer">
       <div class="map-controls-row">
-        <!-- Selector de capas libres (Cero API Key) -->
         <div class="layer-selector" role="group" aria-label="Tipo de mapa">
           <button
             v-for="(cfg, key) in CAPAS_MAPA"
@@ -458,7 +624,6 @@ onBeforeUnmount(() => {
             {{ cfg.label }}
           </button>
         </div>
-
         <button type="button" class="reset-bounds-btn" @click="centrarTodaLaCiudad">
           Ver toda la ciudad
         </button>
@@ -469,43 +634,8 @@ onBeforeUnmount(() => {
           <span class="legend-item"><span class="dot dot-independiente" /> De Barrio (Boticario)</span>
           <span class="legend-item"><span class="badge-pill-24h">24H</span> De Turno</span>
         </div>
+        <slot name="controles-extra" />
       </div>
-    </div>
-
-    <!-- Barra de acceso rápido a sectores clave de la ciudad -->
-    <div v-if="!minimal" class="sectors-bar">
-      <button
-        v-for="s in SECTORES"
-        :key="s.id"
-        type="button"
-        class="sector-pill"
-        :class="{ active: sectorActivo === s.id }"
-        @click="irASector(s)"
-      >
-        {{ s.label }}
-      </button>
-    </div>
-
-    <!-- Contenedor del Mapa Real -->
-    <div class="map-stage" :class="{ 'map-stage--minimal': minimal }">
-      <div v-if="cargando" class="map-loading-overlay">
-        <div class="loading-spinner" />
-        <p>Cargando mapa de Villavicencio con droguerías...</p>
-      </div>
-
-      <div v-if="errorCarga" class="map-error-overlay">
-        <p>No se pudo conectar con el servicio de mapas en este momento.</p>
-        <a
-          href="https://www.google.com/maps/search/droguerias/@4.135,-73.630,13z"
-          target="_blank"
-          rel="noopener"
-          class="external-maps-link"
-        >
-          Abrir en Google Maps
-        </a>
-      </div>
-
-      <div ref="mapContainer" class="leaflet-map-element" />
     </div>
   </div>
 </template>
@@ -518,6 +648,16 @@ onBeforeUnmount(() => {
   box-shadow: var(--shadow-sm), var(--inset);
   padding: 16px;
   margin-bottom: 24px;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.map-card-wrapper--integrado {
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  border-top: none;
+  box-shadow: var(--shadow-sm);
+  padding-top: 8px;
+  margin-top: -1px;
 }
 
 .map-card-wrapper--minimal {
@@ -701,9 +841,21 @@ onBeforeUnmount(() => {
   font-weight: 700;
 }
 
+.map-layout {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  min-width: 0;
+}
+
+.map-footer {
+  padding-top: 12px;
+}
+
 .map-stage {
   position: relative;
-  width: 100%;
+  flex: 1 1 auto;
+  min-width: 0;
   height: 520px;
   border-radius: 16px;
   overflow: hidden;
@@ -716,10 +868,15 @@ onBeforeUnmount(() => {
   border: none;
 }
 
+.map-stage--ajustando,
+.map-stage--ajustando .leaflet-container {
+  cursor: crosshair !important;
+}
+
 .leaflet-map-element {
   width: 100%;
   height: 100%;
-  background: #0b1220;
+  background: #efe7d6;
 }
 
 /* Spinner y overlays */
@@ -754,9 +911,97 @@ onBeforeUnmount(() => {
 }
 
 .external-maps-link {
-  color: var(--aqua);
+  color: var(--verde-deep);
   font-weight: 600;
   text-decoration: underline;
+}
+
+.map-error-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.map-empty-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: var(--surface-raised);
+}
+
+.map-empty-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  max-width: 420px;
+  padding: 24px;
+  border-radius: 16px;
+  text-align: center;
+  background: var(--bg-1);
+  border: 1px solid var(--surface-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.map-empty-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: var(--verde);
+  background: rgba(31, 107, 79, 0.1);
+}
+
+.map-empty-card p {
+  font-size: 0.9rem;
+  color: var(--ink);
+}
+
+.map-empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.map-empty-actions button {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--surface-border);
+  background: var(--bg-2);
+  color: var(--verde-texto);
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.map-empty-actions button:hover {
+  border-color: var(--verde);
+}
+
+.retry-maps-btn {
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 10px;
+  border: 1.5px solid var(--verde-deep);
+  background: var(--verde);
+  color: var(--sobre-acento);
+  font-family: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.18s;
+}
+
+.retry-maps-btn:hover {
+  background: var(--verde-deep);
 }
 
 /* Marcadores Personalizados de Leaflet */
@@ -766,40 +1011,110 @@ onBeforeUnmount(() => {
 }
 
 :deep(.custom-pin) {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 50% 50% 50% 0;
-  transform: rotate(-45deg);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45);
-  border: 2px solid #ffffff;
+  width: 34px;
+  height: 34px;
+  padding: 3px;
+  border-radius: 50%;
+  background: var(--verde);
+  border: 1.5px solid #fffdf7;
+  box-shadow: 0 3px 10px -3px rgba(22, 36, 29, 0.5);
   cursor: pointer;
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.18s var(--ease), box-shadow 0.18s var(--ease);
 }
 
 :deep(.custom-pin:hover) {
-  transform: rotate(-45deg) scale(1.22);
+  transform: scale(1.16);
+  box-shadow: 0 8px 18px -4px rgba(22, 36, 29, 0.55);
   z-index: 9999 !important;
 }
 
+:deep(.farmapp-cluster) {
+  background: transparent;
+  border: none;
+}
+
+:deep(.cluster-pin) {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--verde);
+  color: var(--sobre-acento);
+  border: 1.5px solid #fffdf7;
+  box-shadow: 0 0 0 3px rgba(31, 107, 79, 0.2), 0 6px 14px -6px rgba(22, 36, 29, 0.5);
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.18s var(--ease);
+}
+
+:deep(.cluster-activa) {
+  box-shadow: 0 0 0 5px rgba(31, 107, 79, 0.45), 0 8px 16px -6px rgba(22, 36, 29, 0.6);
+  transform: scale(1.08);
+}
+
+:deep(.cluster-vacia) {
+  opacity: 0.45;
+  border-style: dashed;
+  pointer-events: none;
+  cursor: default;
+}
+
+:deep(.cluster-comuna) {
+  background: var(--comuna-color);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--comuna-color) 22%, transparent),
+    0 8px 16px -6px rgba(22, 36, 29, 0.5);
+}
+
+:deep(.cluster-pin:hover) {
+  transform: scale(1.1);
+}
+
 :deep(.pin-symbol) {
-  transform: rotate(45deg);
   display: flex;
+  flex: 0 0 26px;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
-  font-size: 10.5px;
-  font-weight: 900;
-  color: #ffffff;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  overflow: hidden;
   user-select: none;
   line-height: 1;
 }
 
 :deep(.pin-symbol svg) {
   display: block;
+}
+
+:deep(.logo-marca) {
+  display: block;
+  flex: 0 0 auto;
+}
+
+:deep(.leaflet-container .leaflet-marker-pane .pin-symbol .logo-marca-img) {
+  width: 26px !important;
+  height: 26px !important;
+  max-width: 26px !important;
+  max-height: 26px !important;
+  object-fit: contain !important;
+  border-radius: 50% !important;
+  background: #fffdf7 !important;
+}
+
+:deep(.leaflet-popup-card > .logo-marca-img) {
+  width: 46px;
+  height: 46px;
+  max-width: 46px;
+  max-height: 46px;
+  object-fit: contain;
+  margin: 0 auto;
 }
 
 :deep(.pin-txt-lr) {
@@ -826,7 +1141,6 @@ onBeforeUnmount(() => {
   border-radius: 6px;
   border: 1.5px solid #ffffff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-  transform: rotate(45deg);
   pointer-events: none;
   letter-spacing: -0.5px;
 }
@@ -874,7 +1188,7 @@ onBeforeUnmount(() => {
 
 :deep(.pin-price-tag) {
   position: absolute;
-  bottom: -20px;
+  bottom: -8px;
   left: 50%;
   transform: translateX(-50%);
   background: var(--bg-1, #0c1426);
@@ -1021,22 +1335,22 @@ onBeforeUnmount(() => {
 
 :deep(.tag-green) {
   background: rgba(16, 185, 129, 0.2);
-  color: #10b981;
+  color: var(--verde-texto);
 }
 
-:deep(.tag-blue) {
-  background: rgba(2, 132, 199, 0.2);
-  color: #0284c7;
+:deep(.tag-verde) {
+  background: rgba(31, 107, 79, 0.16);
+  color: var(--verde-deep);
 }
 
 :deep(.tag-gold) {
-  background: rgba(245, 158, 11, 0.2);
-  color: #f59e0b;
+  background: rgba(216, 154, 43, 0.16);
+  color: #9a6a0a;
 }
 
-:deep(.tag-cyan) {
-  background: rgba(6, 182, 212, 0.2);
-  color: #06b6d4;
+:deep(.tag-terracota) {
+  background: rgba(192, 90, 50, 0.14);
+  color: #8f3e1d;
 }
 
 :deep(.popup-barrio) {
@@ -1055,6 +1369,30 @@ onBeforeUnmount(() => {
 
 [data-theme='light'] :deep(.popup-title) {
   color: #0b1220;
+}
+
+:deep(.popup-rating) {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 3px 0 2px;
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+
+:deep(.popup-rating-value) {
+  font-weight: 800;
+  color: var(--ink);
+}
+
+:deep(.popup-rating-stars) {
+  color: var(--ambar);
+  letter-spacing: 1px;
+  font-size: 0.72rem;
+}
+
+:deep(.popup-rating-count) {
+  color: var(--muted);
 }
 
 :deep(.popup-dir) {
@@ -1105,7 +1443,7 @@ onBeforeUnmount(() => {
 
 :deep(.popup-btn--wa) {
   background: #25d366;
-  color: #ffffff;
+  color: #06210f;
 }
 
 :deep(.popup-btn--wa:hover) {
@@ -1126,7 +1464,25 @@ onBeforeUnmount(() => {
 
 @media (max-width: 620px) {
   .map-stage {
-    height: 420px;
+    height: 360px;
+  }
+  .map-layout {
+    flex-direction: column;
+  }
+  .map-footer {
+    padding-top: 8px;
+  }
+  .map-controls-row {
+    gap: 8px;
+  }
+  .map-legend {
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 2px;
+  }
+  .map-header {
+    padding: 4px 2px 8px;
   }
 }
 </style>

@@ -1,3 +1,5 @@
+import { drogueriasVillavicencio } from './droguerias';
+
 export type OfertaDrogueria = {
   drogueriaId: number;
   drogueriaNombre: string;
@@ -19,318 +21,112 @@ export type InfoComparativa = {
   ofertas: OfertaDrogueria[];
 };
 
-export const COMPARATIVA_MEDICAMENTOS: Record<string, InfoComparativa> = {
-  Acetaminofén: {
-    medicamentoNombre: 'Acetaminofén 500 mg',
-    requiereReceta: false,
-    categoria: 'Analgésico / Antipirético',
-    descripcionUso: 'Alivio eficaz de dolor leve a moderado y control de fiebre. De venta libre.',
-    mejorPrecio: 3200,
-    precioPromedio: 4200,
-    ofertas: [
-      {
-        drogueriaId: 7,
-        drogueriaNombre: 'Droguería La Esquina - Montecarlo',
-        barrio: 'Montecarlo',
-        precio: 3200,
-        disponible: true,
-        telefono: '(608) 684-2100',
-        whatsapp: '573142220707',
-        direccion: 'Calle 12 Sur # 22-04',
-      },
-      {
-        drogueriaId: 4,
-        drogueriaNombre: 'Droguería San Jorge - Porfía',
-        barrio: 'Porfía',
-        precio: 3500,
-        disponible: true,
-        telefono: '(608) 683-9012',
-        whatsapp: '573158880404',
-        direccion: 'Carrera 43 # 52-10',
-      },
-      {
-        drogueriaId: 3,
-        drogueriaNombre: 'Droguería La Economía - Esperanza',
-        barrio: 'La Esperanza',
-        precio: 3900,
-        disponible: true,
-        telefono: '(608) 668-1234',
-        whatsapp: '573136660303',
-        direccion: 'Calle 15 # 38-40',
-      },
-      {
-        drogueriaId: 1,
-        drogueriaNombre: 'Drogas La Rebaja - Centro Principal',
-        barrio: 'Centro',
-        precio: 4500,
-        disponible: true,
-        telefono: '(608) 662-3400',
-        whatsapp: '573105550101',
-        direccion: 'Calle 38 # 31-20',
-      },
-      {
-        drogueriaId: 2,
-        drogueriaNombre: 'Cruz Verde - Sede Barzal Salud',
-        barrio: 'El Barzal',
-        precio: 4800,
-        disponible: true,
-        telefono: '(608) 670-8800',
-        whatsapp: '573124440202',
-        direccion: 'Cra. 40 # 33B-15',
-      },
-    ],
-  },
-  Ibuprofeno: {
-    medicamentoNombre: 'Ibuprofeno 400 mg',
-    requiereReceta: false,
-    categoria: 'Antiinflamatorio (AINE)',
-    descripcionUso: 'Alivia dolor muscular, inflamación y dolores menstruales o articulares.',
-    mejorPrecio: 4500,
-    precioPromedio: 5800,
-    ofertas: [
-      {
-        drogueriaId: 8,
-        drogueriaNombre: 'Droguería Comunitaria Catumare',
-        barrio: 'Catumare',
-        precio: 4500,
-        disponible: true,
-        telefono: '(608) 682-1199',
-        whatsapp: '573173330808',
-        direccion: 'Mz 14 Casa 2',
-      },
-      {
-        drogueriaId: 5,
-        drogueriaNombre: 'Farmacenter La 40 - Siete de Agosto',
-        barrio: 'Siete de Agosto',
-        precio: 5200,
-        disponible: true,
-        telefono: '(608) 671-5544',
-        whatsapp: '573117770505',
-        direccion: 'Av. 40 # 26C-10',
-      },
-      {
-        drogueriaId: 1,
-        drogueriaNombre: 'Drogas La Rebaja - Centro Principal',
-        barrio: 'Centro',
-        precio: 6000,
-        disponible: true,
-        telefono: '(608) 662-3400',
-        whatsapp: '573105550101',
-        direccion: 'Calle 38 # 31-20',
-      },
-    ],
-  },
-  Amoxicilina: {
-    medicamentoNombre: 'Amoxicilina 500 mg',
-    requiereReceta: true,
-    categoria: 'Antibiótico Betalactámico',
-    descripcionUso: 'Tratamiento de infecciones bacterianas. Requiere fórmula médica vigente.',
-    mejorPrecio: 9800,
-    precioPromedio: 12500,
-    ofertas: [
-      {
-        drogueriaId: 9,
-        drogueriaNombre: 'Droguería Multidrogas - San Benito',
-        barrio: 'San Benito',
-        precio: 9800,
-        disponible: true,
-        telefono: '(608) 664-5080',
-        whatsapp: '573184440909',
-        direccion: 'Calle 35 # 24-18',
-      },
-      {
-        drogueriaId: 2,
-        drogueriaNombre: 'Cruz Verde - Sede Barzal Salud',
-        barrio: 'El Barzal',
-        precio: 11500,
-        disponible: true,
-        telefono: '(608) 670-8800',
-        whatsapp: '573124440202',
-        direccion: 'Cra. 40 # 33B-15',
-      },
-      {
-        drogueriaId: 1,
-        drogueriaNombre: 'Drogas La Rebaja - Centro Principal',
-        barrio: 'Centro',
-        precio: 13200,
-        disponible: true,
-        telefono: '(608) 662-3400',
-        whatsapp: '573105550101',
-        direccion: 'Calle 38 # 31-20',
-      },
-    ],
-  },
-  Loratadina: {
-    medicamentoNombre: 'Loratadina 10 mg',
-    requiereReceta: false,
-    categoria: 'Antihistamínico',
-    descripcionUso: 'Alivia rinitis alérgica, estornudos y picazón ocular o cutánea.',
-    mejorPrecio: 3800,
-    precioPromedio: 4900,
-    ofertas: [
-      {
-        drogueriaId: 7,
-        drogueriaNombre: 'Droguería La Esquina - Montecarlo',
-        barrio: 'Montecarlo',
-        precio: 3800,
-        disponible: true,
-        telefono: '(608) 684-2100',
-        whatsapp: '573142220707',
-        direccion: 'Calle 12 Sur # 22-04',
-      },
-      {
-        drogueriaId: 3,
-        drogueriaNombre: 'Droguería La Economía - Esperanza',
-        barrio: 'La Esperanza',
-        precio: 4200,
-        disponible: true,
-        telefono: '(608) 668-1234',
-        whatsapp: '573136660303',
-        direccion: 'Calle 15 # 38-40',
-      },
-      {
-        drogueriaId: 6,
-        drogueriaNombre: 'Droguerías Pasteur - CC Viva',
-        barrio: 'Siete de Agosto',
-        precio: 5500,
-        disponible: true,
-        telefono: '(608) 681-3322',
-        whatsapp: '573209990606',
-        direccion: 'Cra. 40 # 26C-10',
-      },
-    ],
-  },
-  Metformina: {
-    medicamentoNombre: 'Metformina 850 mg',
-    requiereReceta: true,
-    categoria: 'Antidiabético Oral',
-    descripcionUso: 'Control glicémico en diabetes tipo 2. Uso estricto bajo prescripción médica.',
-    mejorPrecio: 8200,
-    precioPromedio: 10400,
-    ofertas: [
-      {
-        drogueriaId: 4,
-        drogueriaNombre: 'Droguería San Jorge - Porfía',
-        barrio: 'Porfía',
-        precio: 8200,
-        disponible: true,
-        telefono: '(608) 683-9012',
-        whatsapp: '573158880404',
-        direccion: 'Carrera 43 # 52-10',
-      },
-      {
-        drogueriaId: 2,
-        drogueriaNombre: 'Cruz Verde - Sede Barzal Salud',
-        barrio: 'El Barzal',
-        precio: 9900,
-        disponible: true,
-        telefono: '(608) 670-8800',
-        whatsapp: '573124440202',
-        direccion: 'Cra. 40 # 33B-15',
-      },
-    ],
-  },
-  Omeprazol: {
-    medicamentoNombre: 'Omeprazol 20 mg',
-    requiereReceta: false,
-    categoria: 'Inhibidor de Bomba de Protones',
-    descripcionUso: 'Tratamiento de reflujo gastroesofágico, acidez y gastritis.',
-    mejorPrecio: 5000,
-    precioPromedio: 6800,
-    ofertas: [
-      {
-        drogueriaId: 10,
-        drogueriaNombre: 'Droguería Los Fundadores',
-        barrio: 'Los Fundadores',
-        precio: 5000,
-        disponible: true,
-        telefono: '(608) 667-4321',
-        whatsapp: '573161111010',
-        direccion: 'Cra. 23 # 12-40',
-      },
-      {
-        drogueriaId: 5,
-        drogueriaNombre: 'Farmacenter La 40 - Siete de Agosto',
-        barrio: 'Siete de Agosto',
-        precio: 6500,
-        disponible: true,
-        telefono: '(608) 671-5544',
-        whatsapp: '573117770505',
-        direccion: 'Av. 40 # 26C-10',
-      },
-    ],
-  },
-  Salbutamol: {
-    medicamentoNombre: 'Salbutamol Inhalador 100 mcg',
-    requiereReceta: true,
-    categoria: 'Broncodilatador',
-    descripcionUso: 'Alivio rápido de broncoespasmo en asma o EPOC. Requiere fórmula médica.',
-    mejorPrecio: 14500,
-    precioPromedio: 18200,
-    ofertas: [
-      {
-        drogueriaId: 3,
-        drogueriaNombre: 'Droguería La Economía - Esperanza',
-        barrio: 'La Esperanza',
-        precio: 14500,
-        disponible: true,
-        telefono: '(608) 668-1234',
-        whatsapp: '573136660303',
-        direccion: 'Calle 15 # 38-40',
-      },
-      {
-        drogueriaId: 1,
-        drogueriaNombre: 'Drogas La Rebaja - Centro Principal',
-        barrio: 'Centro',
-        precio: 16900,
-        disponible: true,
-        telefono: '(608) 662-3400',
-        whatsapp: '573105550101',
-        direccion: 'Calle 38 # 31-20',
-      },
-    ],
-  },
+type BaseMedicamento = {
+  nombre: string;
+  concentracion: string;
+  categoria: string;
+  descripcion: string;
+  precio: number;
+  receta: boolean;
 };
 
-export function obtenerComparativa(nombre: string): InfoComparativa {
-  // Búsqueda aproximada por coincidencia de nombre
-  const key = Object.keys(COMPARATIVA_MEDICAMENTOS).find((k) =>
-    nombre.toLowerCase().includes(k.toLowerCase()) || k.toLowerCase().includes(nombre.toLowerCase()),
-  );
+// Precios de referencia para comparar; siempre se confirman con la droguería por WhatsApp.
+const BASE: BaseMedicamento[] = [
+  { nombre: 'Acetaminofén', concentracion: '500 mg', categoria: 'Analgésico / Antipirético', descripcion: 'Dolor leve a moderado y fiebre.', precio: 3200, receta: false },
+  { nombre: 'Ibuprofeno', concentracion: '400 mg', categoria: 'Antiinflamatorio', descripcion: 'Dolor, inflamación y fiebre.', precio: 4500, receta: false },
+  { nombre: 'Amoxicilina', concentracion: '500 mg', categoria: 'Antibiótico', descripcion: 'Infecciones bacterianas. Requiere prescripción.', precio: 12800, receta: true },
+  { nombre: 'Loratadina', concentracion: '10 mg', categoria: 'Antialérgico', descripcion: 'Alergias y rinitis.', precio: 3900, receta: false },
+  { nombre: 'Metformina', concentracion: '850 mg', categoria: 'Antidiabético', descripcion: 'Control de glucosa. Requiere prescripción.', precio: 8900, receta: true },
+  { nombre: 'Omeprazol', concentracion: '20 mg', categoria: 'Gastroprotector', descripcion: 'Acidez y reflujo.', precio: 6200, receta: false },
+  { nombre: 'Salbutamol', concentracion: '100 mcg', categoria: 'Broncodilatador', descripcion: 'Asma y broncoespasmo. Requiere prescripción.', precio: 7400, receta: true },
+  { nombre: 'Atorvastatina', concentracion: '20 mg', categoria: 'Estatinas', descripcion: 'Colesterol. Requiere prescripción.', precio: 15500, receta: true },
+  { nombre: 'Cetirizina', concentracion: '10 mg', categoria: 'Antialérgico', descripcion: 'Alergias estacionales.', precio: 4100, receta: false },
+  { nombre: 'Enalapril', concentracion: '10 mg', categoria: 'Antihipertensivo', descripcion: 'Presión arterial. Requiere prescripción.', precio: 9700, receta: true },
+  { nombre: 'Paracetamol infantil', concentracion: '250 mg/5 mL', categoria: 'Pediatría', descripcion: 'Fiebre en niños.', precio: 5600, receta: false },
+  { nombre: 'Ácido fólico', concentracion: '5 mg', categoria: 'Vitamina', descripcion: 'Suplemento prenatal.', precio: 3400, receta: false },
+  { nombre: 'Advil', concentracion: '400 mg', categoria: 'Analgésico de marca', descripcion: 'Dolor de cabeza, muscular y fiebre.', precio: 8900, receta: false },
+  { nombre: 'Advil Cold & Sinus', concentracion: '200 mg / 30 mg', categoria: 'Resfriado', descripcion: 'Congestión nasal, dolor y fiebre.', precio: 11500, receta: false },
+  { nombre: 'Tylenol', concentracion: '500 mg', categoria: 'Analgésico de marca', descripcion: 'Dolor y fiebre.', precio: 7600, receta: false },
+  { nombre: 'Tempra', concentracion: '100 mg/5 mL', categoria: 'Pediatría', descripcion: 'Fiebre en niños.', precio: 8200, receta: false },
+  { nombre: 'Vick VapoRub', concentracion: 'Alcanfor / mentol', categoria: 'Descongestivo tópico', descripcion: 'Ungüento para pecho y espalda.', precio: 6800, receta: false },
+  { nombre: 'Vick Synex', concentracion: '120 mL', categoria: 'Jarabe para la tos', descripcion: 'Tos y congestión.', precio: 9200, receta: false },
+  { nombre: 'Benadryl', concentracion: '25 mg', categoria: 'Antialérgico de marca', descripcion: 'Alergias y urticaria.', precio: 7900, receta: false },
+  { nombre: 'Centrum', concentracion: 'Multivitamínico', categoria: 'Suplemento', descripcion: 'Vitaminas y minerales diarios.', precio: 28900, receta: false },
+  { nombre: 'Redoxon', concentracion: '1000 mg', categoria: 'Vitamina C', descripcion: 'Apoyo inmunológico.', precio: 12500, receta: false },
+  { nombre: 'Ensure', concentracion: '400 g', categoria: 'Suplemento nutricional', descripcion: 'Nutrición oral para adultos.', precio: 45900, receta: false },
+  { nombre: 'Electral', concentracion: 'Sales orales', categoria: 'Rehidratación', descripcion: 'Diarrea o deshidratación.', precio: 3900, receta: false },
+  { nombre: 'Buscapina', concentracion: '10 mg', categoria: 'Antiespasmódico', descripcion: 'Dolor abdominal y cólicos.', precio: 9800, receta: false },
+  { nombre: 'Dolo-Neurobión', concentracion: 'Complexo B', categoria: 'Analgésico neural', descripcion: 'Dolor neural y muscular.', precio: 13900, receta: false },
+];
 
-  if (key && COMPARATIVA_MEDICAMENTOS[key]) {
-    return COMPARATIVA_MEDICAMENTOS[key];
-  }
+const IDS_DROGUERIAS = [1, 2, 3, 7, 8, 11, 12, 17, 20, 24, 29, 30];
 
-  // Generador dinámico coherente para medicamentos sin ficha específica
+const CONTACTOS: Record<number, { telefono: string; whatsapp: string }> = {
+  1: { telefono: '+57 323 2254770', whatsapp: '573232254770' },
+  3: { telefono: '+57 323 2254770', whatsapp: '573232254770' },
+  7: { telefono: '+57 1 800 0999991', whatsapp: '5718000999991' },
+  8: { telefono: '+57 601 4865000', whatsapp: '576014865000' },
+  11: { telefono: '+57 608 6621570', whatsapp: '576086621570' },
+  12: { telefono: '+57 321 3774119', whatsapp: '573213774119' },
+  17: { telefono: '+57 608 6727565', whatsapp: '576086727565' },
+  20: { telefono: '+57 310 5508157', whatsapp: '573105508157' },
+  24: { telefono: '+57 316 3637985', whatsapp: '573163637985' },
+  29: { telefono: '+57 322 3406415', whatsapp: '573223406415' },
+};
+
+function ofertasDe(precioBase: number, idMedicamento: number): OfertaDrogueria[] {
+  return IDS_DROGUERIAS.map((id, indice) => {
+    const d = drogueriasVillavicencio.find((x) => x.id === id);
+    if (!d) return null;
+    return {
+      drogueriaId: d.id,
+      drogueriaNombre: d.nombre,
+      barrio: d.barrio,
+      precio: precioBase + indice * 120 + ((id * idMedicamento) % 5) * 90,
+      disponible: true,
+      telefono: CONTACTOS[d.id]?.telefono ?? d.telefono,
+      whatsapp: CONTACTOS[d.id]?.whatsapp ?? d.whatsapp,
+      direccion: d.direccion,
+    };
+  }).filter((o): o is OfertaDrogueria => o !== null);
+}
+
+export const COMPARATIVA_MEDICAMENTOS: Record<string, InfoComparativa> = Object.fromEntries(
+  BASE.map((med, indice) => {
+    const ofertas = ofertasDe(med.precio, indice + 1);
+    return [
+      med.nombre,
+      {
+        medicamentoNombre: `${med.nombre} ${med.concentracion}`,
+        requiereReceta: med.receta,
+        categoria: med.categoria,
+        descripcionUso: med.descripcion,
+        mejorPrecio: med.precio,
+        precioPromedio: Math.round(ofertas.reduce((s, o) => s + o.precio, 0) / Math.max(ofertas.length, 1)),
+        ofertas,
+      },
+    ];
+  }),
+);
+
+function comparativaGenerica(nombre: string): InfoComparativa {
+  const hash = Array.from(nombre).reduce((s, c) => s + c.charCodeAt(0), 0);
+  const precio = 2800 + (hash % 42) * 450;
+  const ofertas = ofertasDe(precio, hash % 13 + 1);
   return {
     medicamentoNombre: nombre,
     requiereReceta: false,
-    categoria: 'Uso terapéutico general',
-    descripcionUso: 'Consulta disponibilidad en droguerías de Villavicencio.',
-    mejorPrecio: 4500,
-    precioPromedio: 5800,
-    ofertas: [
-      {
-        drogueriaId: 7,
-        drogueriaNombre: 'Droguería La Esquina - Montecarlo',
-        barrio: 'Montecarlo',
-        precio: 4500,
-        disponible: true,
-        telefono: '(608) 684-2100',
-        whatsapp: '573142220707',
-        direccion: 'Calle 12 Sur # 22-04',
-      },
-      {
-        drogueriaId: 1,
-        drogueriaNombre: 'Drogas La Rebaja - Centro Principal',
-        barrio: 'Centro',
-        precio: 5800,
-        disponible: true,
-        telefono: '(608) 662-3400',
-        whatsapp: '573105550101',
-        direccion: 'Calle 38 # 31-20',
-      },
-    ],
+    categoria: 'Producto de farmacia',
+    descripcionUso: 'Producto de uso común. Confirma precio y disponibilidad con la droguería.',
+    mejorPrecio: precio,
+    precioPromedio: Math.round(ofertas.reduce((s, o) => s + o.precio, 0) / Math.max(ofertas.length, 1)),
+    ofertas,
   };
+}
+
+export function obtenerComparativa(nombre: string): InfoComparativa {
+  const normalizar = (valor: string) => valor.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const buscado = normalizar(nombre);
+  const clave = Object.keys(COMPARATIVA_MEDICAMENTOS).find((k) => buscado.includes(normalizar(k)));
+  return (clave && COMPARATIVA_MEDICAMENTOS[clave]) || comparativaGenerica(nombre);
 }

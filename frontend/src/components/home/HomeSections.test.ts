@@ -32,7 +32,7 @@ describe('Secciones Informativas y Visuales de Home', () => {
       expect(wrapper.text()).toContain('La Rebaja');
       expect(wrapper.text()).toContain('Cruz Verde');
       expect(wrapper.text()).toContain('Copifam');
-      expect(wrapper.text()).toContain('Boticarios de Barrio');
+      expect(wrapper.text()).toContain('Boticarios de barrio');
 
       const cards = wrapper.findAll('.marca-card');
       expect(cards.length).toBeGreaterThanOrEqual(5);

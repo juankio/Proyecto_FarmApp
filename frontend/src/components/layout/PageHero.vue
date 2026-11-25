@@ -71,17 +71,12 @@ withDefaults(
   opacity: 0.45;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(circle, rgba(90, 200, 250, 0.55), transparent 68%);
+  background: radial-gradient(circle, rgba(31, 107, 79, 0.3), transparent 68%);
 }
 
-[data-theme="light"] .glow {
-  background: radial-gradient(
-    circle,
-    rgba(10, 132, 255, 0.32) 0%,
-    rgba(0, 102, 255, 0.18) 45%,
-    transparent 70%
-  );
-  opacity: 0.85;
+[data-theme="dark"] .glow {
+  background: radial-gradient(circle, rgba(79, 174, 131, 0.28), transparent 68%);
+  opacity: 0.8;
 }
 
 .copy {
@@ -99,21 +94,11 @@ withDefaults(
 
 h1 {
   font-size: clamp(2.3rem, 5.2vw, 4.2rem);
-  font-weight: 800;
-  letter-spacing: -0.052em;
-  line-height: 1.02;
+  font-weight: 600;
+  letter-spacing: -0.028em;
+  line-height: 1.04;
   max-width: 17ch;
-  background: linear-gradient(180deg, #ffffff 20%, #cfd9ec 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-[data-theme="light"] .page-hero h1 {
   color: var(--ink);
-  background: none;
-  -webkit-background-clip: initial;
-  background-clip: initial;
 }
 
 .page-hero.centered h1,

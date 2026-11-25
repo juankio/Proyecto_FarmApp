@@ -15,7 +15,6 @@ import { optimizarCloudinary } from '../utils/imagen';
     lede="Aquí te estaremos actualizando nuestros últimos avances, alianzas y todo lo que pasa detrás de FarmApp."
   >
     <template #actions>
-      <AppButton size="lg" @click="$router.push('/feria')">Ver la feria</AppButton>
       <AppButton size="lg" variant="secondary" @click="$router.push('/encuesta')">
         Participar en la encuesta
       </AppButton>
