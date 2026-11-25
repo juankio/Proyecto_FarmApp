@@ -1,36 +1,53 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import { nextTick } from 'vue';
 import { useAuthStore } from '../stores/auth';
 import HomeView from '../views/HomeView.vue';
 
+const MAX_FRAMES_OBJETIVO = 90;
+
+function esperarFrame(): Promise<void> {
+  return new Promise((resolve) => window.requestAnimationFrame(() => resolve()));
+}
+
+function buscarObjetivo(hash: string): HTMLElement | null {
+  const id = hash.startsWith('#') ? hash.slice(1) : hash;
+  try {
+    return document.getElementById(decodeURIComponent(id));
+  } catch {
+    return document.getElementById(id);
+  }
+}
+
+async function localizarObjetivo(hash: string): Promise<HTMLElement | null> {
+  await nextTick();
+  for (let espera = 0; espera < MAX_FRAMES_OBJETIVO; espera++) {
+    const objetivo = buscarObjetivo(hash);
+    if (objetivo && objetivo.offsetHeight > 0) return objetivo;
+    await esperarFrame();
+  }
+  return buscarObjetivo(hash);
+}
+
 export const router = createRouter({
   history: createWebHistory(),
-  scrollBehavior(to, from, saved) {
+  async scrollBehavior(to, from, saved) {
     if (saved) return saved;
-    if (to.hash) {
-      return new Promise((resolve) => {
-        let alturaPrevia = 0;
-        let estables = 0;
-        let espera = 0;
-        const verificar = () => {
-          const objetivo = document.querySelector<HTMLElement>(to.hash);
-          const altura = document.documentElement.scrollHeight;
-          if (objetivo && altura === alturaPrevia) estables++;
-          else estables = 0;
-          alturaPrevia = altura;
-          espera++;
-          if ((objetivo && estables >= 3) || espera >= 40) {
-            const top = objetivo
-              ? Math.max(0, objetivo.getBoundingClientRect().top + window.scrollY - 124)
-              : 0;
-            resolve({ left: 0, top, behavior: from.path === to.path ? 'smooth' : 'auto' });
-            return;
-          }
-          window.setTimeout(verificar, 60);
-        };
-        verificar();
-      });
+    if (!to.hash) return { top: 0 };
+
+    const objetivo = await localizarObjetivo(to.hash);
+    if (!objetivo) return { top: 0 };
+
+    const comportamiento = from.path === to.path ? 'smooth' : 'auto';
+    await esperarFrame();
+    objetivo.scrollIntoView({ behavior: comportamiento, block: 'start' });
+
+    if (comportamiento === 'auto') {
+      await esperarFrame();
+      if (objetivo.getBoundingClientRect().top < 0) {
+        objetivo.scrollIntoView({ behavior: 'auto', block: 'start' });
+      }
     }
-    return { top: 0 };
+    return false;
   },
   routes: [
     { path: '/', name: 'home', component: HomeView, meta: { title: 'Inicio' } },

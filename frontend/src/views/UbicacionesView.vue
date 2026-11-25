@@ -214,6 +214,19 @@ watch(drogueriasProcesadas, () => {
   drogueriasVisibles.value = TAMANO_PAGINA;
 });
 
+const VERSION_FOTO = 2;
+const fotosFallidas = ref<Set<number>>(new Set());
+
+function marcarFotoFallida(id: number): void {
+  const actualizadas = new Set(fotosFallidas.value);
+  actualizadas.add(id);
+  fotosFallidas.value = actualizadas;
+}
+
+function siglaFoto(cadena: string): string {
+  return obtenerCadenaInfo(cadena).nombre.slice(0, 2).toUpperCase();
+}
+
 function generarLinkWhatsApp(d: Drogueria): string {
   const texto = encodeURIComponent(
     `Hola ${d.nombre}, los encontré en FarmApp Villavicencio y quiero consultar disponibilidad y precios de medicamentos.`,
@@ -412,6 +425,20 @@ onMounted(() => {
         </div>
 
         <h3 class="drog-title">{{ d.nombre }}</h3>
+        <div v-if="d.conFoto" class="drog-foto-wrap">
+          <img
+            v-if="!fotosFallidas.has(d.id)"
+            class="drog-foto"
+            :src="`/api/farmacias/foto/${encodeURIComponent(d.placeId)}?v=${VERSION_FOTO}`"
+            :alt="`Fotografía de ${d.nombre}`"
+            loading="lazy"
+            decoding="async"
+            @error="marcarFotoFallida(d.id)"
+          />
+          <div v-else class="drog-foto drog-foto--fallback" role="img" :aria-label="`Sin fotografía de ${d.nombre}`">
+            {{ siglaFoto(d.cadena) }}
+          </div>
+        </div>
         <p class="drog-direccion">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
@@ -491,9 +518,7 @@ onMounted(() => {
         </p>
       </div>
       <div class="affiliate-cta">
-        <RouterLink to="/contactos">
-          <AppButton size="lg">Afiliar mi droguería</AppButton>
-        </RouterLink>
+        <RouterLink to="/contactos" class="affiliate-link">Afiliar mi droguería</RouterLink>
       </div>
   </section>
 </template>
@@ -651,8 +676,9 @@ onMounted(() => {
 /* Cuadrícula de Droguerías */
 .droguerias-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
   gap: 20px;
+  min-width: 0;
 }
 
 .ver-mas-wrap {
@@ -680,6 +706,9 @@ onMounted(() => {
 }
 
 .drog-card {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   padding: 22px;
   border-radius: 16px;
   background: var(--bg-1);
@@ -777,6 +806,36 @@ onMounted(() => {
   font-weight: 700;
   color: var(--ink);
   line-height: 1.25;
+}
+
+.drog-foto-wrap {
+  width: 100%;
+  min-width: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--bg-2);
+}
+
+.drog-foto {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  max-height: 180px;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.drog-foto--fallback {
+  display: grid;
+  place-items: center;
+  min-height: 120px;
+  color: var(--verde-deep);
+  background: var(--bg-2);
+  border: 1px dashed var(--line);
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
 }
 
 .drog-direccion {

@@ -23,7 +23,8 @@ import { faq } from '../../data/faq';
 
 <style scoped>
 #preguntas {
-  scroll-margin-top: 124px;
+  scroll-margin-top: 96px;
+  padding-top: clamp(8px, 1.5vw, 16px);
 }
 
 .faq-grid {

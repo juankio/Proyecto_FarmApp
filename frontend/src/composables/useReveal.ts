@@ -3,12 +3,14 @@ import { onBeforeUnmount } from 'vue';
 // Duración de entrada alineada con --motion-slow (src/styles/motion.css).
 // Mantener sincronizado si se cambia el token.
 const DURACION_REVEAL_MS = 850;
+const MARGEN_REVEAL_PX = 200;
 
 let observer: IntersectionObserver | null = null;
 let mutation: MutationObserver | null = null;
-let resizeObs: ResizeObserver | null = null;
 let frame = 0;
 let cuadroScroll = 0;
+let recienInsertados: HTMLElement[] = [];
+
 function ensureObserver(): IntersectionObserver {
   if (observer) return observer;
   observer = new IntersectionObserver(
@@ -24,15 +26,29 @@ function ensureObserver(): IntersectionObserver {
   );
   return observer;
 }
-function revelarPorPosicion(): void {
-  const margen = window.innerHeight + 200;
-  document.querySelectorAll<HTMLElement>('.reveal:not(.is-visible)').forEach((el) => {
-    if (el.getBoundingClientRect().top < margen) el.classList.add('is-visible');
-  });
-}
-function revelarPendientes(): void {
+
+function revelarVisibles(elementos: HTMLElement[]): void {
+  const margen = window.innerHeight + MARGEN_REVEAL_PX;
+  const visibles: HTMLElement[] = [];
+
+  for (const el of elementos) {
+    if (!el.classList.contains('is-visible') && el.getBoundingClientRect().top < margen) {
+      visibles.push(el);
+    }
+  }
+
   const io = ensureObserver();
-  document.querySelectorAll<HTMLElement>('.reveal:not(.is-visible)').forEach((el) => io.observe(el));
+  for (const el of visibles) el.classList.add('is-visible');
+  for (const el of elementos) {
+    if (!el.classList.contains('is-visible')) io.observe(el);
+  }
+}
+
+function revelarPorPosicion(): void {
+  const elementos = new Set<HTMLElement>(document.querySelectorAll<HTMLElement>('.reveal'));
+  for (const el of recienInsertados) elementos.add(el);
+  recienInsertados = [];
+  revelarVisibles(Array.from(elementos));
 }
 
 function scheduleReveal(): void {
@@ -40,7 +56,6 @@ function scheduleReveal(): void {
   frame = window.requestAnimationFrame(() => {
     frame = 0;
     revelarPorPosicion();
-    revelarPendientes();
   });
 }
 
@@ -51,6 +66,7 @@ function alHacerScroll(): void {
     revelarPorPosicion();
   });
 }
+
 function alRedimensionar(): void {
   scheduleReveal();
 }
@@ -58,28 +74,24 @@ function alRedimensionar(): void {
 export function useReveal() {
   function start(): void {
     revelarPorPosicion();
-    revelarPendientes();
 
     if (mutation) return;
     mutation = new MutationObserver((registros) => {
-      const relevante = registros.some((registro) =>
-        Array.from(registro.addedNodes).some(
-          (nodo) =>
-            nodo instanceof Element &&
-            !nodo.closest('.leaflet-container, .map-stage') &&
-            (nodo.classList.contains('reveal') || nodo.querySelector('.reveal')),
-        ),
-      );
-      if (relevante) scheduleReveal();
+      for (const registro of registros) {
+        for (const nodo of Array.from(registro.addedNodes)) {
+          if (!(nodo instanceof HTMLElement) || nodo.closest('.leaflet-container, .map-stage')) {
+            continue;
+          }
+          if (nodo.classList.contains('reveal')) recienInsertados.push(nodo);
+          nodo.querySelectorAll<HTMLElement>('.reveal').forEach((el) => recienInsertados.push(el));
+        }
+      }
+      scheduleReveal();
     });
     mutation.observe(document.body, { childList: true, subtree: true });
     window.addEventListener('scroll', alHacerScroll, { passive: true });
+    window.addEventListener('resize', alRedimensionar, { passive: true });
     window.addEventListener('load', scheduleReveal);
-
-    if ('ResizeObserver' in window) {
-      resizeObs = new ResizeObserver(alRedimensionar);
-      resizeObs.observe(document.body);
-    }
 
     // Revelar todo el contenido en el siguiente frame: garantiza que ninguna
     // sección quede atrapada por scroll instantáneo o layout shift, manteniendo
@@ -96,14 +108,14 @@ export function useReveal() {
     observer = null;
     mutation?.disconnect();
     mutation = null;
-    resizeObs?.disconnect();
-    resizeObs = null;
     window.removeEventListener('scroll', alHacerScroll);
+    window.removeEventListener('resize', alRedimensionar);
     window.removeEventListener('load', scheduleReveal);
     if (frame) window.cancelAnimationFrame(frame);
     if (cuadroScroll) window.cancelAnimationFrame(cuadroScroll);
     frame = 0;
     cuadroScroll = 0;
+    recienInsertados = [];
   });
 
   return { start, revealAll: scheduleReveal };

@@ -44,7 +44,6 @@ let tileLayer: any = null;
 let userMarker: any = null;
 let userAccuracyCircle: any = null;
 let temporizadorRender: number | undefined;
-let modoAgrupado: boolean | null = null;
 let resizeObserver: ResizeObserver | null = null;
 let themeObserver: MutationObserver | null = null;
 const markersMap = new Map<number, { marker: any; lat: number; lng: number }>();
@@ -231,8 +230,6 @@ function inicializarMapa(L: any) {
   renderizarMarcadores(L);
   mapInstance.on('zoomend', () => {
     if (!mapInstance) return;
-    const debeAgrupar = mapInstance.getZoom() <= 14;
-    if (modoAgrupado === debeAgrupar) return;
     programarRender(L);
   });
   if (props.comuna != null) irAComuna(props.comuna);
@@ -252,6 +249,85 @@ function programarRender(L: any): void {
   temporizadorRender = window.setTimeout(() => renderizarMarcadores(L), 120);
 }
 
+const SEPARACION_PIN_M = 15;
+const METROS_POR_GRADO = 111_320;
+
+function distanciaPinMetros(latA: number, lngA: number, latB: number, lngB: number): number {
+  const deltaLat = (latA - latB) * METROS_POR_GRADO;
+  const deltaLng = (lngA - lngB) * METROS_POR_GRADO * Math.cos((latA * Math.PI) / 180);
+  return Math.hypot(deltaLat, deltaLng);
+}
+
+function posicionesSinSolape<T extends { id: number; lat: number; lng: number }>(
+  droguerias: T[],
+): Map<number, [number, number]> {
+  const posiciones = new Map<number, [number, number]>();
+  const paso = 0.00018;
+  const angulos = [0, 60, 120, 180, 240, 300, 30, 90, 150, 210, 270, 330];
+
+  for (const d of [...droguerias].sort((a, b) => a.id - b.id)) {
+    let lat = d.lat;
+    let lng = d.lng;
+    let intento = 0;
+
+    while (
+      intento < angulos.length * 4 &&
+      [...posiciones.values()].some(([colLat, colLng]) =>
+        distanciaPinMetros(lat, lng, colLat, colLng) < SEPARACION_PIN_M,
+      )
+    ) {
+      const vuelta = Math.floor(intento / angulos.length) + 1;
+      const radianes = (angulos[intento % angulos.length] * Math.PI) / 180;
+      const radio = paso * vuelta;
+      lat = d.lat + Math.sin(radianes) * radio;
+      lng = d.lng + (Math.cos(radianes) * radio) / Math.cos((d.lat * Math.PI) / 180);
+      intento += 1;
+    }
+
+    posiciones.set(d.id, [lat, lng]);
+  }
+
+  return posiciones;
+}
+
+const SEPARACION_CLUSTER_PX = 44;
+const VERSION_FOTO = 2;
+
+function posicionesEnPixeles(
+  candidatos: { clave: string; lat: number; lng: number }[],
+  zoom: number,
+): Map<string, [number, number]> {
+  const separadas = new Map<string, [number, number]>();
+  const colocados: { x: number; y: number }[] = [];
+  const angulos = [0, 45, 90, 135, 180, 225, 270, 315, 22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5, 337.5];
+
+  for (const candidato of [...candidatos].sort((a, b) => a.clave.localeCompare(b.clave))) {
+    const origen = mapInstance.project([candidato.lat, candidato.lng], zoom);
+    let punto = { x: origen.x, y: origen.y };
+    let intento = 0;
+
+    while (
+      intento < angulos.length * 4 &&
+      colocados.some((c) => Math.max(Math.abs(c.x - punto.x), Math.abs(c.y - punto.y)) < SEPARACION_CLUSTER_PX)
+    ) {
+      const vuelta = Math.floor(intento / angulos.length) + 1;
+      const radianes = (angulos[intento % angulos.length] * Math.PI) / 180;
+      const radio = SEPARACION_CLUSTER_PX * vuelta;
+      punto = {
+        x: origen.x + Math.cos(radianes) * radio,
+        y: origen.y + Math.sin(radianes) * radio,
+      };
+      intento += 1;
+    }
+
+    const latLng = mapInstance.unproject(punto, zoom);
+    separadas.set(candidato.clave, [latLng.lat, latLng.lng]);
+    colocados.push(punto);
+  }
+
+  return separadas;
+}
+
 function renderizarMarcadores(L: any) {
   if (!mapInstance || !markersLayer) return;
 
@@ -262,9 +338,9 @@ function renderizarMarcadores(L: any) {
 
   const zoom = mapInstance.getZoom();
   const agrupar = zoom <= 14;
-  modoAgrupado = agrupar;
   const base =
     agrupar && props.comuna != null && props.drogueriasTotales?.length ? props.drogueriasTotales : props.droguerias;
+  const posicionesVisibles = posicionesSinSolape(base);
   const grupos = new Map<number, typeof base>();
 
   base.forEach((d) => {
@@ -273,6 +349,27 @@ function renderizarMarcadores(L: any) {
     lista.push(d);
     grupos.set(clave, lista);
   });
+
+  const candidatos: { clave: string; lat: number; lng: number }[] = [];
+  grupos.forEach((lista, idComuna) => {
+    if (agrupar && (lista.length > 1 || props.comuna != null)) {
+      const comuna = comunaPorId(idComuna);
+      if (comuna) {
+        candidatos.push({ clave: `c-${comuna.id}`, lat: comuna.centro[0], lng: comuna.centro[1] });
+        return;
+      }
+    }
+    candidatos.push({ clave: `d-${lista[0].id}`, lat: lista[0].lat, lng: lista[0].lng });
+  });
+
+  if (agrupar || props.comuna != null) {
+    COMUNAS.forEach((comuna) => {
+      if (agrupar && grupos.has(comuna.id)) return;
+      candidatos.push({ clave: `c-${comuna.id}`, lat: comuna.centro[0], lng: comuna.centro[1] });
+    });
+  }
+
+  const posicionesAgrupadas = agrupar ? posicionesEnPixeles(candidatos, zoom) : new Map<string, [number, number]>();
 
   grupos.forEach((lista, idComuna) => {
     if (agrupar && (lista.length > 1 || props.comuna != null)) {
@@ -284,7 +381,8 @@ function renderizarMarcadores(L: any) {
           iconSize: [40, 40],
           iconAnchor: [20, 20],
         });
-        const grupo = L.marker(comuna.centro, {
+        const [latGrupo, lngGrupo] = posicionesAgrupadas.get(`c-${comuna.id}`) ?? comuna.centro;
+        const grupo = L.marker([latGrupo, lngGrupo], {
           icon: iconoGrupo,
           title: `Comuna ${comuna.id} · ${comuna.nombre}`,
         });
@@ -313,15 +411,26 @@ function renderizarMarcadores(L: any) {
       popupAnchor: [0, -30],
     });
 
-    const marker = L.marker([d.lat, d.lng], { icon: customIcon, title: `${d.nombre} · ${brand.nombre}` });
+    const [latPin, lngPin] = agrupar
+      ? (posicionesAgrupadas.get(`d-${d.id}`) ?? [d.lat, d.lng])
+      : (posicionesVisibles.get(d.id) ?? [d.lat, d.lng]);
+    const marker = L.marker([latPin, lngPin], { icon: customIcon, title: `${d.nombre} · ${brand.nombre}` });
     markersMap.set(d.id, { marker, lat: d.lat, lng: d.lng });
 
     const linkWhatsApp = `https://wa.me/${d.whatsapp}?text=${encodeURIComponent('Hola ' + d.nombre + ', los vi en FarmApp Villavicencio.')}`;
     const linkMaps = `https://www.google.com/maps/dir/?api=1&destination=${d.lat},${d.lng}`;
     const distanciaHtml =
       d.distanciaKm !== undefined
-        ? `<span class="popup-distancia">📍 A ${d.distanciaKm < 1 ? Math.round(d.distanciaKm * 1000) + ' m' : d.distanciaKm.toFixed(1) + ' km'}</span>`
+        ? `<span class="popup-distancia"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> A ${d.distanciaKm < 1 ? Math.round(d.distanciaKm * 1000) + ' m' : d.distanciaKm.toFixed(1) + ' km'}</span>`
         : '';
+
+    const siglaFoto = brand.nombre.slice(0, 2).toUpperCase();
+    const fotoHtml = d.conFoto
+      ? `<div class="popup-foto-wrap">
+          <img class="popup-foto" src="/api/farmacias/foto/${encodeURIComponent(d.placeId)}?v=${VERSION_FOTO}" alt="Fotografía de ${d.nombre}" loading="lazy" decoding="async" onerror="this.hidden=true;this.nextElementSibling.hidden=false" />
+          <div class="popup-foto popup-foto--fallback" hidden role="img" aria-label="Foto no disponible">${siglaFoto}</div>
+        </div>`
+      : '';
 
     const badgeTipoHtml =
       brand.tipo === 'independiente'
@@ -340,6 +449,7 @@ function renderizarMarcadores(L: any) {
           ${d.afiliada ? '<span class="popup-tag tag-gold">Verificada</span>' : ''}
           ${d.domicilio ? '<span class="popup-tag tag-terracota">Domicilio</span>' : ''}
         </div>
+        ${fotoHtml}
         <h4 class="popup-title">${d.nombre}</h4>
         <p class="popup-rating">
           <span class="popup-rating-value">${calificacionDrogueria(d.id)}</span>
@@ -384,7 +494,8 @@ function renderizarMarcadores(L: any) {
         iconSize: [40, 40],
         iconAnchor: [20, 20],
       });
-      const marcador = L.marker(comuna.centro, {
+      const [latComuna, lngComuna] = posicionesAgrupadas.get(`c-${comuna.id}`) ?? comuna.centro;
+      const marcador = L.marker([latComuna, lngComuna], {
         icon: icono,
         title: `Comuna ${comuna.id} · ${comuna.nombre} · ${conteo ? conteo + ' droguerías' : 'sin droguerías'}`,
       });
@@ -741,7 +852,7 @@ defineExpose({ enfocarDrogueria, centrarTodaLaCiudad, irAComuna });
   background: transparent;
   color: var(--muted);
   cursor: pointer;
-  transition: all 0.16s ease;
+  transition: color 0.16s ease, background-color 0.16s ease, border-color 0.16s ease;
 }
 
 .layer-pill:hover {
@@ -764,7 +875,7 @@ defineExpose({ enfocarDrogueria, centrarTodaLaCiudad, irAComuna });
   font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background-color 0.2s, border-color 0.2s;
 }
 
 .reset-bounds-btn:hover {
@@ -840,7 +951,10 @@ defineExpose({ enfocarDrogueria, centrarTodaLaCiudad, irAComuna });
   color: var(--muted);
   border: 1px solid var(--line);
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    color 0.2s var(--ease),
+    background-color 0.2s var(--ease),
+    border-color 0.2s var(--ease);
 }
 
 .sector-pill:hover {
@@ -1332,6 +1446,39 @@ defineExpose({ enfocarDrogueria, centrarTodaLaCiudad, irAComuna });
   color: #6d28d9;
 }
 
+:deep(.popup-foto-wrap) {
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--bg-2);
+}
+
+:deep(.popup-foto) {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  max-height: 140px;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+:deep(.popup-foto[hidden]) {
+  display: none;
+}
+
+:deep(.popup-foto--fallback) {
+  display: grid;
+  place-items: center;
+  min-height: 96px;
+  color: var(--verde-deep);
+  background: var(--bg-2);
+  border: 1px dashed var(--line);
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
 :deep(.popup-status-row) {
   display: flex;
   align-items: center;
@@ -1421,6 +1568,9 @@ defineExpose({ enfocarDrogueria, centrarTodaLaCiudad, irAComuna });
 }
 
 :deep(.popup-distancia) {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: 0.75rem;
   font-weight: 700;
   color: var(--aqua, #5ac8fa);
