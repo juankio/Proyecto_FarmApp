@@ -250,12 +250,17 @@ const pines: Pin[] = [
 
 .cobertura {
   position: absolute;
-  right: 16px;
-  bottom: -46px;
+  top: 12px;
+  left: 12px;
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-size: 0.72rem;
+  padding: 6px 9px;
+  border-radius: 8px;
+  background: var(--bg-1);
+  border: 1px solid var(--surface-border);
+  box-shadow: 0 4px 12px -9px rgba(22, 36, 29, 0.6);
+  font-size: 0.64rem;
   font-weight: 600;
   color: var(--ink-soft);
 }
@@ -313,7 +318,7 @@ const pines: Pin[] = [
   }
   .cobertura {
     position: static;
-    margin: 28px auto 0;
+    margin: 18px auto 0;
     justify-content: center;
   }
   .sello {

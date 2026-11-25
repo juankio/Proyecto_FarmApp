@@ -44,6 +44,7 @@ let tileLayer: any = null;
 let userMarker: any = null;
 let userAccuracyCircle: any = null;
 let temporizadorZoom: number | undefined;
+let modoAgrupado: boolean | null = null;
 let resizeObserver: ResizeObserver | null = null;
 let themeObserver: MutationObserver | null = null;
 const markersMap = new Map<number, { marker: any; lat: number; lng: number }>();
@@ -201,13 +202,6 @@ function inicializarMapa(L: any) {
     scrollWheelZoom: true,
   });
 
-  const seleccionarComunaDesdeMapa = (evento: Event) => {
-    const objetivo = (evento.target as HTMLElement | null)?.closest?.('[data-comuna]');
-    if (!objetivo || objetivo.classList.contains('cluster-vacia')) return;
-    const id = Number(objetivo.getAttribute('data-comuna'));
-    if (Number.isFinite(id)) emit('select-comuna', id);
-  };
-  mapContainer.value.addEventListener('pointerdown', seleccionarComunaDesdeMapa, true);
   mapInstance.on('click', (evento: any) => {
     if (props.ajustandoUbicacion) {
       emit('update-ubicacion', { lat: evento.latlng.lat, lng: evento.latlng.lng });
@@ -236,6 +230,9 @@ function inicializarMapa(L: any) {
 
   renderizarMarcadores(L);
   mapInstance.on('zoomend', () => {
+    if (!mapInstance) return;
+    const debeAgrupar = mapInstance.getZoom() <= 14;
+    if (modoAgrupado === debeAgrupar) return;
     window.clearTimeout(temporizadorZoom);
     temporizadorZoom = window.setTimeout(() => renderizarMarcadores(L), 120);
   });
@@ -260,9 +257,8 @@ function renderizarMarcadores(L: any) {
   if (!props.droguerias.length && !props.drogueriasTotales?.length) return;
 
   const zoom = mapInstance.getZoom();
-  // Con comuna activa se conservan los 10 círculos para poder cambiar de zona, incluso al hacer zoom.
   const agrupar = zoom <= 14;
-  // Con una comuna activa se conservan los 10 círculos para poder cambiar de zona.
+  modoAgrupado = agrupar;
   const base =
     agrupar && props.comuna != null && props.drogueriasTotales?.length ? props.drogueriasTotales : props.droguerias;
   const grupos = new Map<number, typeof base>();
@@ -288,6 +284,7 @@ function renderizarMarcadores(L: any) {
           icon: iconoGrupo,
           title: `Comuna ${comuna.id} · ${comuna.nombre}`,
         });
+        if (lista.length) grupo.on('click', () => emit('select-comuna', comuna.id));
         markersLayer.addLayer(grupo);
         return;
       }
@@ -387,6 +384,7 @@ function renderizarMarcadores(L: any) {
         icon: icono,
         title: `Comuna ${comuna.id} · ${comuna.nombre} · ${conteo ? conteo + ' droguerías' : 'sin droguerías'}`,
       });
+      if (conteo > 0) marcador.on('click', () => emit('select-comuna', comuna.id));
       markersLayer.addLayer(marcador);
     });
   }

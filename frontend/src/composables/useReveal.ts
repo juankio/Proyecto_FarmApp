@@ -61,7 +61,17 @@ export function useReveal() {
     revelarPendientes();
 
     if (mutation) return;
-    mutation = new MutationObserver(scheduleReveal);
+    mutation = new MutationObserver((registros) => {
+      const relevante = registros.some((registro) =>
+        Array.from(registro.addedNodes).some(
+          (nodo) =>
+            nodo instanceof Element &&
+            !nodo.closest('.leaflet-container, .map-stage') &&
+            (nodo.classList.contains('reveal') || nodo.querySelector('.reveal')),
+        ),
+      );
+      if (relevante) scheduleReveal();
+    });
     mutation.observe(document.body, { childList: true, subtree: true });
     window.addEventListener('scroll', alHacerScroll, { passive: true });
     window.addEventListener('load', scheduleReveal);

@@ -22,7 +22,6 @@ const cadenaSeleccionada = ref<string>('Todas las marcas');
 const solo24h = ref(false);
 const soloDomicilio = ref(false);
 const soloAfiliadas = ref(false);
-const mostrarMapa = ref(true);
 const comunaActiva = ref<number | null>(null);
 
 // Geolocalización del usuario
@@ -254,26 +253,6 @@ onMounted(() => {
   <section class="section reveal">
     <!-- Panel de controles y filtros -->
     <div class="filter-card">
-      <div class="panel-heading">
-        <div class="panel-heading-title">
-          <span class="map-badge">Red Metropolitana</span>
-          <h2>Mapa oficial de droguerías en Villavicencio</h2>
-        </div>
-        <button
-          type="button"
-          class="map-toggle-btn"
-          :class="{ active: mostrarMapa }"
-          @click="mostrarMapa = !mostrarMapa"
-        >
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6" />
-            <line x1="8" y1="2" x2="8" y2="18" />
-            <line x1="16" y1="6" x2="16" y2="22" />
-          </svg>
-          <span>{{ mostrarMapa ? 'Ocultar mapa' : 'Ver mapa' }}</span>
-        </button>
-      </div>
-
       <div class="filter-top">
         <div class="search-wrap">
           <AppInput
@@ -343,7 +322,6 @@ onMounted(() => {
 
     <!-- Mapa Interactivo de Villavicencio -->
     <MapaVillavicencio
-      v-if="mostrarMapa"
       :droguerias="drogueriasProcesadas"
       :droguerias-totales="drogueriasVillavicencio"
       :user-lat="userLat"
@@ -518,39 +496,6 @@ onMounted(() => {
   gap: 16px;
 }
 
-.panel-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.panel-heading-title {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.panel-heading h2 {
-  font-size: clamp(1.05rem, 2vw, 1.35rem);
-  margin: 0;
-  color: var(--ink);
-}
-
-.panel-heading .map-badge {
-  font-size: 0.68rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 4px 8px;
-  border-radius: 6px;
-  background: rgba(31, 107, 79, 0.12);
-  border: 1px solid rgba(31, 107, 79, 0.3);
-  color: var(--verde-texto);
-}
-
 .filter-top {
   display: grid;
   grid-template-columns: 1.8fr 1.2fr 1.2fr auto auto;
@@ -608,34 +553,6 @@ onMounted(() => {
 
 .gps-btn.active {
   background: rgba(10, 132, 255, 0.2);
-  border-color: var(--blue);
-  color: var(--blue-bright);
-}
-
-.map-toggle-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  height: 48px;
-  padding: 0 16px;
-  border-radius: 12px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  white-space: nowrap;
-  background: var(--glass-control-bg);
-  border: 1px solid var(--line);
-  color: var(--ink);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.map-toggle-btn:hover {
-  background: var(--nav-hover-bg);
-  border-color: var(--blue-bright);
-}
-
-.map-toggle-btn.active {
-  background: rgba(10, 132, 255, 0.16);
   border-color: var(--blue);
   color: var(--blue-bright);
 }
@@ -984,17 +901,6 @@ onMounted(() => {
   .results-count {
     margin-left: 0;
     width: 100%;
-  }
-  .panel-heading {
-    gap: 8px;
-  }
-  .panel-heading h2 {
-    font-size: 1.05rem;
-  }
-  .panel-heading .map-toggle-btn {
-    min-height: 36px;
-    padding: 0 10px;
-    font-size: 0.78rem;
   }
   .filter-card {
     padding: 14px;
