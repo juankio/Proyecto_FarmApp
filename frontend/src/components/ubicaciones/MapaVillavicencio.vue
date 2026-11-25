@@ -525,6 +525,7 @@ onMounted(async () => {
   try {
     const L = await cargarLeafletScript();
     await nextTick();
+    await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
     inicializarMapa(L);
     if (props.userLat !== null && props.userLng !== null) {
       actualizarUbicacionUsuario(L);
