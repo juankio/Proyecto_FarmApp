@@ -124,6 +124,10 @@ useFocusTrap(isOpen, modalRef, () => emit('close'));
   transition: opacity 0.26s ease;
 }
 
+.modal-leave-active {
+  pointer-events: none;
+}
+
 .modal-enter-active .modal,
 .modal-leave-active .modal {
   transition:
