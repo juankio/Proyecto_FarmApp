@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from 'vue-router';
 import PageHero from '../components/layout/PageHero.vue';
 import AppButton from '../components/ui/AppButton.vue';
@@ -37,15 +37,28 @@ const {
   buscar,
   limpiar,
   cambiarPagina,
+  cargar,
 } = usePaginatedQuery<Medicamento>({
   endpoint: '/medicamentos',
   limit: 12,
+  buildParams: (pagina, cantidad, texto) => {
+    const params = new URLSearchParams({ page: String(pagina), limit: String(cantidad) });
+    if (texto) params.set('q', texto);
+    if (filtroReceta.value !== 'todos') params.set('receta', filtroReceta.value);
+    return params;
+  },
   fetcher: async (path) => {
     const url = new URL(path, window.location.origin);
-    const page = Number(url.searchParams.get('page') ?? '1');
+    const pagina = Number(url.searchParams.get('page') ?? '1');
     const q = url.searchParams.get('q') ?? '';
-    return store.fetchList({ page, limit: 12, q });
+    const receta = url.searchParams.get('receta') as 'libre' | 'receta' | null;
+    return store.fetchList({ page: pagina, limit: 12, q, receta: receta ?? undefined });
   },
+});
+
+watch(filtroReceta, () => {
+  page.value = 1;
+  cargar();
 });
 
 onMounted(() => {
@@ -60,13 +73,7 @@ function abrir(medicamento: Medicamento): void {
 }
 
 const itemsFiltrados = computed(() => {
-  let list = [...items.value];
-
-  if (filtroReceta.value === 'libre') {
-    list = list.filter((m) => !obtenerComparativa(m.nombre).requiereReceta);
-  } else if (filtroReceta.value === 'receta') {
-    list = list.filter((m) => obtenerComparativa(m.nombre).requiereReceta);
-  }
+  const list = [...items.value];
 
   if (ordenPrecio.value === 'menor-precio') {
     list.sort(
@@ -80,12 +87,24 @@ const itemsFiltrados = computed(() => {
 
 const resumen = computed(() => {
   if (cargando.value) return 'Buscando medicamentos...';
-  if (!itemsFiltrados.value.length) {
+  if (!items.value.length) {
+    if (filtroReceta.value === 'receta') {
+      return filtro.value
+        ? `Sin resultados bajo fórmula médica para “${filtro.value}”`
+        : 'No hay medicamentos bajo fórmula médica';
+    }
+    if (filtroReceta.value === 'libre') {
+      return filtro.value
+        ? `Sin resultados de venta libre para “${filtro.value}”`
+        : 'No hay medicamentos de venta libre';
+    }
     return filtro.value ? `Sin resultados para “${filtro.value}”` : 'No hay medicamentos con estos filtros';
   }
   if (filtro.value) {
     return `${total.value} resultado${total.value === 1 ? '' : 's'} para “${filtro.value}”`;
   }
+  if (filtroReceta.value === 'receta') return `${total.value} medicamentos bajo fórmula médica`;
+  if (filtroReceta.value === 'libre') return `${total.value} medicamentos de venta libre`;
   return `${total.value} medicamentos en Villavicencio`;
 });
 

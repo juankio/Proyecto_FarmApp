@@ -7,6 +7,7 @@ export type MedicamentoParams = {
   page?: number;
   limit?: number;
   q?: string;
+  receta?: 'libre' | 'receta';
 };
 
 export type CreateMedicamentoInput = {
@@ -50,6 +51,7 @@ export const useMedicamentosStore = defineStore('medicamentos', () => {
     const p = params.page ?? page.value;
     const l = params.limit ?? limit.value;
     const q = params.q ?? query.value;
+    const receta = params.receta;
     page.value = p;
     limit.value = l;
     query.value = q;
@@ -61,6 +63,7 @@ export const useMedicamentosStore = defineStore('medicamentos', () => {
     try {
       const search = new URLSearchParams({ page: String(p), limit: String(l) });
       if (q) search.set('q', q);
+      if (receta) search.set('receta', receta);
       const data = await apiGet<Paginado<Medicamento>>(`/medicamentos?${search}`);
       if (actual !== peticion) return data;
       items.value = data.items;
